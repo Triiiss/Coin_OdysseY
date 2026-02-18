@@ -4,4 +4,4 @@ if(( ! doc -d ))
 then
     mkdir doc
 fi
-javadoc -d doc World_1/*.java 
+javadoc -d doc world_2/*.java 
