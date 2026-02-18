@@ -1,9 +1,21 @@
-package World_1;
+/**
+ * @author Thémis Tran Tu Thien :D
+ * @version 1.1
+ */
+
+package world_1;
 
 /**
  * Main class
  */
 public class Main{
+    /**
+     * Empty constructor
+     */
+    private Main(){
+        // Empty constructor
+    }
+
     /**
      * Main method
      * @param args the string of arguments
@@ -15,8 +27,8 @@ public class Main{
         a.display();
         b.display();
 
-        a.updateScore(50);
-        b.updateScore(-25);
+        a.addScore(50);
+        b.removeScore(25);
 
         a.display();
         b.display();
@@ -47,10 +59,10 @@ public class Main{
         b2 = null;
 
         // New players
-        Player j1 = new Player();
-        Player j2 = new Player();
+        Player p1 = new Player();
+        Player p2 = new Player();
 
-        j1.display();
-        j2.display();
+        p1.display();
+        p2.display();
     }
 }

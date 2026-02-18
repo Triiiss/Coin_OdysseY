@@ -1,9 +1,9 @@
 /**
  * @author Thémis Tran Tu Thien :D
- * @version 1.0
+ * @version 1.1
  */
 
-package World_1;
+package world_1;
 
 
 /**
@@ -12,7 +12,7 @@ package World_1;
 public class Player{
     private final String name;
     private int score;
-    private static int nbplayers = 0;
+    private static int nbPlayers = 0;
 
     /**
      * Consctuctor of the Player object (score is automatically at 0)
@@ -22,15 +22,15 @@ public class Player{
         this.name = name;
         this.score = 0;
 
-        System.out.println("[Creation] Number of total players : " + Player.nbplayers);
-        Player.nbplayers++;
+        System.out.println("[Creation] Number of total players : " + Player.nbPlayers);
+        Player.nbPlayers++;
     }
 
     /**
      * Constructor with no need of a name argument. The default name will be PlayerN with N the number of total players
      */
     public Player(){
-        this("Player" + (Player.nbplayers + 1));
+        this("Player" + (Player.nbPlayers + 1));
     }
 
     /**
@@ -41,11 +41,24 @@ public class Player{
     }
 
     /**
-     * Adds or remove points to the score of the player
-     * @param points The number (positive) of points to add
+     * Adds points to the score of the player
+     * @param points The number of points to add (positive)
      */
-    public void updateScore(int points){
-        this.score += this.score + points <= 0 ? - this.score : points;
+    public void addScore(int points){
+        if (points >= 0){
+            this.score += points;
+        }
+    }
+
+    /**
+     * Remove points to the score of the player
+     * If the update would result in a score below zero, the score is reset to zero
+     * @param points The number of points to add (positive)
+     */
+    public void removeScore(int points){
+        if (points >= 0){
+            this.score -= this.score - points <= 0 ? this.score : points;
+        }
     }
 
     /**
@@ -74,6 +87,7 @@ public class Player{
     }
 
     /**
+     * Two players are considered equals if their name match up (case sensitivity ignored)
      * @return true if it's equal or false if not
      */
     public boolean equals(Object obj){
@@ -91,6 +105,6 @@ public class Player{
      * @return the number of player total
      */
     public static int getNbPlayer() {
-        return Player.nbplayers;
+        return Player.nbPlayers;
     }
 }
