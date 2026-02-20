@@ -1,6 +1,6 @@
 /**
  * @author Thémis Tran Tu Thien :D
- * @version 1.1
+ * @version 1.2
  */
 
 package world_2;
@@ -30,23 +30,12 @@ public class Main{
             try{
                 Level firstLevel = Level.getLevelFromFile(file);
 
-                /*firstLevel.display();     // Bouger manuellement pour voir si ça marche
-                System.out.println("x: " + firstLevel.getPlayerX() + " y: " + firstLevel.getPlayerY());
-                firstLevel.movePlayerLeft();
-                firstLevel.display();
-                System.out.println("x: " + firstLevel.getPlayerX() + " y: " + firstLevel.getPlayerY());
-                firstLevel.movePlayerUp();
-                firstLevel.display();
-                System.out.println("x: " + firstLevel.getPlayerX() + " y: " + firstLevel.getPlayerY());*/
-
                 Scanner sc = new Scanner(System.in);
                 String label;
                 Direction action = null;
 
                 while (action != Direction.EXIT_KEY){
-                    firstLevel.display();
-                    System.out.println("x: " + firstLevel.getPlayerX() + " y: " + firstLevel.getPlayerY());
-                    System.out.println("Z: Up | Q: Right | S: Down | D: Left | N: exit");
+                    System.out.println(firstLevel.toString());
                     
                     label = sc.next();
                     action = Direction.stringToDirection(label);
@@ -75,8 +64,6 @@ public class Main{
                     }
                 }
             } catch (FileNotFoundException e){
-                System.err.println(e.getMessage());
-            } catch (PlayerOutOfBoundsException e) {
                 System.err.println(e.getMessage());
             }
         }

@@ -33,7 +33,7 @@ public class Level{
      * @param playerX the x coordinate of the player
      * @param playerY the y coordinate of the player
      */
-    public Level(int width, int height, Structure[] structs, Player player, int playerX, int playerY) throws PlayerOutOfBoundsException {
+    public Level(int width, int height, Structure[] structs, Player player, int playerX, int playerY){
         if (width > 0 && height > 0){
             this.width = width;
             this.height = height;
@@ -55,15 +55,18 @@ public class Level{
                     }
                 }
             }
-            if (isAvailable(playerX,playerY)){      // Fills the player
+            if (!isAvailable(playerX,playerY)){      // Fills the player
+                throw new PlayerOutOfBoundsException("Creation of the level impossible : player out of the map or in a wall, or not given");
+            }
+            else if (player == null){
+                throw new PlayerOutOfBoundsException("The player cannot be null");
+            }
+            else{
                 this.playerX = playerX;
                 this.playerY = playerY;
                 this.player = player;
 
                 this.level[playerY][playerX] = '1';
-            }
-            else{
-                throw new PlayerOutOfBoundsException("Creation of the level impossible : player out of the map or in a wall");
             }
         }
     }
@@ -79,7 +82,7 @@ public class Level{
      * @param file The file path in the directory files
      * @return a level object based on the info of the file
      */
-    public static Level getLevelFromFile(String file) throws FileNotFoundException, PlayerOutOfBoundsException{
+    public static Level getLevelFromFile(String file) throws FileNotFoundException{
         Path p = Paths.get(CUR+"/files/"+file);
 
         Player p1 = null;
@@ -204,22 +207,33 @@ public class Level{
     /**
      * Displays the map and the structures within
      */
-    public void display(){
-        for (int j=0;j<this.width+2;j++){
-            System.out.print('#');
+    @Override
+    public String toString(){
+        StringBuilder level = new StringBuilder();
+
+        for (int j = 0; j < this.width+2; j++) {
+            level.append('#');
         }
-        System.out.print("\n");
-        for (int i=0;i<this.height;i++){
-            System.out.print('#');
-            for (int j=0;j<this.width;j++){
-                System.out.print(this.level[i][j]);
+        level.append("\n");
+
+        for (int i = 0; i < this.height; i++) {
+            level.append('#');
+            for (int j = 0; j < this.width; j++) {
+                level.append(this.level[i][j]);
             }
-            System.out.print("#\n");
+            level.append("#\n");
         }
-        for (int j=0;j<this.width+2;j++){
-            System.out.print('#');
+
+        for (int j = 0; j < this.width + 2; j++) {
+            level.append('#');
         }
-        System.out.print("\n");
+        level.append("\n");
+
+        level.append(this.player.toString() + '\n');
+        level.append("x: " + this.getPlayerX() + " y: " + this.getPlayerY() + " | score : " + this.player.getScore() +"\n");
+        level.append("Z: Up | Q: Right | S: Down | D: Left | N: exit");
+
+        return level.toString();
     }
 
     /**
