@@ -58,7 +58,11 @@ public class Cell{
     }
 
     public static boolean isValidType(int type){
-        return (type == 0 || type == 1 || type == 2) ? true : false;
+        return (type == 0 || type == 1 || type == 2 || type == 3) ? true : false;
+    }
+
+    public boolean hasCollision(){
+        return (this.type == 0 || this.type = 3) ? true : false;
     }
 
     /**
@@ -104,6 +108,8 @@ public class Cell{
                 return ' ';
             case 2:
                 return '*';
+            case 3:
+                return 'D';
         }
         return ' ';
     }

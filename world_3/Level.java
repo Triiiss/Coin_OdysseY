@@ -82,12 +82,21 @@ public class Level{
                                 }
                             }
                             break;
+                        case 3:         // If it's a locked door
+                            for (int j=0;j<structs[i].getheight();j++){
+                                for (int k=0;k<structs[i].getWidth();k++){
+                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == 1){
+                                        this.level[j+structs[i].getY()][k+structs[i].getX()].setType(3);
+                                    }
+                                }
+                            }
+                            break;
                     }
                 }
             }
             for (int i=0;i<this.height;i++){        // Creates all cells as empty ones
                 for (int j=0;j<this.width;j++){
-                    System.out.println(this.level[i][j].getX() + " " + this.level[i][j].getY() + " " + this.level[i][j].getCoin() + " " + this.level[i][j].getType() + " " + this.level[i][j].getTypeChar(this.playerX,this.playerY));
+                    System.out.println(this.level[i][j].getX() + " " + this.level[i][j].getY() + " " + this.level[i][j].getType() + " " + this.level[i][j].getCoin() + " " + this.level[i][j].getTypeChar(0,0));
                 }
             }
             if (!isAvailable(playerX,playerY)){      // Fills the player
@@ -189,7 +198,7 @@ public class Level{
      * @return true if the player can move to the space (x,y)
      */
     public boolean isAvailable(int x, int y){
-        if (x >= 0 && x < this.width && y >= 0 && y < this.height && this.level[y][x].getType() != 0){
+        if (x >= 0 && x < this.width && y >= 0 && y < this.height && this.level[y][x].hasCollision()){
             return true;
         }
         return false;
@@ -525,8 +534,6 @@ public class Level{
                     newPlayerX = this.startPlayerX;
                     newPlayerY = this.startPlayerY;
                 }
-                //this.level[playerY][playerX] = ' ';
-                //this.level[newPlayerY][newPlayerX] = '1';
 
                 this.playerX = newPlayerX;
                 this.playerY = newPlayerY;
