@@ -17,7 +17,7 @@ import java.io.IOException;
 public class Level{
     private int width;
     private int height;
-    private char[][] level;
+    private Cell[][] level;
     private Player player;
     private int playerX;
     private int playerY;
@@ -42,11 +42,11 @@ public class Level{
             this.height = height;
             this.nbCoins = 0;
 
-            this.level = new char[this.height][this.width];
+            this.level = new Cell[this.height][this.width];
 
-            for (int i=0;i<this.height;i++){        // Fill spaces
+            for (int i=0;i<this.height;i++){        // Creates all cells as empty ones
                 for (int j=0;j<this.width;j++){
-                    this.level[i][j] = ' ';
+                    this.level[i][j] = new Cell(j,i,false,1);
                 }
             }
 
@@ -56,18 +56,19 @@ public class Level{
                         case 0:             // If it's a wall
                             for (int j=0;j<structs[i].getheight();j++){
                                 for (int k=0;k<structs[i].getWidth();k++){
-                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()] == ' '){
-                                        this.level[j+structs[i].getY()][k+structs[i].getX()] = '#';
+                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == 1 && !this.level[j+structs[i].getY()][k+structs[i].getX()].getCoin()){
+                                        this.level[j+structs[i].getY()][k+structs[i].getX()].setType(0);
                                     }
                                 }
                             }
                             break;
+                        // Note : structure.type 1 is coins while cell.type 1 is empty that way all other type are the same and structure 1 and cell 1 is different
                         case 1:             // If it's coins
                             for (int j=0;j<structs[i].getheight();j++){
                                 for (int k=0;k<structs[i].getWidth();k++){
-                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()] == ' '){
-                                        this.level[j+structs[i].getY()][k+structs[i].getX()] = '.';
+                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() != 0 && !this.level[j+structs[i].getY()][k+structs[i].getX()].getCoin()){       // Coins can be anywhere except walls and can't count a coin twice
                                         this.nbCoins += 1;
+                                        this.level[j+structs[i].getY()][k+structs[i].getX()].addCoin();
                                     }
                                 }
                             }
@@ -75,8 +76,8 @@ public class Level{
                         case 2:         // If it's a trap
                             for (int j=0;j<structs[i].getheight();j++){
                                 for (int k=0;k<structs[i].getWidth();k++){
-                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()] == ' '){
-                                        this.level[j+structs[i].getY()][k+structs[i].getX()] = '*';
+                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == 1){
+                                        this.level[j+structs[i].getY()][k+structs[i].getX()].setType(2);
                                     }
                                 }
                             }
@@ -84,11 +85,17 @@ public class Level{
                     }
                 }
             }
+            for (int i=0;i<this.height;i++){        // Creates all cells as empty ones
+                for (int j=0;j<this.width;j++){
+                    System.out.println(this.level[i][j].getX() + " " + this.level[i][j].getY() + " " + this.level[i][j].getCoin() + " " + this.level[i][j].getType() + " " + this.level[i][j].getTypeChar(this.playerX,this.playerY));
+                }
+            }
             if (!isAvailable(playerX,playerY)){      // Fills the player
-                throw new PlayerOutOfBoundsException("Creation of the level impossible : player out of the map or in a wall, or not given");
+                System.out.println(playerX + " " + playerY + " " + this.level[playerY][playerX].getType());
+                throw new PlayerOutOfBoundsException("Creation of the level impossible : player out of the map or in a wall");
             }
             else if (player == null){
-                throw new PlayerOutOfBoundsException("The player cannot be null");
+                throw new PlayerOutOfBoundsException("The player not given (null)");
             }
             else{
                 this.playerX = playerX;
@@ -96,8 +103,6 @@ public class Level{
                 this.startPlayerX = playerX;
                 this.startPlayerY = playerY;
                 this.player = player;
-
-                this.level[playerY][playerX] = '1';
             }
         }
     }
@@ -113,10 +118,8 @@ public class Level{
      * @param file The file path in the directory files
      * @return a level object based on the info of the file
      */
-    public static Level getLevelFromFile(String file) throws FileNotFoundException{
+    public static Level getLevelFromFile(String file, Player p1) throws FileNotFoundException{
         Path p = Paths.get(CUR+"/files/"+file);
-
-        Player p1 = null;
         Structure[] structLevel = null;
 
         int width = -1;
@@ -136,20 +139,17 @@ public class Level{
                     }
                     else{
                         switch (section){
-                            case 0:     // Player
-                                p1 = new Player(ligne);
-                                break;
-                            case 1:     // nbStructures
+                            case 0:     // nbStructures
                                 structLevel = new Structure[Integer.parseInt(ligne)];
                                 break;
-                            case 2:     // Structures info
+                            case 1:     // Structures info
                                 String[] structInfo = ligne.split(" ");
                                 if (structLevel != null){
                                     structLevel[subSection] = new Structure(Integer.parseInt(structInfo[0]),Integer.parseInt(structInfo[1]),Integer.parseInt(structInfo[2]),Integer.parseInt(structInfo[3]),Integer.parseInt(structInfo[4]));
                                     subSection += 1;
                                 }
                                 break;
-                            case 3:     // Level info
+                            case 2:     // Level info
                                 String[] levelInfo = ligne.split(" ");
                                 width = Integer.parseInt(levelInfo[0]);
                                 height = Integer.parseInt(levelInfo[1]);
@@ -189,7 +189,7 @@ public class Level{
      * @return true if the player can move to the space (x,y)
      */
     public boolean isAvailable(int x, int y){
-        if (x >= 0 && x < this.width && y >= 0 && y < this.height && this.level[y][x] != '#'){
+        if (x >= 0 && x < this.width && y >= 0 && y < this.height && this.level[y][x].getType() != 0){
             return true;
         }
         return false;
@@ -245,6 +245,7 @@ public class Level{
 
     /**
      * Displays the map and the structures within
+     * @return The string to print out of the map, its edges and the UI
      */
     @Override
     public String toString(){
@@ -258,7 +259,7 @@ public class Level{
         for (int i = 0; i < this.height; i++) {
             level.append('#');
             for (int j = 0; j < this.width; j++) {
-                level.append(this.level[i][j]);
+                level.append(this.level[i][j].getTypeChar(this.playerX,this.playerY));
             }
             level.append("#\n");
         }
@@ -287,8 +288,9 @@ public class Level{
     /**
      * Prints out the outer layer of the level and "LEVEL COMPLETE"
      * Usually printed out when all the coins a gathered
+     * @return the winning screen as a string to print out
      */
-    public String displayWin(){
+    public String displayLevelComplete(){
         StringBuilder winScreen = new StringBuilder();
 
         for (int j=0;j<this.width+2;j++){
@@ -341,12 +343,91 @@ public class Level{
             }
         }
 
+        winScreen.append("\nPress any key to continue");
+
+        return winScreen.toString();
+    }
+
+    /**
+     * Prints out the outer layer of the level and "THANK YOU FOR PLAYING"
+     * Usually printed out when all the levels are completed
+     * @return the winning game screen as a string to print out
+     */
+    public String displayWin(){
+        StringBuilder winScreen = new StringBuilder();
+
+        for (int j=0;j<this.width+2;j++){
+            winScreen.append('#');
+        }
+        winScreen.append('\n');
+
+        for (int i=0;i<this.height/2-1;i++){
+            winScreen.append('#');
+            for (int j=0;j<this.width;j++){
+                winScreen.append(' ');
+            }
+            winScreen.append('#');
+            winScreen.append('\n');
+        }
+
+        winScreen.append('#');
+        for (int j=0;j<(this.width/2)-5;j++){
+            winScreen.append(' ');
+        }
+        winScreen.append("THANK YOU");
+        for (int j=0;j<(this.width/2)-4;j++){
+            winScreen.append(' ');
+        }
+        if (this.width % 2 == 1){
+            winScreen.append(' ');
+        }
+        winScreen.append('#');
+        winScreen.append('\n');
+
+
+        winScreen.append('#');
+        for (int j=0;j<(this.width/2)-6;j++){
+            winScreen.append(' ');
+        }
+        winScreen.append("FOR PLAYING");
+        for (int j=0;j<(this.width/2)-5;j++){
+            winScreen.append(' ');
+        }
+        if (this.width % 2 == 1){
+            winScreen.append(' ');
+        }
+        winScreen.append('#');
+        winScreen.append('\n');
+
+        for (int i=0;i<this.height/2-1;i++){
+            winScreen.append('#');
+            for (int j=0;j<this.width;j++){
+                winScreen.append(' ');
+            }
+            winScreen.append('#');
+            winScreen.append('\n');
+        }
+        for (int j=0;j<this.width+2;j++){
+            winScreen.append('#');
+        }
+        winScreen.append('\n');
+        winScreen.append(this.player.toString() + " | ");
+        for (int h=1; h<=this.player.getMaxHealth();h++){
+            if (h > this.player.getHealthPoint()){
+                winScreen.append(" ♡ ");
+            }
+            else{
+                winScreen.append(" ❤︎⁠ ");
+            }
+        }
+
         return winScreen.toString();
     }
 
     /**
      * Prints out the outer layer of the level and "GAME OVER"
      * Usually printed out when the health is negative or equal to 0
+     * @return the losing screen as a string to print out
      */
     public String displayGameOver(){
         StringBuilder gameOverScreen = new StringBuilder();
@@ -433,18 +514,19 @@ public class Level{
 
         if (newPlayerX >= 0 && newPlayerY >= 0){
             if (isAvailable(newPlayerX,newPlayerY)){
-                if (this.level[newPlayerY][newPlayerX] == '.' && this.nbCoins > 0){
+                if (this.level[newPlayerY][newPlayerX].getCoin() && this.nbCoins > 0){
                     nbCoins -= 1;
                     this.player.addScore(10);
+                    this.level[newPlayerY][newPlayerX].removeCoin();
                 }
-                else if (this.level[newPlayerY][newPlayerX] == '*' && this.player.getHealthPoint() > 0){
+                if (this.level[newPlayerY][newPlayerX].getType() == 2 && this.player.getHealthPoint() > 0){
                     this.player.removeHealth(2);
-                    this.level[newPlayerY][newPlayerX] = ' ';       // Delete the trap
+                    this.level[newPlayerY][newPlayerX].setType(1);       // Delete the trap
                     newPlayerX = this.startPlayerX;
                     newPlayerY = this.startPlayerY;
                 }
-                this.level[playerY][playerX] = ' ';
-                this.level[newPlayerY][newPlayerX] = '1';
+                //this.level[playerY][playerX] = ' ';
+                //this.level[newPlayerY][newPlayerX] = '1';
 
                 this.playerX = newPlayerX;
                 this.playerY = newPlayerY;

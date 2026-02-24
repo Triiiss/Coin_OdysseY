@@ -25,18 +25,30 @@ public class Main{
      */
     public static void main(String[] args){
         if (args.length >= 1){       // If no arguments, error message
-            String file = args[0];
+            Scanner sc = new Scanner(System.in);
+
+            System.out.println("What is your name?");       // Gets player name and creates player
+            String playerName = sc.next();
+            Player player = new Player(playerName);
+
+            Level[] game = new Level[args.length];          // All levels
 
             try{
-                Level firstLevel = Level.getLevelFromFile(file);
-
-                Scanner sc = new Scanner(System.in);
                 String label;
                 Direction action = null;
-
+                int iLevel = 0;
+                
+                for (int i=0;i<args.length;i++){            // Creates all level
+                    game[i] = Level.getLevelFromFile(args[i], player);
+                }
+                
                 while (action != Direction.EXIT_KEY){
-                    if (firstLevel.getPlayer().getHealthPoint() <= 0){
-                        System.out.println(firstLevel.displayGameOver());
+                    if (iLevel >= args.length){          // Winning game
+                        System.out.println(game[iLevel-1].displayWin());
+                        break;
+                    }
+                    else if (game[iLevel].getPlayer().getHealthPoint() <= 0){        // Lost game
+                        System.out.println(game[iLevel].displayGameOver());
                         
                         label = sc.next();
                         action = Direction.stringToDirection(label);
@@ -45,8 +57,9 @@ public class Main{
                                 System.out.println("Exiting...");
                                 break;
                             case Direction.RESTART_KEY:
-                                firstLevel = null;
-                                firstLevel = Level.getLevelFromFile(file);
+                                game[iLevel] = null;
+                                player.reset();         // Resets the player's info
+                                game[iLevel] = Level.getLevelFromFile(args[iLevel],player);
                                 break;
                             case null:
                                 System.out.println("Input invalid");
@@ -56,16 +69,17 @@ public class Main{
                                 break;
                         }
                     }
-                    else if (firstLevel.getNbCoins() <= 0){
-                        System.out.println(firstLevel.displayWin());
-                        break;
+                    else if (game[iLevel].getNbCoins() <= 0){       // Winning level
+                        System.out.println(game[iLevel].displayLevelComplete());
+                        iLevel += 1;
+                        sc.next();
                     }
-                    else{
-                        System.out.println(firstLevel.toString());
+                    else{               // The actual game
+                        System.out.println(game[iLevel].toString());
                         
                         label = sc.next();
                         action = Direction.stringToDirection(label);
-                        firstLevel.movePlayer(action);
+                        game[iLevel].movePlayer(action);
                     }
                 }
             } catch (FileNotFoundException e){

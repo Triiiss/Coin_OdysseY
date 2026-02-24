@@ -148,4 +148,9 @@ public class Player{
         }
         return false;
     }
+
+    public void reset(){
+        this.score = 0;
+        this.healthPoint = this.MAXHEALTH;
+    }
 }
