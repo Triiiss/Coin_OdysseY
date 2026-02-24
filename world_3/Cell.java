@@ -62,7 +62,7 @@ public class Cell{
     }
 
     public boolean hasCollision(){
-        return (this.type == 0 || this.type = 3) ? true : false;
+        return (this.type == 0 || this.type == 3) ? true : false;
     }
 
     /**
