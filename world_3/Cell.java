@@ -15,6 +15,8 @@ public class Cell{
     private int type;
 
     /**
+     * The cell is a space that can either be a wall, empty, or a trap
+     * The player can be on it, and it can have a coin or not
      * @param x the x coordinate of the cell
      * @param y the y coordinate of the cell
      * @param coin if it has a coin on it or not
@@ -30,6 +32,7 @@ public class Cell{
     }
 
     /**
+     * Get the X coordinate of the cell
      * @return The x coordinate
      */
     public int getX(){
@@ -37,6 +40,7 @@ public class Cell{
     }
 
     /**
+     * Get the Y coordinate of the cell
      * @return The y coordinate
      */
     public int getY(){
@@ -44,6 +48,7 @@ public class Cell{
     }
 
     /**
+     * Get wether the cell has a coin or not
      * @return The coin boolean
      */
     public boolean getCoin(){
@@ -51,16 +56,55 @@ public class Cell{
     }
 
     /**
+     * Get the type of the cell
      * @return The type of the cell
      */
     public int getType(){
         return this.type;
     }
 
+    /**
+     * Each cell has a type, and shows something based on what's on it
+     * The player is priority, then coins then the actual type
+     * So a coin can be on a trap and just show the coin (it's a hidden trap hehe)
+     * @param playerX The X coordinate of the player
+     * @param playerY The coordinates of the player to know if the player is in the cell or not
+     * @return the character of the cell ( ,.,#,*,1,etc)
+     */
+    public char getTypeChar(int playerX, int playerY){
+        if (playerX == this.x && playerY == this.y){
+            return '1';
+        }
+        else if (this.coin){
+            return '.';
+        }
+        switch(this.type){
+            case 0:
+                return '#';
+            case 1:
+                return ' ';
+            case 2:
+                return '*';
+            case 3:
+                return 'D';
+        }
+        return ' ';
+    }
+
+    /**
+     * To add a type of cell, we can add it in one place (here)
+     * @param type The type given
+     * @return wether a type is valid or not
+     */
     public static boolean isValidType(int type){
         return (type == 0 || type == 1 || type == 2 || type == 3) ? true : false;
     }
 
+    /**
+     * Some tiles have collitions with the player (locked doors, or walls), some not (empty, or traps)
+     * By adding a type of cell, adding it here will make it collide or not
+     * @return true if it can collide with the player false if not
+     */
     public boolean hasCollision(){
         return (this.type == 0 || this.type == 3) ? true : false;
     }
@@ -92,25 +136,5 @@ public class Cell{
      */
     public void removeCoin(){
         this.coin = false;
-    }
-
-    public char getTypeChar(int playerX, int playerY){
-        if (playerX == this.x && playerY == this.y){
-            return '1';
-        }
-        else if (this.coin){
-            return '.';
-        }
-        switch(this.type){
-            case 0:
-                return '#';
-            case 1:
-                return ' ';
-            case 2:
-                return '*';
-            case 3:
-                return 'D';
-        }
-        return ' ';
     }
 }

@@ -114,12 +114,12 @@ public class Level{
     /**
      * Consctructor from the text file
      * Format of the file :
-     * NAME
      * NB_STRUCT n
      * n STRUCT INFO (width height x y)
      * LEVEL INFO (width height playerX playerY)
      * 
      * @param file The file path in the directory files
+     * @param p1 The player. It doesn't have to be created with the level, it is given so the player can stay the same in different levels
      * @return a level object based on the info of the file
      */
     public static Level getLevelFromFile(String file, Player p1) throws FileNotFoundException{

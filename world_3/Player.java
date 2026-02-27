@@ -149,6 +149,9 @@ public class Player{
         return false;
     }
 
+    /**
+     * Resets the player in case of game over (no need to create it again, just reset the score and the health)
+     */
     public void reset(){
         this.score = 0;
         this.healthPoint = this.MAXHEALTH;
