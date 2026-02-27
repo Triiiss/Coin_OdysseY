@@ -198,7 +198,7 @@ public class Level{
      * @return true if the player can move to the space (x,y)
      */
     public boolean isAvailable(int x, int y){
-        if (x >= 0 && x < this.width && y >= 0 && y < this.height && this.level[y][x].hasCollision()){
+        if (x >= 0 && x < this.width && y >= 0 && y < this.height && !this.level[y][x].hasCollision()){
             return true;
         }
         return false;
