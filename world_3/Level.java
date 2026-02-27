@@ -94,11 +94,6 @@ public class Level{
                     }
                 }
             }
-            for (int i=0;i<this.height;i++){        // Creates all cells as empty ones
-                for (int j=0;j<this.width;j++){
-                    System.out.println(this.level[i][j].getX() + " " + this.level[i][j].getY() + " " + this.level[i][j].getType() + " " + this.level[i][j].getCoin() + " " + this.level[i][j].getTypeChar(0,0));
-                }
-            }
             if (!isAvailable(playerX,playerY)){      // Fills the player
                 System.out.println(playerX + " " + playerY + " " + this.level[playerY][playerX].getType());
                 throw new PlayerOutOfBoundsException("Creation of the level impossible : player out of the map or in a wall");
@@ -491,8 +486,9 @@ public class Level{
      * @param direction the direction from the enum class Direction
      */
     public void movePlayer(Direction direction){
-        int newPlayerX = -1;
-        int newPlayerY = -1;
+        int newPlayerX = 0;
+        int newPlayerY = 0;
+        boolean validInput = true;
         switch (direction){
             case Direction.LEFT_KEY:
                 newPlayerX = this.playerX - 1;
@@ -512,16 +508,32 @@ public class Level{
                 break;
             case Direction.EXIT_KEY:
                 System.out.println("Exiting...");
+                validInput = false;
                 break;
             case null:
                 System.out.println("Input invalid");
+                validInput = false;
                 break;
             default:
                 System.out.println("Input invalid");
+                validInput = false;
                 break;
         }
+        if (validInput){
+            while (newPlayerX < 0){         // The tore system => adds a cycle to the coordinates
+                newPlayerX += this.width;
+            }
+        
+            while (newPlayerX >= this.width){
+                newPlayerX -= this.width;
+            }
+            while (newPlayerY < 0){
+                newPlayerY += this.height;
+            }
+            while (newPlayerY >= this.height){
+                newPlayerY -= this.height;
+            }
 
-        if (newPlayerX >= 0 && newPlayerY >= 0){
             if (isAvailable(newPlayerX,newPlayerY)){
                 if (this.level[newPlayerY][newPlayerX].getCoin() && this.nbCoins > 0){
                     nbCoins -= 1;
