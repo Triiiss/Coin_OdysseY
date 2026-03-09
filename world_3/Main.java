@@ -1,12 +1,19 @@
 /**
  * @author Thémis Tran Tu Thien :D
  * @version 1.1
+ * @TODO
+ * Comportemental
+ * Position dans le player      check
+ * Position en objet            check
+ * enum type CellType           check
+ * bool collision               check
  */
 
 package world_3;
 
 import java.util.Scanner;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Main class
@@ -25,64 +32,57 @@ public class Main{
      */
     public static void main(String[] args){
         if (args.length >= 1){       // If no arguments, error message
-            Scanner sc = new Scanner(System.in);
-
             System.out.println("What is your name?");       // Gets player name and creates player
-            String playerName = sc.next();
+            String playerName = Rule.getInput();
             Player player = new Player(playerName);
 
             Level[] game = new Level[args.length];          // All levels
 
             try{
-                String label;
                 Direction action = null;
                 int iLevel = 0;
                 
-                for (int i=0;i<args.length;i++){            // Creates all level
-                    game[i] = Level.getLevelFromFile(args[i], player);
-                }
-                
-                while (action != Direction.EXIT_KEY){
+                while (action != Direction.EXIT){
                     if (iLevel >= args.length){          // Winning game
                         System.out.println(game[iLevel-1].displayWin());
                         break;
                     }
-                    else if (game[iLevel].getPlayer().getHealthPoint() <= 0){        // Lost game
+                    else if (game[iLevel] == null){                  // Creation of the level
+                        game[iLevel] = Level.getLevelFromFile(args[iLevel], player);
+                    }
+                    else if (Rule.gameOver(game[iLevel])){        // Lost game
                         System.out.println(game[iLevel].displayGameOver());
                         
-                        label = sc.next();
-                        action = Direction.stringToDirection(label);
+                        action = Rule.getDirection();
                         switch(action){
-                            case Direction.EXIT_KEY:
+                            case Direction.EXIT:
                                 System.out.println("Exiting...");
                                 break;
-                            case Direction.RESTART_KEY:
+                            case Direction.RESTART:
                                 game[iLevel] = null;
                                 player.reset();         // Resets the player's info
                                 game[iLevel] = Level.getLevelFromFile(args[iLevel],player);
-                                break;
-                            case null:
-                                System.out.println("Input invalid");
                                 break;
                             default:
                                 System.out.println("Input invalid");
                                 break;
                         }
                     }
-                    else if (game[iLevel].getNbCoins() <= 0){       // Winning level
+                    else if (Rule.levelComplete(game[iLevel])){       // Winning level
                         System.out.println(game[iLevel].displayLevelComplete());
                         iLevel += 1;
-                        sc.next();
+                        Rule.getInput();
                     }
                     else{               // The actual game
                         System.out.println(game[iLevel].toString());
                         
-                        label = sc.next();
-                        action = Direction.stringToDirection(label);
+                        action = Rule.getDirection();
                         game[iLevel].movePlayer(action);
                     }
                 }
             } catch (FileNotFoundException e){
+                System.err.println(e.getMessage());
+            } catch (IOException e){
                 System.err.println(e.getMessage());
             }
         }

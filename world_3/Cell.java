@@ -12,7 +12,8 @@ public class Cell{
     private int x;
     private int y;
     private boolean coin;
-    private int type;
+    private CellType type;
+    private boolean collision;
 
     /**
      * The cell is a space that can either be a wall, empty, or a trap
@@ -22,13 +23,22 @@ public class Cell{
      * @param coin if it has a coin on it or not
      * @param type the type of the cell (0: a wall; 1: empty; 2: a trap)
      */
-    public Cell(int x, int y, boolean coin, int type){
+    public Cell(int x, int y, boolean coin, CellType type){
         this.x = x;
         this.y = y;
         this.coin = coin;
-        if (Cell.isValidType(type) && ((coin == true && type != 0) || (coin == false))){      // Checks the type and no coins inside a wall
+        if (coin && type == CellType.WALL){      // Checks the type and no coins inside a wall
+            this.type = CellType.EMPTY;
+        }
+        else{
             this.type = type;
         }
+        this.collision = this.type.defaultCollision();
+    }
+
+    public Cell(int x,int y,boolean coin, CellType type, boolean collision){
+        this(x,y,coin,type);
+        this.collision = collision;
     }
 
     /**
@@ -59,45 +69,8 @@ public class Cell{
      * Get the type of the cell
      * @return The type of the cell
      */
-    public int getType(){
+    public CellType getType(){
         return this.type;
-    }
-
-    /**
-     * Each cell has a type, and shows something based on what's on it
-     * The player is priority, then coins then the actual type
-     * So a coin can be on a trap and just show the coin (it's a hidden trap hehe)
-     * @param playerX The X coordinate of the player
-     * @param playerY The coordinates of the player to know if the player is in the cell or not
-     * @return the character of the cell ( ,.,#,*,1,etc)
-     */
-    public char getTypeChar(int playerX, int playerY){
-        if (playerX == this.x && playerY == this.y){
-            return '1';
-        }
-        else if (this.coin){
-            return '.';
-        }
-        switch(this.type){
-            case 0:
-                return '#';
-            case 1:
-                return ' ';
-            case 2:
-                return '*';
-            case 3:
-                return 'D';
-        }
-        return ' ';
-    }
-
-    /**
-     * To add a type of cell, we can add it in one place (here)
-     * @param type The type given
-     * @return wether a type is valid or not
-     */
-    public static boolean isValidType(int type){
-        return (type == 0 || type == 1 || type == 2 || type == 3) ? true : false;
     }
 
     /**
@@ -105,25 +78,30 @@ public class Cell{
      * By adding a type of cell, adding it here will make it collide or not
      * @return true if it can collide with the player false if not
      */
-    public boolean hasCollision(){
-        return (this.type == 0 || this.type == 3) ? true : false;
+    public boolean getCollision(){
+        return this.collision;
     }
 
     /**
      * Sets the type during the creation or for changing levels
      * @param type the new type
      */
-    public void setType(int type){
-        if (Cell.isValidType(type) && ((coin == true && type != 0) || (coin == false))){
+    public void setType(CellType type, boolean collision){
+        if (!(coin && type == CellType.WALL && collision)){
             this.type = type;
+            this.collision = collision;
         }
+    }
+
+    public void setType(CellType type){
+        setType(type,type.defaultCollision());
     }
 
     /**
      * Adds a coin during the creation of the level
      */
     public void addCoin(){
-        if (this.type != 0){        // Not in a wall
+        if (this.type != CellType.WALL){        // Not in a wall
             this.coin = true;
         }
         else{

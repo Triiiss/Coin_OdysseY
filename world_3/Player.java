@@ -11,9 +11,10 @@ package world_3;
  */
 public class Player{
     private final String name;
-    private int score;
+    private int score;              // Ajouter position
     private int healthPoint;
     final private int MAXHEALTH;
+    private Position coord;
     private static int nbPlayers = 0;
 
     /**
@@ -25,6 +26,7 @@ public class Player{
         this.score = 0;
         this.healthPoint = 5;
         this.MAXHEALTH = 5;
+        this.coord = new Position(-1,-1);
 
         System.out.println("[Creation] Number of total players : " + Player.nbPlayers);
         Player.nbPlayers++;
@@ -38,10 +40,85 @@ public class Player{
     }
 
     /**
+     * Get the name of the player
+     * @return The name
+     */
+    public String getName(){
+        return this.name;
+    }
+
+    /**
+     * Get the score of the player
+     * @return The score
+     */
+    public int getScore(){
+        return this.score;
+    }
+
+    /**
+     * Get the health points of the player
+     * @return The healthPoint
+     */
+    public int getHealthPoint(){
+        return this.healthPoint;
+    }
+
+    /**
+     * Get the max health points of the player
+     * @return The MAXHEALTH
+     */
+    public int getMaxHealth(){
+        return this.MAXHEALTH;
+    }
+
+    public Position getCoord(){
+        return this.coord;
+    }
+
+    /**
+     * Count the players that were created using the constructor method
+     * @return the number of player total
+     */
+    public static int getNbPlayer() {
+        return Player.nbPlayers;
+    }
+
+    /**
      * Displays the information of your Player object
      */
     public void display(){
         System.out.println("Player : " + this.name + " | score : " + this.score);
+    }
+
+    /**
+     * Puts the player object in the form of a string
+     * @return the string in the form of [name] : [score] pts
+     */
+    public String toString(){
+        String s = this.score > 1 ? "s" : "";
+        return this.name + " : " + this.score + " pt" + s;
+    }
+
+    /**
+     * Two players are considered equals if their name match up (case sensitivity ignored)
+     * @return true if it's equal or false if not
+     */
+    public boolean equals(Object obj){
+        if (obj instanceof Player){
+            Player P2 = (Player) obj;
+            if (this.getName().equalsIgnoreCase(P2.getName())){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Resets the player in case of game over (no need to create it again, just reset the score and the health)
+     */
+    public void reset(){
+        this.score = 0;
+        this.healthPoint = this.MAXHEALTH;
     }
 
     /**
@@ -86,74 +163,8 @@ public class Player{
         }
     }
 
-    /**
-     * Puts the player object in the form of a string
-     * @return the string in the form of [name] : [score] pts
-     */
-    public String toString(){
-        String s = this.score > 1 ? "s" : "";
-        return this.name + " : " + this.score + " pt" + s;
-    }
-
-    /**
-     * Get the name of the player
-     * @return The name
-     */
-    public String getName(){
-        return this.name;
-    }
-
-    /**
-     * Get the score of the player
-     * @return The score
-     */
-    public int getScore(){
-        return this.score;
-    }
-
-    /**
-     * Get the health points of the player
-     * @return The healthPoint
-     */
-    public int getHealthPoint(){
-        return this.healthPoint;
-    }
-
-    /**
-     * Get the max health points of the player
-     * @return The MAXHEALTH
-     */
-    public int getMaxHealth(){
-        return this.MAXHEALTH;
-    }
-
-    /**
-     * Count the players that were created using the constructor method
-     * @return the number of player total
-     */
-    public static int getNbPlayer() {
-        return Player.nbPlayers;
-    }
-
-    /**
-     * Two players are considered equals if their name match up (case sensitivity ignored)
-     * @return true if it's equal or false if not
-     */
-    public boolean equals(Object obj){
-        if (obj instanceof Player){
-            Player P2 = (Player) obj;
-            if (this.getName().equalsIgnoreCase(P2.getName())){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Resets the player in case of game over (no need to create it again, just reset the score and the health)
-     */
-    public void reset(){
-        this.score = 0;
-        this.healthPoint = this.MAXHEALTH;
+    public void move(int x, int y){
+        this.coord.setX(x);
+        this.coord.setY(y);
     }
 }

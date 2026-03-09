@@ -1,6 +1,6 @@
 /**
  * @author Thémis Tran Tu Thien :D
- * @version 1.1
+ * @version 1.2
  */
 
 package world_3;
@@ -19,13 +19,10 @@ public class Level{
     private int height;
     private Cell[][] level;
     private Player player;
-    private int playerX;
-    private int playerY;
     private int nbCoins;
-    private int startPlayerX;
-    private int startPlayerY;
+    private Position startPlayer;
 
-    private static String CUR = System.getProperty("user.dir");     // no need
+    private static String CUR = System.getProperty("user.dir");
 
     /**
      * Constructor method
@@ -46,67 +43,54 @@ public class Level{
 
             for (int i=0;i<this.height;i++){        // Creates all cells as empty ones
                 for (int j=0;j<this.width;j++){
-                    this.level[i][j] = new Cell(j,i,false,1);
+                    this.level[i][j] = new Cell(j,i,false,CellType.EMPTY);
                 }
             }
 
             for (int i=0;i<structs.length; i++){            // Fill the structures
                 if (this.isInLevel(structs[i])){
-                    switch(structs[i].getType()){
-                        case 0:             // If it's a wall
-                            for (int j=0;j<structs[i].getheight();j++){
-                                for (int k=0;k<structs[i].getWidth();k++){
-                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == 1 && !this.level[j+structs[i].getY()][k+structs[i].getX()].getCoin()){
-                                        this.level[j+structs[i].getY()][k+structs[i].getX()].setType(0);
+                    for (int j=0;j<structs[i].getHeight();j++){
+                        for (int k=0;k<structs[i].getWidth();k++){
+                            switch(structs[i].getType()){
+                                case 0:             // If it's a wall
+                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY && !this.level[j+structs[i].getY()][k+structs[i].getX()].getCoin()){
+                                        this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.WALL);
                                     }
-                                }
-                            }
-                            break;
-                        // Note : structure.type 1 is coins while cell.type 1 is empty that way all other type are the same and structure 1 and cell 1 is different
-                        case 1:             // If it's coins
-                            for (int j=0;j<structs[i].getheight();j++){
-                                for (int k=0;k<structs[i].getWidth();k++){
-                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() != 0 && !this.level[j+structs[i].getY()][k+structs[i].getX()].getCoin()){       // Coins can be anywhere except walls and can't count a coin twice
+                                    break;
+                                // Note : structure.type 1 is coins while cell.type 1 is empty that way all other type are the same and structure 1 and cell 1 is different
+                                case 1:             // If it's coins
+                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() != CellType.WALL && !this.level[j+structs[i].getY()][k+structs[i].getX()].getCoin()){       // Coins can be anywhere except walls and can't count a coin twice
                                         this.nbCoins += 1;
                                         this.level[j+structs[i].getY()][k+structs[i].getX()].addCoin();
                                     }
-                                }
-                            }
-                            break;
-                        case 2:         // If it's a trap
-                            for (int j=0;j<structs[i].getheight();j++){
-                                for (int k=0;k<structs[i].getWidth();k++){
-                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == 1){
-                                        this.level[j+structs[i].getY()][k+structs[i].getX()].setType(2);
+                                    break;
+                                case 2:         // If it's a trap
+                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY){
+                                        this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.TRAP);
                                     }
-                                }
-                            }
-                            break;
-                        case 3:         // If it's a locked door
-                            for (int j=0;j<structs[i].getheight();j++){
-                                for (int k=0;k<structs[i].getWidth();k++){
-                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == 1){
-                                        this.level[j+structs[i].getY()][k+structs[i].getX()].setType(3);
+                                    break;
+                                case 3:         // If it's a locked door
+                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY){
+                                        this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.DOOR);
                                     }
-                                }
+                                    break;
                             }
-                            break;
+                        }
                     }
                 }
             }
-            if (!isAvailable(playerX,playerY)){      // Fills the player
-                System.out.println(playerX + " " + playerY + " " + this.level[playerY][playerX].getType());
+            
+            if (!isAvailable(new Position(playerX,playerY))){      // Player not in map
+                System.out.println(playerX + " " + playerY + " " + this.level[playerY][playerX].getType().name());
                 throw new PlayerOutOfBoundsException("Creation of the level impossible : player out of the map or in a wall");
             }
-            else if (player == null){
+            else if (player == null){       // Player not given
                 throw new PlayerOutOfBoundsException("The player not given (null)");
             }
-            else{
-                this.playerX = playerX;
-                this.playerY = playerY;
-                this.startPlayerX = playerX;
-                this.startPlayerY = playerY;
+            else{       // Fill the player
+                this.startPlayer = new Position(playerX,playerY);
                 this.player = player;
+                this.player.move(playerX,playerY);
             }
         }
     }
@@ -122,7 +106,7 @@ public class Level{
      * @param p1 The player. It doesn't have to be created with the level, it is given so the player can stay the same in different levels
      * @return a level object based on the info of the file
      */
-    public static Level getLevelFromFile(String file, Player p1) throws FileNotFoundException{
+    public static Level getLevelFromFile(String file, Player p1) throws FileNotFoundException, IOException{
         Path p = Paths.get(CUR+"/files/"+file);
         Structure[] structLevel = null;
 
@@ -168,6 +152,7 @@ public class Level{
                 }
             } catch(IOException e){
                 System.out.println(e.getMessage());
+                throw new IOException(e.getMessage());
             }
         }
         else{
@@ -177,33 +162,10 @@ public class Level{
     }
 
     /**
-     * Check if the structure can be fitted inside the level
-     * @param struct The structure to check
-     * @return true if it can be in the level, false if not
-     */
-    public boolean isInLevel(Structure struct){
-        boolean condition = ((struct.getX() >= 0) && (struct.getX() <= this.width) && (struct.getY() >= 0) && (struct.getY() <= this.height) &&(struct.getX() + struct.getWidth() >= 0) && (struct.getX() + struct.getWidth() <= this.width) && (struct.getY() + struct.getheight() >= 0) && (struct.getY() + struct.getheight() <= this.height));        // x, x+width, y et y+height sont dans les bornes
-        return condition ? true : false;
-    }
-
-    /**
-     * Checks the space for movePlayer functions
-     * @param x the x coordinate
-     * @param y the y coordinate
-     * @return true if the player can move to the space (x,y)
-     */
-    public boolean isAvailable(int x, int y){
-        if (x >= 0 && x < this.width && y >= 0 && y < this.height && !this.level[y][x].hasCollision()){
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Returns the height of the structure
      * @return the height
     */
-    public int getheight(){
+    public int getHeight(){
         return this.height;
     }
 
@@ -224,27 +186,19 @@ public class Level{
     }
 
     /**
-     * Returns the playerX of the structure
-     * @return the playerX
-    */
-    public int getPlayerX(){
-        return this.playerX;
-    }
-
-    /**
-     * Returns the playerY of the structure
-     * @return the playerY
-    */
-    public int getPlayerY(){
-        return this.playerY;
-    }
-
-    /**
      * Returns the nbCoins of the structure
      * @return the nbCoins
     */
     public int getNbCoins(){
         return this.nbCoins;
+    }
+
+    public Cell[][] getLevel(){
+        return this.level;
+    }
+
+    public Position getStartPlayer(){
+        return this.startPlayer;
     }
 
     /**
@@ -263,7 +217,7 @@ public class Level{
         for (int i = 0; i < this.height; i++) {
             level.append('#');
             for (int j = 0; j < this.width; j++) {
-                level.append(this.level[i][j].getTypeChar(this.playerX,this.playerY));
+                level.append(Rule.cellChar(this.level[i][j],this.player.getCoord().getX(),this.player.getCoord().getY()));
             }
             level.append("#\n");
         }
@@ -283,7 +237,7 @@ public class Level{
             }
         }
         level.append('\n');
-        level.append("x: " + this.getPlayerX() + " y: " + this.getPlayerY() + " | coins left : "+ this.getNbCoins() + "\n");
+        level.append("x: " + this.player.getCoord().getX() + " y: " + this.player.getCoord().getY() + " | coins left : "+ this.getNbCoins() + "\n");
         level.append("Z: Up | Q: Right | S: Down | D: Left | N: exit");
 
         return level.toString();
@@ -481,74 +435,73 @@ public class Level{
     }
 
     /**
+     * Check if the structure can be fitted inside the level
+     * @param struct The structure to check
+     * @return true if it can be in the level, false if not
+     */
+    public boolean isInLevel(Structure struct){
+        boolean condition = ((struct.getX() >= 0) && (struct.getX() <= this.width) && (struct.getY() >= 0) && (struct.getY() <= this.height) &&(struct.getX() + struct.getWidth() >= 0) && (struct.getX() + struct.getWidth() <= this.width) && (struct.getY() + struct.getHeight() >= 0) && (struct.getY() + struct.getHeight() <= this.height));        // x, x+width, y et y+height sont dans les bornes
+        return condition ? true : false;
+    }
+
+    /**
+     * Checks the space for movePlayer functions
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @return true if the player can move to the space (x,y)
+     */
+    public boolean isAvailable(Position coord){
+        if (coord.getX() >= 0 && coord.getX() < this.width && coord.getY() >= 0 && coord.getY() < this.height && !this.level[coord.getY()][coord.getX()].getCollision()){
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Moves the player up, down, left, or rigth based on the direction
      * Checks if it can move there, updates the map, and update the score if it went on a coin
      * @param direction the direction from the enum class Direction
      */
     public void movePlayer(Direction direction){
-        int newPlayerX = 0;
-        int newPlayerY = 0;
-        boolean validInput = true;
+        Position newPlayer = new Position(this.player.getCoord().getX(),this.player.getCoord().getY());
+        boolean validInput = false;
         switch (direction){
-            case Direction.LEFT_KEY:
-                newPlayerX = this.playerX - 1;
-                newPlayerY = this.playerY;
+            case Direction.LEFT:
+                newPlayer.addX(-1);
+                validInput = true;
                 break;
-            case Direction.UP_KEY:
-                newPlayerX = this.playerX;
-                newPlayerY = this.playerY - 1;
+            case Direction.UP:
+                newPlayer.addY(-1);
+                validInput = true;
                 break;
-            case Direction.RIGHT_KEY:
-                newPlayerX = this.playerX + 1;
-                newPlayerY = this.playerY;
+            case Direction.RIGHT:
+                newPlayer.addX(1);
+                validInput = true;
                 break;
-            case Direction.DOWN_KEY:
-                newPlayerX = this.playerX;
-                newPlayerY = this.playerY + 1;
+            case Direction.DOWN:
+                newPlayer.addY(1);
+                validInput = true;
                 break;
-            case Direction.EXIT_KEY:
+            case Direction.EXIT:
                 System.out.println("Exiting...");
-                validInput = false;
-                break;
-            case null:
-                System.out.println("Input invalid");
-                validInput = false;
                 break;
             default:
                 System.out.println("Input invalid");
-                validInput = false;
                 break;
         }
         if (validInput){
-            while (newPlayerX < 0){         // The tore system => adds a cycle to the coordinates
-                newPlayerX += this.width;
-            }
-        
-            while (newPlayerX >= this.width){
-                newPlayerX -= this.width;
-            }
-            while (newPlayerY < 0){
-                newPlayerY += this.height;
-            }
-            while (newPlayerY >= this.height){
-                newPlayerY -= this.height;
-            }
+            Rule.tore(this,newPlayer);
 
-            if (isAvailable(newPlayerX,newPlayerY)){
-                if (this.level[newPlayerY][newPlayerX].getCoin() && this.nbCoins > 0){
+            if (isAvailable(newPlayer)){
+                if (this.level[newPlayer.getY()][newPlayer.getX()].getCoin() && this.nbCoins > 0){
                     nbCoins -= 1;
-                    this.player.addScore(10);
-                    this.level[newPlayerY][newPlayerX].removeCoin();
+                    Rule.collectCoin(this,newPlayer);
                 }
-                if (this.level[newPlayerY][newPlayerX].getType() == 2 && this.player.getHealthPoint() > 0){
-                    this.player.removeHealth(2);
-                    this.level[newPlayerY][newPlayerX].setType(1);       // Delete the trap
-                    newPlayerX = this.startPlayerX;
-                    newPlayerY = this.startPlayerY;
+                if (this.level[newPlayer.getY()][newPlayer.getX()].getType() == CellType.TRAP && this.player.getHealthPoint() > 0){
+                    Rule.activateTrap(this,newPlayer);
                 }
 
-                this.playerX = newPlayerX;
-                this.playerY = newPlayerY;
+                this.player.move(newPlayer.getX(),newPlayer.getY());
             }
         }
     }
