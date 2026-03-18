@@ -33,6 +33,12 @@
 2 1 1 13 24
 2 1 1 23 24
 0 2 2 2 27
-2 2 1 2 26
+2 1 1 2 26
+
+flameGuy 3 26 3 true 0
+rollingBarrel 13 12 4 true 0
+fallingBarrel 23 18 4 true 0
+DonkeyKong 5 5 10 true 0
+Kamek 17 1 5 true 0
 
 28 30 5 28

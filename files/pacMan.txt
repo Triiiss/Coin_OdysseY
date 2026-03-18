@@ -50,5 +50,10 @@
 1 8 1 0 13
 3 1 1 17 25
 
+blinky 21 25 5 true 0
+pinky 5 12 5 true 0
+inky 20 4 5 true 0
+clyde 13 10 5 true 0
+
 26 29 13 22
 
