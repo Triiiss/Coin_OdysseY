@@ -9,6 +9,9 @@ import java.nio.file.*;
 import java.io.FileNotFoundException;
 import java.util.List;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.HashSet;
 
 /**
  * Level class
@@ -18,7 +21,8 @@ public class Level{
     private int width;
     private int height;
     private Cell[][] level;
-    private Enemy[] enemies;
+    private List<Enemy> enemies;
+    private HashSet<Cell> enemyCells;
     private Player player;
     private int nbCoins;
     private Position startPlayer;
@@ -30,22 +34,24 @@ public class Level{
      * @param width size of the x coordonate
      * @param height size of the y coordonate
      * @param structs a list (can be empty) of structures to add to the level
+     * @param enemies the list of enemies in the level  
      * @param player The player with the name and the score
      * @param playerX the x coordinate of the player
      * @param playerY the y coordinate of the player
      */
-    public Level(int width, int height, Structure[] structs, Enemy[] enemies, Player player, int playerX, int playerY){
+    public Level(int width, int height, Structure[] structs, List<Enemy> enemies, Player player, int playerX, int playerY){
         if (width > 0 && height > 0){
             this.width = width;
             this.height = height;
             this.nbCoins = 0;
             this.enemies = enemies;
+            this.enemyCells = new HashSet<Cell>();
 
             this.level = new Cell[this.height][this.width];
 
             for (int i=0;i<this.height;i++){        // Creates all cells as empty ones
                 for (int j=0;j<this.width;j++){
-                    this.level[i][j] = new Cell(j,i,false,CellType.EMPTY);
+                    this.level[i][j] = new Cell(new Position(j,i),false,CellType.EMPTY);
                 }
             }
 
@@ -81,6 +87,11 @@ public class Level{
                     }
                 }
             }
+            Iterator<Enemy> iterator = this.enemies.iterator();
+            while (iterator.hasNext()){
+                Enemy foe = iterator.next();
+                enemyCells.add(this.level[foe.getCoord().getY()][foe.getCoord().getX()]);
+            }
             
             if (!isAvailable(new Position(playerX,playerY))){      // Player not in map
                 System.out.println(playerX + " " + playerY + " " + this.level[playerY][playerX].getType().name());
@@ -107,11 +118,13 @@ public class Level{
      * @param file The file path in the directory files
      * @param p1 The player. It doesn't have to be created with the level, it is given so the player can stay the same in different levels
      * @return a level object based on the info of the file
+     * @throws IOException If the format read is not valid
+     * @throws FileNotFoundException If the file given isn't there
      */
     public static Level getLevelFromFile(String file, Player p1) throws FileNotFoundException, IOException{
         Path p = Paths.get(CUR+"/files/"+file);
         Structure[] structLevel = null;
-        Enemy[] enemies = null;
+        List<Enemy> enemies = new ArrayList<Enemy>();
 
         int width = -1;
         int height = -1;
@@ -139,35 +152,36 @@ public class Level{
                                 break;
                             case 1:     // Structures info
                                 String[] structInfo = ligne.split(" ");
-                                if (structLevel.length != 0){
+                                if (structInfo.length == 5){
                                     structLevel[subSection] = new Structure(Integer.parseInt(structInfo[0]),Integer.parseInt(structInfo[1]),Integer.parseInt(structInfo[2]),Integer.parseInt(structInfo[3]),Integer.parseInt(structInfo[4]));
                                     subSection += 1;
                                 }
                                 break;
-                            case 2:     // nbEnemy
-                                enemies = new Enemy[Integer.parseInt(ligne)];
-                                if (Integer.parseInt(ligne) == 0){
-                                    section += 1;
-                                }
-                                break;
-                            case 3:
+                            case 2:
                                 String[] enemiesInfo = ligne.split(" ");
-                                if (enemies.length != 0){
-                                    enemies[subSection] = new Enemy(enemiesInfo[0], new Position(Integer.parseInt(enemiesInfo[1]),Integer.parseInt(enemiesInfo[2])),Integer.parseInt(enemiesInfo[3]),enemiesInfo[4] != "false");
-                                    subSection += 1;
+                                if (enemiesInfo.length == 6){
+                                    EnemyType type = EnemyType.UNKNOWN;
+                                    switch (Integer.parseInt(enemiesInfo[5])){
+                                        case 0:
+                                            type = EnemyType.RANDOM;
+                                            break;
+                                    }
+                                    enemies.add(new Enemy(enemiesInfo[0], new Position(Integer.parseInt(enemiesInfo[1]),Integer.parseInt(enemiesInfo[2])),Integer.parseInt(enemiesInfo[3]),Boolean.parseBoolean(enemiesInfo[4]), type));
                                 }
                                 break;
-                            case 4:     // Level info
+                            case 3:     // Level info
                                 String[] levelInfo = ligne.split(" ");
+                                if (levelInfo.length == 4){
                                 width = Integer.parseInt(levelInfo[0]);
                                 height = Integer.parseInt(levelInfo[1]);
                                 playerX = Integer.parseInt(levelInfo[2]);
                                 playerY = Integer.parseInt(levelInfo[3]);
+                                }
                                 break;
                         }
                     }
                 }
-                if (structLevel != null || p1 != null){
+                if (structLevel != null && p1 != null){
                     return new Level(width, height, structLevel, enemies, p1, playerX, playerY);
                 }
             } catch(IOException e){
@@ -213,10 +227,18 @@ public class Level{
         return this.nbCoins;
     }
 
+    /**
+     * Get the level as cells
+     * @return the level
+     */
     public Cell[][] getLevel(){
         return this.level;
     }
 
+    /**
+     * Get the position of the start coordinate of the player
+     * @return The starting position of the player
+     */
     public Position getStartPlayer(){
         return this.startPlayer;
     }
@@ -237,7 +259,7 @@ public class Level{
         for (int i = 0; i < this.height; i++) {
             level.append('#');
             for (int j = 0; j < this.width; j++) {
-                level.append(Rule.cellChar(this.level[i][j],this.enemies,this.player.getCoord()));
+                level.append(Rule.cellChar(this.level[i][j],this.enemyCells,this.player.getCoord()));
             }
             level.append("#\n");
         }
@@ -253,12 +275,13 @@ public class Level{
                 level.append(" ♡ ");
             }
             else{
-                level.append(" ❤︎⁠ ");
+                level.append(" \u001B[31m❤︎⁠\u001B[0m ");
             }
         }
         level.append('\n');
-        level.append("x: " + this.player.getCoord().getX() + " y: " + this.player.getCoord().getY() + " | coins left : "+ this.getNbCoins() + "\n");
+        level.append("x: " + this.player.getCoord().getX() + " y: " + this.player.getCoord().getY() + " | coins left : \u001B[33m"+ this.getNbCoins() + "⁠\u001B[0m\n");
         level.append("Z: Up | Q: Right | S: Down | D: Left | N: exit");
+        level.append(" " + this.enemyCells);
 
         return level.toString();
     }
@@ -466,15 +489,34 @@ public class Level{
 
     /**
      * Checks the space for movePlayer functions
-     * @param x the x coordinate
-     * @param y the y coordinate
+     * @param coord The coordinate of the cell
      * @return true if the player can move to the space (x,y)
      */
     public boolean isAvailable(Position coord){
-        if (coord.getX() >= 0 && coord.getX() < this.width && coord.getY() >= 0 && coord.getY() < this.height && !this.level[coord.getY()][coord.getX()].getCollision()){
-            return true;
+        return (coord.getX() >= 0 && coord.getX() < this.width && coord.getY() >= 0 && coord.getY() < this.height && !this.level[coord.getY()][coord.getX()].getCollision()) ? true : false;
+    }
+
+    /**
+     * Checks the space for moveEnemy functions
+     * @param coord The coordinate of the cell
+     * @param enemy checks if the ennemy collids with the walls
+     * @return true if the player can move to the space (x,y)
+     */
+    public boolean isAvailable(Position coord, Enemy enemy){
+        return (coord.getX() >= 0 && coord.getX() < this.width && coord.getY() >= 0 && coord.getY() < this.height && enemy.enemyCollision(this.level[coord.getY()][coord.getX()])) ? true : false;
+    }
+
+    /**
+     * Resets all the enemies when the player is hurt
+     */
+    public void resetEnemies(){
+        Iterator<Enemy> iterator = this.enemies.iterator();
+        this.enemyCells.clear();
+        while (iterator.hasNext()){
+            Enemy enemy = iterator.next();
+            enemy.resetPosition();
+            this.enemyCells.add(this.level[enemy.getCoord().getY()][enemy.getCoord().getX()]);
         }
-        return false;
     }
 
     /**
@@ -509,27 +551,37 @@ public class Level{
                 System.out.println("Input invalid");
                 break;
         }
-        for (int i=0;i<this.enemies.length;i++){
-            enemies[i].move();
+
+        this.enemyCells.clear();
+        Iterator<Enemy> iterator = this.enemies.iterator();
+        while (iterator.hasNext()){     // Enemies moving (no matter if the player moved or not)
+            Enemy enemy = iterator.next();
+            Rule.moveEnemy(this,enemy);
+            enemyCells.add(this.level[enemy.getCoord().getY()][enemy.getCoord().getX()]);
         }
+
         if (validInput){
             Rule.tore(this,newPlayer);
 
             if (isAvailable(newPlayer)){
-                if (this.level[newPlayer.getY()][newPlayer.getX()].getCoin() && this.nbCoins > 0){
+                if (this.level[newPlayer.getY()][newPlayer.getX()].getCoin() && this.nbCoins > 0){      // Get coin
                     nbCoins -= 1;
                     Rule.collectCoin(this,newPlayer);
                 }
-                /*for (int i=0;i<this.enemies.length;i++){
-                    if (newPlayer.equals(enemies[i].getCoord())){
-                        Rule.enemyHit(this,enemies[i],newPlayer);
-                        break;
-                    }
-                }*/
-                if (this.level[newPlayer.getY()][newPlayer.getX()].getType() == CellType.TRAP && this.player.getHealthPoint() > 0){
+                if (this.level[newPlayer.getY()][newPlayer.getX()].getType() == CellType.TRAP && this.player.getHealthPoint() > 0){         // Get on a trap
                     Rule.activateTrap(this,newPlayer);
                 }
 
+                iterator = this.enemies.iterator();
+                while (iterator.hasNext()){     // Enemies moving (no matter if the player moved or not)
+                    Enemy enemy = iterator.next();
+                    if (newPlayer.equals(enemy.getCoord()) || player.getCoord().equals(enemy.getCoord())){
+                        if (Rule.enemyHit(enemy,this.player)){
+                            this.resetEnemies();
+                            break;
+                        }
+                    }
+                }
                 this.player.move(newPlayer.getX(),newPlayer.getY());
             }
         }
