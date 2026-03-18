@@ -44,10 +44,12 @@ run_tuto:
 
 clean_w4:
 	rm -f $(CLASS_W4)
+	rm -f world_4/*.class
 	rm -f exec.jar
 
 clean_w3:
 	rm -f $(CLASS_W3)
+	rm -f world_3/*.class
 	rm -f exec.jar
 
 clean_w2:
