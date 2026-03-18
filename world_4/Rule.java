@@ -167,7 +167,7 @@ public class Rule{
             default:
                 return false;
         }
-        System.out.println("\u001B[31mYou've been hit\u001B[0m");
+        System.out.println("\u001B[31mYou've been hit by " + enemy.name + "\u001B[0m");
         return true;
     }
 
