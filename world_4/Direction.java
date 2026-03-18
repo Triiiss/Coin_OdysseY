@@ -34,5 +34,6 @@ public enum Direction{
      */
     RESTART,
     
+    /**An unknown key */
     UNKNOWN;
 }
