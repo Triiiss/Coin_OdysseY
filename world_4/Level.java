@@ -281,7 +281,6 @@ public class Level{
         level.append('\n');
         level.append("x: " + this.player.getCoord().getX() + " y: " + this.player.getCoord().getY() + " | coins left : \u001B[33m"+ this.getNbCoins() + "⁠\u001B[0m\n");
         level.append("Z: Up | Q: Right | S: Down | D: Left | N: exit");
-        level.append(" " + this.enemyCells);
 
         return level.toString();
     }
