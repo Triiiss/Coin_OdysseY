@@ -572,16 +572,16 @@ public class Level{
                 }
 
                 iterator = this.enemies.iterator();
-                while (iterator.hasNext()){     // Enemies moving (no matter if the player moved or not)
-                    Enemy enemy = iterator.next();
-                    if (newPlayer.equals(enemy.getCoord()) || player.getCoord().equals(enemy.getCoord())){
-                        if (Rule.enemyHit(enemy,this.player)){
-                            this.resetEnemies();
-                            break;
-                        }
-                    }
-                }
                 this.player.move(newPlayer.getX(),newPlayer.getY());
+            }
+        }
+        while (iterator.hasNext()){         // Check if enemy hits whether the player moved or not
+            Enemy enemy = iterator.next();
+            if (player.getCoord().equals(enemy.getCoord())){
+                if (Rule.enemyHit(enemy,this.player)){
+                    this.resetEnemies();
+                    break;
+                }
             }
         }
     }
