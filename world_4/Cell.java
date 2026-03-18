@@ -9,8 +9,7 @@ package world_4;
  * Cell class
  */
 public class Cell{
-    private int x;
-    private int y;
+    private Position coord;
     private boolean coin;
     private CellType type;
     private boolean collision;
@@ -18,14 +17,12 @@ public class Cell{
     /**
      * The cell is a space that can either be a wall, empty, or a trap
      * The player can be on it, and it can have a coin or not
-     * @param x the x coordinate of the cell
-     * @param y the y coordinate of the cell
+     * @param coord the coords
      * @param coin if it has a coin on it or not
      * @param type the type of the cell (0: a wall; 1: empty; 2: a trap)
      */
-    public Cell(int x, int y, boolean coin, CellType type){
-        this.x = x;
-        this.y = y;
+    public Cell(Position coord, boolean coin, CellType type){
+        this.coord = coord;
         this.coin = coin;
         if (coin && type == CellType.WALL){      // Checks the type and no coins inside a wall
             this.type = CellType.EMPTY;
@@ -36,25 +33,25 @@ public class Cell{
         this.collision = this.type.defaultCollision();
     }
 
-    public Cell(int x,int y,boolean coin, CellType type, boolean collision){
-        this(x,y,coin,type);
+    /**
+     * The cell is a space that can either be a wall, empty, or a trap
+     * The player can be on it, and it can have a coin or not
+     * @param coord the coordinates
+     * @param coin if it has a coin on it or not
+     * @param type the type of the cell (0: a wall; 1: empty; 2: a trap)
+     * @param collision the collision with the player
+     */
+    public Cell(Position coord,boolean coin, CellType type, boolean collision){
+        this(coord,coin,type);
         this.collision = collision;
     }
 
     /**
-     * Get the X coordinate of the cell
-     * @return The x coordinate
+     * Get the coordinate of the cell
+     * @return The coordinate
      */
-    public int getX(){
-        return this.x;
-    }
-
-    /**
-     * Get the Y coordinate of the cell
-     * @return The y coordinate
-     */
-    public int getY(){
-        return this.y;
+    public Position getCoord(){
+        return this.coord;
     }
 
     /**
@@ -85,6 +82,7 @@ public class Cell{
     /**
      * Sets the type during the creation or for changing levels
      * @param type the new type
+     * @param collision if the cell collides with the player
      */
     public void setType(CellType type, boolean collision){
         if (!(coin && type == CellType.WALL && collision)){
@@ -93,6 +91,10 @@ public class Cell{
         }
     }
 
+    /**
+     * Sets the type during the creation or for changing levels
+     * @param type the new type
+     */
     public void setType(CellType type){
         setType(type,type.defaultCollision());
     }
@@ -114,5 +116,27 @@ public class Cell{
      */
     public void removeCoin(){
         this.coin = false;
+    }
+
+    /**
+     * Checks if two cells are equal (coordinate)
+     * @param cell The cell we want to check
+     * @return If two cells are equal or not
+     */
+    public boolean equals(Cell cell){
+        return ((this.coord.equals(cell.getCoord())) && (this.type == cell.getType())) ? true : false;
+    }
+
+    /**
+     * Redefine the hashCode
+     * @return The hash of an object based on equals
+     */
+    @Override
+    public int hashCode(){
+        int result = 11;     // My favorite prime number
+        result = 31*result + this.coord.hashCode();
+        result = 31*result + this.type.hashCode();
+
+        return result;
     }
 }

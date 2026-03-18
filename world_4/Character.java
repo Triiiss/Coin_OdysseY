@@ -10,12 +10,23 @@ package world_4;
  * The character class to play a video game
  */
 public abstract class Character{
+    /**The unique name of the character */
     protected final String name;
+    /**The position of a character */
     protected Position coord;
+    /**The current health points */
     protected int healthPoint;
+    /**The maximum amount of health */
     final protected int MAXHEALTH;
+    /**If the character collides normally with walls or not */
     protected boolean collide;
 
+    /**
+     * The character, parent to enemy and player
+     * @param name the name of the player
+     * @param coord their current coords
+     * @param MAXHEALTH The max health of the player
+     */
     public Character(String name, Position coord, int MAXHEALTH){
         this.name = name;
         this.coord = coord;
@@ -24,6 +35,13 @@ public abstract class Character{
         this.collide = true;
     }
 
+    /**
+     * The character, parent to enemy and player
+     * @param name the name of the player
+     * @param coord their current coords
+     * @param MAXHEALTH The max health of the player
+     * @param collide If the character collide with other spaces or not
+     */
     public Character(String name, Position coord, int MAXHEALTH, boolean collide){
         this(name,coord,MAXHEALTH);
         this.collide = collide;
@@ -53,6 +71,10 @@ public abstract class Character{
         return this.MAXHEALTH;
     }
 
+    /**
+     * Get the position of the character
+     * @return The position of the character
+     */
     public Position getCoord(){
         return this.coord;
     }
@@ -61,14 +83,27 @@ public abstract class Character{
      * Two characters are considered equals if their name match up (case sensitivity ignored)
      * @return true if it's equal or false if not
      */
+    @Override
     public boolean equals(Object obj){
         if (obj instanceof Character){
             Character P2 = (Character) obj;
-            if (this.getName().equalsIgnoreCase(P2.getName())){
+            if (this.name.equalsIgnoreCase(P2.getName())){
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * Redefine the hashCode
+     * @return The hash of an object based on equals
+     */
+    @Override
+    public int hashCode(){
+        int result = 11;     // My favorite prime number
+        result = 31*result + this.name.toLowerCase().hashCode();
+
+        return result;
     }
 
     /**
