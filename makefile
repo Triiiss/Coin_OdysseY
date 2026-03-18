@@ -15,15 +15,15 @@ all: w4
 
 w4:
 	javac $(SRC_W4)
-	jar --create --file exec.jar --main-class=world_4.Main -C . world_4
+	jar --create --file Coin_Odyssey.jar --main-class=world_4.Main -C . world_4
 
 w3:
 	javac $(SRC_W3)
-	jar --create --file exec.jar --main-class=world_3.Main -C . world_3
+	jar --create --file Coin_Odyssey.jar --main-class=world_3.Main -C . world_3
 
 w2: 
 	javac $(SRC_W2)
-	jar --create --file exec.jar --main-class=world_2.Main -C . world_2
+	jar --create --file Coin_Odyssey.jar --main-class=world_2.Main -C . world_2
 
 w1: 
 	javac $(SRC_W1)
@@ -45,16 +45,16 @@ run_tuto:
 clean_w4:
 	rm -f $(CLASS_W4)
 	rm -f world_4/*.class
-	rm -f exec.jar
+	rm -f Coin_Odyssey.jar
 
 clean_w3:
 	rm -f $(CLASS_W3)
 	rm -f world_3/*.class
-	rm -f exec.jar
+	rm -f Coin_Odyssey.jar
 
 clean_w2:
 	rm -f $(CLASS_W2)
-	rm -f exec.jar
+	rm -f Coin_Odyssey.jar
 
 clean_w1:
 	rm -f $(CLASS_W1)
