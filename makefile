@@ -16,10 +16,14 @@ all: w4
 w4:
 	javac $(SRC_W4)
 	jar --create --file Coin_Odyssey.jar --main-class=world_4.Main -C . world_4
+	rm -f $(CLASS_W4)
+	rm -f world_4/*.class
 
 w3:
 	javac $(SRC_W3)
 	jar --create --file Coin_Odyssey.jar --main-class=world_3.Main -C . world_3
+	rm -f $(CLASS_W3)
+	rm -f world_3/*.class
 
 w2: 
 	javac $(SRC_W2)
