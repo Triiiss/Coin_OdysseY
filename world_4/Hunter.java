@@ -6,19 +6,19 @@
 package world_4;
 
 /**
- * The ghost (phases through walls enemy)
+ * The hunter (phases through walls enemy)
  */
 
 
 public class Ghost extends Enemy{
     /**
-     * The ghost enemy
+     * The hunter enemy
      * @param name The name of the zombie
      * @param coord The starting position of the enemy
      * @param MAXHEALTH The maximum health
      */
-    public Ghost(String name, Position coord,int MAXHEALTH){
-        super(name, coord, MAXHEALTH, false);
+    public Hunter(String name, Position coord,int MAXHEALTH){
+        super(name, coord, 3, true);
     }
 
     /**
@@ -28,20 +28,7 @@ public class Ghost extends Enemy{
     public void move(Level level){
         Position newEnemy = new Position(this.getCoord().getX(),this.getCoord().getY());
         
-        if (this.coord.getX() < level.getPlayer().getCoord().getX()){
-            newEnemy.addX(1);
-        }
-        else if (this.coord.getX() > level.getPlayer().getCoord().getX()){
-            newEnemy.addX(-1);
-        }
-        else{   
-            if (this.coord.getY() < level.getPlayer().getCoord().getY()){
-                newEnemy.addY(1);
-            }
-            else if (this.coord.getY() > level.getPlayer().getCoord().getY()){
-                newEnemy.addY(-1);
-            } 
-        }
+        //dgsfhidfgslhgsdflkjhgdfsklj
 
         if (level.isAvailable(newEnemy,this)){
             this.move(newEnemy.getX(),newEnemy.getY());
@@ -53,7 +40,7 @@ public class Ghost extends Enemy{
      * @param player the player that suffers
      */
     public void enemyHit(Player player){
-        player.removeHealth(1);
+        player.removeHealth(2);
 
         System.out.println("\u001B[31mYou've been hit by " + this.name + "\u001B[0m");
     }
@@ -64,7 +51,7 @@ public class Ghost extends Enemy{
      * @return if the enemy can go on that space or not
      */
     public boolean enemyCollision(Cell cell){
-        return true;
+        return false;
     }
 
     /**
@@ -72,6 +59,6 @@ public class Ghost extends Enemy{
      * @return the char G
      */
     public char getChar(){
-        return 'G';
+        return 'C';
     }
 }

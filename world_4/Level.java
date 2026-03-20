@@ -164,6 +164,13 @@ public class Level{
                                         case 0:
                                             enemies.add(new Zombie(enemiesInfo[0], new Position(Integer.parseInt(enemiesInfo[1]),Integer.parseInt(enemiesInfo[2])),Integer.parseInt(enemiesInfo[3])));
                                             break;
+                                        case 1:
+                                            enemies.add(new Ghost(enemiesInfo[0], new Position(Integer.parseInt(enemiesInfo[1]),Integer.parseInt(enemiesInfo[2])),Integer.parseInt(enemiesInfo[3])));
+                                            break;
+                                        case 2:
+                                            enemies.add(new Hunter(enemiesInfo[0], new Position(Integer.parseInt(enemiesInfo[1]),Integer.parseInt(enemiesInfo[2])),Integer.parseInt(enemiesInfo[3])));
+                                            break;
+                                            
                                         default:            // The default type
                                             enemies.add(new Zombie(enemiesInfo[0], new Position(Integer.parseInt(enemiesInfo[1]),Integer.parseInt(enemiesInfo[2])),Integer.parseInt(enemiesInfo[3])));
                                             break;
@@ -526,6 +533,7 @@ public class Level{
      */
     public void move(Direction direction){
         Position newPlayer = new Position(this.player.getCoord().getX(),this.player.getCoord().getY());
+        Position oldPlayer = new Position(this.player.getCoord().getX(),this.player.getCoord().getY());
         boolean validInput = false;
         switch (direction){
             case Direction.LEFT:
@@ -554,11 +562,6 @@ public class Level{
 
         this.enemyCells.clear();
         Iterator<Enemy> iterator = this.enemies.iterator();
-        while (iterator.hasNext()){     // Enemies moving (no matter if the player moved or not)
-            Enemy enemy = iterator.next();
-            enemy.move(this);
-            enemyCells.putIfAbsent(this.level[enemy.getCoord().getY()][enemy.getCoord().getX()],enemy);
-        }
 
         if (validInput){
             Rule.tore(this,newPlayer);
@@ -572,13 +575,17 @@ public class Level{
                     Rule.activateTrap(this,newPlayer);
                 }
 
-                iterator = this.enemies.iterator();
                 this.player.move(newPlayer.getX(),newPlayer.getY());
             }
         }
+
         while (iterator.hasNext()){         // Check if enemy hits whether the player moved or not
             Enemy enemy = iterator.next();
-            if (player.getCoord().equals(enemy.getCoord())){
+            Position old = new Position(enemy.getCoord().getX(),enemy.getCoord().getY());
+            enemy.move(this);
+            enemyCells.putIfAbsent(this.level[enemy.getCoord().getY()][enemy.getCoord().getX()],enemy);
+
+            if ((player.getCoord().equals(enemy.getCoord())) || (old.equals(player.getCoord()) && oldPlayer.equals(enemy.getCoord()) && validInput && isAvailable(newPlayer))){
                 enemy.enemyHit(this.player);
                 this.resetEnemies();
                 break;
