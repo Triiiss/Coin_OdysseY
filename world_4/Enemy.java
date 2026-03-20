@@ -1,6 +1,6 @@
 /**
  * @author Thémis Tran Tu Thien :D
- * @version 1.1
+ * @version 1.2
  */
 
 package world_4;
@@ -8,9 +8,8 @@ package world_4;
 /**
  * The enemy class >:c
  */
-public class Enemy extends Character{
+public abstract class Enemy extends Character{
     private Position startCoord;
-    private EnemyType type;
 
     /**
      * Constructor method
@@ -18,12 +17,10 @@ public class Enemy extends Character{
      * @param coord its current coordinates
      * @param MAXHEALTH The max health of the enemy
      * @param collide if the enemy collides with the walls
-     * @param type the enemy type
      */
-    public Enemy(String name, Position coord,int MAXHEALTH, boolean collide, EnemyType type){
+    public Enemy(String name, Position coord,int MAXHEALTH, boolean collide){
         super(name, coord, MAXHEALTH, collide);
         this.startCoord = new Position(coord.getX(),coord.getY());
-        this.type = type;
     }
 
     /**
@@ -35,31 +32,35 @@ public class Enemy extends Character{
     }
 
     /**
-     * Get the type of the enemy
-     * @return the enemy type
-     */
-    public EnemyType getType(){
-        return this.type;
-    }
-
-    /**
-     * Checks if an enemy collides with a cell or not
-     * @param cell the cell it collides
-     * @return if the enemy can go on that space or not
-     */
-    public boolean enemyCollision(Cell cell){
-        switch (this.type){
-            case EnemyType.RANDOM:
-                return (!cell.getCollision() && cell.getType() != CellType.TRAP) ? true : false;
-        }
-        return false;
-    }
-
-    /**
      * Restes the position of an enemy (get back to startCoord)
      */
     public void resetPosition(){
         this.coord.setX(this.startCoord.getX());
         this.coord.setY(this.startCoord.getY());
     }
+
+    /**
+     * move prototype 
+     * @param level The level where the enemy moves
+     */
+    public abstract void move(Level level);
+
+    /**
+     * Checks if an enemy collides with a cell or not
+     * @param cell the cell it collides
+     * @return if the enemy can go on that space or not
+     */
+    public abstract boolean enemyCollision(Cell cell);
+
+    /**
+     * The abstract function where the enemy takes life of a player
+     * @param player the player that suffers
+     */
+    public abstract void enemyHit(Player player);
+
+    /**
+     * Gets the char to represent the enemy
+     * @return the char R, H or G
+     */
+    public abstract char getChar();
 }
