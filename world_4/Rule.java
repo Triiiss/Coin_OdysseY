@@ -6,10 +6,9 @@
 package world_4;
 
 import java.util.Scanner;
-import java.util.Random;
 import java.util.List;
 import java.util.Iterator;
-import java.util.HashSet;
+import java.util.HashMap;
 
 /**
  * The rules of the game, comportemental things
@@ -30,7 +29,7 @@ public class Rule{
      * @param playerCoord the player's coordinate
      * @return the character of the cell ( ,.,#,*,1,etc)
      */
-    public static String cellChar(Cell cell,HashSet<Cell> enemyCells, Position playerCoord){
+    public static String cellChar(Cell cell,HashMap<Cell,Enemy> enemyCells, Position playerCoord){
         String RESET = "\u001B[0m";
         String YELLOW = "\u001B[33m";  // Coin
         String RED = "\u001B[31m";      // Enemy
@@ -40,9 +39,9 @@ public class Rule{
         if (playerCoord.equals(cell.getCoord())){
             return CYAN + "1" + RESET;
         }
-        for (Cell e : enemyCells){
-            if (e.equals(cell)){
-                return RED + "R" + RESET;
+        for (Cell c : enemyCells.keySet()){
+            if (c.equals(cell)){
+                return RED + enemyCells.get(c).getChar() + RESET;
             }
         }
 
@@ -154,65 +153,6 @@ public class Rule{
     }
 
     /**
-     * When an enemy and a player a colliding
-     * @param enemy The enemy
-     * @param player The player
-     * @return if the action worked or not
-     */
-    public static boolean enemyHit(Enemy enemy, Player player){
-        switch(enemy.getType()){
-            case EnemyType.RANDOM:
-                player.removeHealth(1);
-                break;
-            default:
-                return false;
-        }
-        System.out.println("\u001B[31mYou've been hit by " + enemy.name + "\u001B[0m");
-        return true;
-    }
-
-    /**
-     * Moves an enemy based on its type
-     * @param level the level where the enemy moves
-     * @param enemy the moving enemy
-     */
-    public static void moveEnemy(Level level, Enemy enemy){
-        switch(enemy.getType()){
-            case EnemyType.RANDOM:
-                Rule.enemyRandomMove(level,enemy);
-                break;
-        }
-    }
-
-    /**
-     * Moves the enemy with the type RANDOM
-     * @param level the level where the enemy moves
-     * @param enemy the moving enemy
-     */
-    private static void enemyRandomMove(Level level, Enemy enemy){
-        Position newEnemy = new Position(enemy.getCoord().getX(),enemy.getCoord().getY());
-        Random rand = new Random();
-        switch(rand.nextInt(4)){
-            case 0:
-                newEnemy.addX(1);
-                break;
-            case 1:
-                newEnemy.addY(1);
-                break;
-            case 2:
-                newEnemy.addX(-1);
-                break;
-            case 3:
-                newEnemy.addY(-1);
-                break;
-        }
-
-        if (level.isAvailable(newEnemy,enemy)){
-            enemy.move(newEnemy.getX(),newEnemy.getY());
-        }
-    }
-
-    /**
      * Activate a trap a hurt the player
      * @param level The level we activate the trap from
      * @param newPlayer the player's future position
@@ -221,6 +161,7 @@ public class Rule{
         level.getPlayer().removeHealth(2);
         level.resetEnemies();
         level.getLevel()[newPlayer.getY()][newPlayer.getX()].setType(CellType.EMPTY);       // Delete the trap
+        System.out.println("\u001B[31mYou fell into a trap !\u001B[0m");
         newPlayer.setX(level.getStartPlayer().getX());
         newPlayer.setY(level.getStartPlayer().getY());
     }

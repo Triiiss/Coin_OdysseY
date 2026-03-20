@@ -11,7 +11,7 @@ import java.util.List;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.HashSet;
+import java.util.HashMap;
 
 /**
  * Level class
@@ -22,7 +22,7 @@ public class Level{
     private int height;
     private Cell[][] level;
     private List<Enemy> enemies;
-    private HashSet<Cell> enemyCells;
+    private HashMap<Cell,Enemy> enemyCells;
     private Player player;
     private int nbCoins;
     private Position startPlayer;
@@ -45,7 +45,7 @@ public class Level{
             this.height = height;
             this.nbCoins = 0;
             this.enemies = enemies;
-            this.enemyCells = new HashSet<Cell>();
+            this.enemyCells = new HashMap<Cell,Enemy>();
 
             this.level = new Cell[this.height][this.width];
 
@@ -90,7 +90,7 @@ public class Level{
             Iterator<Enemy> iterator = this.enemies.iterator();
             while (iterator.hasNext()){
                 Enemy foe = iterator.next();
-                enemyCells.add(this.level[foe.getCoord().getY()][foe.getCoord().getX()]);
+                enemyCells.putIfAbsent(this.level[foe.getCoord().getY()][foe.getCoord().getX()], foe);
             }
             
             if (!isAvailable(new Position(playerX,playerY))){      // Player not in map
@@ -135,7 +135,7 @@ public class Level{
         int subSection = 0;
 
         if (Files.exists(p) && Files.isRegularFile(p) && Files.isReadable(p)){
-            try {
+            try{
                 List<String> lignes = Files.readAllLines(p);
                 for (String ligne : lignes) {
                     if (ligne.isEmpty()){
@@ -159,14 +159,15 @@ public class Level{
                                 break;
                             case 2:
                                 String[] enemiesInfo = ligne.split(" ");
-                                if (enemiesInfo.length == 6){
-                                    EnemyType type = EnemyType.UNKNOWN;
-                                    switch (Integer.parseInt(enemiesInfo[5])){
+                                if (enemiesInfo.length == 5){
+                                    switch (Integer.parseInt(enemiesInfo[4])){
                                         case 0:
-                                            type = EnemyType.RANDOM;
+                                            enemies.add(new Zombie(enemiesInfo[0], new Position(Integer.parseInt(enemiesInfo[1]),Integer.parseInt(enemiesInfo[2])),Integer.parseInt(enemiesInfo[3])));
+                                            break;
+                                        default:            // The default type
+                                            enemies.add(new Zombie(enemiesInfo[0], new Position(Integer.parseInt(enemiesInfo[1]),Integer.parseInt(enemiesInfo[2])),Integer.parseInt(enemiesInfo[3])));
                                             break;
                                     }
-                                    enemies.add(new Enemy(enemiesInfo[0], new Position(Integer.parseInt(enemiesInfo[1]),Integer.parseInt(enemiesInfo[2])),Integer.parseInt(enemiesInfo[3]),Boolean.parseBoolean(enemiesInfo[4]), type));
                                 }
                                 break;
                             case 3:     // Level info
@@ -339,7 +340,7 @@ public class Level{
                 winScreen.append(" ♡ ");
             }
             else{
-                winScreen.append(" ❤︎⁠ ");
+                winScreen.append(" \u001B[31m❤︎⁠\u001B[0m ");
             }
         }
 
@@ -514,7 +515,7 @@ public class Level{
         while (iterator.hasNext()){
             Enemy enemy = iterator.next();
             enemy.resetPosition();
-            this.enemyCells.add(this.level[enemy.getCoord().getY()][enemy.getCoord().getX()]);
+            this.enemyCells.putIfAbsent(this.level[enemy.getCoord().getY()][enemy.getCoord().getX()],enemy);
         }
     }
 
@@ -555,8 +556,8 @@ public class Level{
         Iterator<Enemy> iterator = this.enemies.iterator();
         while (iterator.hasNext()){     // Enemies moving (no matter if the player moved or not)
             Enemy enemy = iterator.next();
-            Rule.moveEnemy(this,enemy);
-            enemyCells.add(this.level[enemy.getCoord().getY()][enemy.getCoord().getX()]);
+            enemy.move(this);
+            enemyCells.putIfAbsent(this.level[enemy.getCoord().getY()][enemy.getCoord().getX()],enemy);
         }
 
         if (validInput){
@@ -578,10 +579,9 @@ public class Level{
         while (iterator.hasNext()){         // Check if enemy hits whether the player moved or not
             Enemy enemy = iterator.next();
             if (player.getCoord().equals(enemy.getCoord())){
-                if (Rule.enemyHit(enemy,this.player)){
-                    this.resetEnemies();
-                    break;
-                }
+                enemy.enemyHit(this.player);
+                this.resetEnemies();
+                break;
             }
         }
     }
