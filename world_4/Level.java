@@ -8,8 +8,8 @@ package world_4;
 import java.nio.file.*;
 import java.io.FileNotFoundException;
 import java.util.List;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.HashMap;
 
@@ -425,7 +425,7 @@ public class Level{
                 winScreen.append(" ♡ ");
             }
             else{
-                winScreen.append(" ❤︎⁠ ");
+                winScreen.append(" \u001B[31m❤︎\u001B[0m⁠ ");
             }
         }
 
@@ -527,6 +527,57 @@ public class Level{
     }
 
     /**
+     * Return the next path to take to get from enemy.coord to the target
+     * @param source The enemy mostly the hunter
+     * @param target The target usually the player
+     * @return the next step
+     */
+    public Position shortestPath(Enemy source, Position target){
+        boolean[][] visited = new boolean[this.height][this.width];
+        HashMap<Position, Position> path = new HashMap<>();
+        ArrayList<Position> queue = new ArrayList();
+
+        visited[source.getCoord().getY()][source.getCoord().getX()] = true;     // Initialisation
+        queue.add(source.getCoord());
+        path.put(source.getCoord(), null);
+
+        int[][] directions = {      // directions of x an dy
+            {0, -1}, // up
+            {0, 1},  // down
+            {-1, 0}, // left
+            {1, 0}   // right
+        };
+
+        while (!queue.isEmpty()){
+            Position current = queue.remove(0);
+
+            if (current.equals(target)){
+                break;
+            }
+
+            for (int[] dir : directions){       // Check all "children" (all four directions)
+                Position next = new Position(current.getX() + dir[0],current.getY() + dir[1]);
+
+                if (isAvailable(next, source) && !visited[next.getY()][next.getX()]){       // Adds a new step
+                    visited[next.getY()][next.getX()] = true;
+                    path.put(next,current);
+                    queue.add(next);
+                }
+            }
+        }
+        if (!path.containsKey(target)){       // The target and source aren't connected
+            return source.getCoord();
+        }
+
+        Position step = target;
+        while (path.get(step) != null && !path.get(step).equals(source.getCoord())){       // From target to "just before source"
+            step = path.get(step);
+        }
+
+        return step;
+    }
+
+    /**
      * Moves the player up, down, left, or rigth based on the direction
      * Checks if it can move there, updates the map, and update the score if it went on a coin
      * @param direction the direction from the enum class Direction
@@ -560,35 +611,32 @@ public class Level{
                 break;
         }
 
-        this.enemyCells.clear();
-        Iterator<Enemy> iterator = this.enemies.iterator();
-
-        if (validInput){
-            Rule.tore(this,newPlayer);
-
-            if (isAvailable(newPlayer)){
-                if (this.level[newPlayer.getY()][newPlayer.getX()].getCoin() && this.nbCoins > 0){      // Get coin
-                    nbCoins -= 1;
-                    Rule.collectCoin(this,newPlayer);
-                }
-                if (this.level[newPlayer.getY()][newPlayer.getX()].getType() == CellType.TRAP && this.player.getHealthPoint() > 0){         // Get on a trap
-                    Rule.activateTrap(this,newPlayer);
-                }
-
-                this.player.move(newPlayer.getX(),newPlayer.getY());
+        Rule.tore(this,newPlayer);
+        if (validInput && isAvailable(newPlayer)){
+            if (this.level[newPlayer.getY()][newPlayer.getX()].getCoin() && this.nbCoins > 0){      // Get coin
+                nbCoins -= 1;
+                Rule.collectCoin(this,newPlayer);
             }
+            if (this.level[newPlayer.getY()][newPlayer.getX()].getType() == CellType.TRAP && this.player.getHealthPoint() > 0){         // Get on a trap
+                Rule.activateTrap(this,newPlayer);
+            }
+            this.player.move(newPlayer.getX(),newPlayer.getY());
         }
 
-        while (iterator.hasNext()){         // Check if enemy hits whether the player moved or not
-            Enemy enemy = iterator.next();
-            Position old = new Position(enemy.getCoord().getX(),enemy.getCoord().getY());
-            enemy.move(this);
-            enemyCells.putIfAbsent(this.level[enemy.getCoord().getY()][enemy.getCoord().getX()],enemy);
+        if (this.level[newPlayer.getY()][newPlayer.getX()].getType() != CellType.TRAP){     // If not a trap
+            this.enemyCells.clear();
+            Iterator<Enemy> iterator = this.enemies.iterator();
+            while (iterator.hasNext()){         // Check if enemy hits whether the player moved or not
+                Enemy enemy = iterator.next();
+                Position old = new Position(enemy.getCoord().getX(),enemy.getCoord().getY());
+                enemy.move(this);
+                enemyCells.putIfAbsent(this.level[enemy.getCoord().getY()][enemy.getCoord().getX()],enemy);
 
-            if ((player.getCoord().equals(enemy.getCoord())) || (old.equals(player.getCoord()) && oldPlayer.equals(enemy.getCoord()) && validInput && isAvailable(newPlayer))){
-                enemy.enemyHit(this.player);
-                this.resetEnemies();
-                break;
+                if ((player.getCoord().equals(enemy.getCoord())) || (old.equals(player.getCoord()) && oldPlayer.equals(enemy.getCoord()) && validInput && isAvailable(newPlayer))){
+                    enemy.enemyHit(this.player);
+                    this.resetEnemies();
+                    break;
+                }
             }
         }
     }
