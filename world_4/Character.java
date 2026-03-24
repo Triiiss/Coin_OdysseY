@@ -5,7 +5,6 @@
 
 package world_4;
 
-
 /**
  * The character class to play a video game
  */
@@ -18,8 +17,6 @@ public abstract class Character{
     protected int healthPoint;
     /**The maximum amount of health */
     final protected int MAXHEALTH;
-    /**If the character collides normally with walls or not */
-    protected boolean collide;
 
     /**
      * The character, parent to enemy and player
@@ -32,19 +29,6 @@ public abstract class Character{
         this.coord = coord;
         this.healthPoint = MAXHEALTH;
         this.MAXHEALTH = MAXHEALTH;
-        this.collide = true;
-    }
-
-    /**
-     * The character, parent to enemy and player
-     * @param name the name of the player
-     * @param coord their current coords
-     * @param MAXHEALTH The max health of the player
-     * @param collide If the character collide with other spaces or not
-     */
-    public Character(String name, Position coord, int MAXHEALTH, boolean collide){
-        this(name,coord,MAXHEALTH);
-        this.collide = collide;
     }
 
     /**

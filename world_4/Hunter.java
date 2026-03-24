@@ -20,7 +20,7 @@ public class Hunter extends Enemy{
      * @param MAXHEALTH The maximum health
      */
     public Hunter(String name, Position coord,int MAXHEALTH){
-        super(name, coord, 3, true);
+        super(name, coord, 3);
     }
 
     /**
@@ -51,7 +51,7 @@ public class Hunter extends Enemy{
      * @return if the enemy can go on (true) that space or not
      */
     public boolean enemyCollision(Cell cell){
-        return !cell.getCollision();
+        return !cell.getCollision()&& cell.getType() != CellType.TRAP;
     }
 
     /**

@@ -18,7 +18,7 @@ public class Zombie extends Enemy{
      * @param MAXHEALTH The maximum health
      */
     public Zombie(String name, Position coord,int MAXHEALTH){
-        super(name, coord, MAXHEALTH, true);
+        super(name, coord, MAXHEALTH/*, true*/);
     }
 
     /**
@@ -64,7 +64,7 @@ public class Zombie extends Enemy{
      * @return if the enemy can go on that space or not
      */
     public boolean enemyCollision(Cell cell){
-        return !this.collide || !cell.getCollision() && cell.getType() != CellType.TRAP;
+        return !cell.getCollision() && cell.getType() != CellType.TRAP;
     }
     
     /**

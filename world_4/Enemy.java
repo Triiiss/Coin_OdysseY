@@ -18,8 +18,8 @@ public abstract class Enemy extends Character{
      * @param MAXHEALTH The max health of the enemy
      * @param collide if the enemy collides with the walls
      */
-    public Enemy(String name, Position coord,int MAXHEALTH, boolean collide){
-        super(name, coord, MAXHEALTH, collide);
+    public Enemy(String name, Position coord,int MAXHEALTH){
+        super(name, coord, MAXHEALTH);
         this.startCoord = new Position(coord.getX(),coord.getY());
     }
 

@@ -18,7 +18,7 @@ public class Ghost extends Enemy{
      * @param MAXHEALTH The maximum health
      */
     public Ghost(String name, Position coord,int MAXHEALTH){
-        super(name, coord, MAXHEALTH, false);
+        super(name, coord, MAXHEALTH);
     }
 
     /**
