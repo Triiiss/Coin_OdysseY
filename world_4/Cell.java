@@ -123,10 +123,16 @@ public class Cell{
      * @param cell The cell we want to check
      * @return If two cells are equal or not
      */
-    public boolean equals(Cell cell){
-        return ((this.coord.equals(cell.getCoord())) && (this.type == cell.getType())) ? true : false;
-    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
 
+        Cell cell = (Cell) obj;
+
+        return this.coord.equals(cell.getCoord()) &&
+            this.type.equals(cell.getType());
+    }
     /**
      * Redefine the hashCode
      * @return The hash of an object based on equals

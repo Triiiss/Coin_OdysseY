@@ -56,11 +56,13 @@ public class Position{
      * @param coord the other position to check
      * @return if the two position are equal or not
      */
-    public boolean equals(Position coord){
-        if (this.x == coord.getX() && this.y == coord.getY()){
-            return true;
-        }
-        return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Position coord = (Position) o;
+        return this.x == coord.getX() && this.y == coord.getY();
     }
 
     /**
