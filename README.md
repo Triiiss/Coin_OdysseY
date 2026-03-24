@@ -57,26 +57,26 @@ Monde 4 :
 
 
 Pour compiler :
-    - World_4 : make ou make w4
-    - World_3 : make w3
-    - World_2 : make w2
-    - World_1 : make w1
-    - Tutorial : make tuto
+ - World_4 : make ou make w4
+ - World_3 : make w3
+ - World_2 : make w2
+ - World_1 : make w1
+ - Tutorial : make tuto
 Pour excecuter :
-    - World_4 : Utilisation de l'executable 
-    - World_3 : Utilisation de l'executable 
-    - World_2 : make run_w2
-    - World_1 : make run_w1
-    - Tutorial : make run_tuto
+ - World_4 : Utilisation de l'executable 
+ - World_3 : Utilisation de l'executable 
+ - World_2 : make run_w2
+ - World_1 : make run_w1
+ - Tutorial : make run_tuto
 Pour nettoyer:
-    - World_4 : make clean_w4
-    - World_3 : make clean_w3
-    - World_2 : make clean_w2
-    - World_1 : make clean_w1
-    - Tutorial : make clean_tuto
+ - World_4 : make clean_w4
+ - World_3 : make clean_w3
+ - World_2 : make clean_w2
+ - World_1 : make clean_w1
+ - Tutorial : make clean_tuto
 Pour la documentation :
-    - Génération : make doc
-    - Nettoyage : make doc_clean
+ - Génération : make doc
+ - Nettoyage : make doc_clean
     
 POUR EXECUTER L'EXECUTABLE :
 java -jar Coin_Odyssey.jar [FILE_NAME]
