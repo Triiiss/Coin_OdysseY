@@ -26,11 +26,11 @@
 0 2 1 69 10
 1 1 1 74 10
 
-firstGoomba 8 13 1 true 0
-trapedGoomba 21 13 1 true 0
-duoGoomba1 29 13 1 true 0
-duoGoomba2 31 13 1 true 0
-suicideGoomba 66 13 1 true 0
-skyGoomba 51 5 1 true 0
+firstGoomba 8 13 1 0
+trapedGoomba 21 13 1 0
+duoGoomba1 29 13 1 0
+duoGoomba2 31 13 1 0
+suicideGoomba 66 13 1 0
+skyGoomba 51 5 1 0
 
 75 16 0 13

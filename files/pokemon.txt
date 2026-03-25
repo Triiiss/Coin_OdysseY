@@ -18,9 +18,9 @@
 0 1 1 0 16
 0 12 1 7 16
 
-medhyena 11 1 3 true 0
-carapuce 7 13 1 true 0
-salamèche 5 5 5 true 0
-bulbisare 17 11 5 true 0
+medhyena 11 1 3 0
+carapuce 7 13 1 0
+salamèche 5 5 5 0
+bulbisare 17 11 5 0
 
 19 17 14 5
