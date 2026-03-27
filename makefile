@@ -1,23 +1,22 @@
-SRC_TUTO=$(wildcard Tutorial/*.java)
-SRC_W1=$(wildcard world_1/*.java)
-SRC_W2=$(wildcard world_2/*.java)
-SRC_W3=$(wildcard world_3/*.java)
-SRC_W4=$(wildcard world_4/*.java)
+SRC_TUTO = $(wildcard Tutorial/*.java)
+SRC_W1 = $(wildcard world_1/*.java)
+SRC_W2 = $(wildcard world_2/*.java)
+SRC_W3 = $(wildcard world_3/*.java)
+SRC_W4 := $(shell find world_4 -name "*.java")
 
-CLASS_TUTO := $(wildcard Tutorial/*.class)
-CLASS_W1 := $(wildcard world_1/*.class)
-CLASS_W2 := $(wildcard world_2/*.class)
-CLASS_W3 := $(wildcard world_3/*.class)
-CLASS_W4 := $(wildcard world_4/*.class)
+CLASS_TUTO = $(wildcard Tutorial/*.class)
+CLASS_W1 = $(wildcard world_1/*.class)
+CLASS_W2 = $(wildcard world_2/*.class)
+CLASS_W3 = $(wildcard world_3/*.class)
+CLASS_W4 = $(wildcard out/*.class)
 
 all: w4
 
 
 w4:
-	javac $(SRC_W4)
-	jar --create --file Coin_Odyssey.jar --main-class=world_4.Main -C . world_4
-	rm -f $(CLASS_W4)
-	rm -f world_4/*.class
+	javac -d out -cp out $(SRC_W4)
+	jar --create --file Coin_Odyssey.jar --main-class=world_4.Main -C out .
+	rm -rf out
 
 w3:
 	javac $(SRC_W3)
@@ -47,8 +46,7 @@ run_tuto:
 
 
 clean_w4:
-	rm -f $(CLASS_W4)
-	rm -f world_4/*.class
+	rm -rf out
 	rm -f Coin_Odyssey.jar
 
 clean_w3:
