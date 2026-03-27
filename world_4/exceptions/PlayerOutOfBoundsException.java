@@ -3,7 +3,7 @@
  * @version 1.0
  */
 
-package world_4;
+package world_4.exceptions;
 
 /**
  * The exception if the player wants to be generated out of bounds or in a wall
