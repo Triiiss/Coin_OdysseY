@@ -51,9 +51,11 @@ Monde 3 :
  - Niveau 6 : Geographie des niveaux comme un tore (tourne en cycle)
 
 Monde 4 :
- - Niveau 1 : Modélisation d'un ennemi random
+ - Niveau 1 : Modélisation d'un ennemi zombie
  - Niveau 2 : L'ennemi fait perdre de la vie et reset sa position quand le joueur perd de la vie
  - Niveau 3 : Cellules occupées par ennemis est dans un hashset. Redéfinition des hashcode()
+ - Niveau 4 : Modélisation d'un fantôme (méthode enemyCollision)
+ - Niveau 5 : Modélisation d'un chasseur (BFS pour le plus court chemin)
 
 
 Pour compiler :
