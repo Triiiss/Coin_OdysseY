@@ -3,7 +3,7 @@
  * @version 1.0
  */
 
-package world_4;
+package world_4.types;
 
 /**
  * Enumeration of the keys zqsd and exit n (because it's far from the zqsd to avoid missclicks)
