@@ -3,7 +3,9 @@
  * @version 1.0
  */
 
-package world_4;
+package world_4.environnement;
+
+import world_4.types.CellType;
 
 /**
  * Cell class

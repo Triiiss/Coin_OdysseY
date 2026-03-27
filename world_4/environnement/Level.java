@@ -3,7 +3,11 @@
  * @version 1.2
  */
 
-package world_4;
+package world_4.environnement;
+
+import world_4.characters.*;
+import world_4.types.*;
+import world_4.exceptions.*;
 
 import java.nio.file.*;
 import java.io.FileNotFoundException;
@@ -535,7 +539,7 @@ public class Level{
     public Position shortestPath(Enemy source, Position target){
         boolean[][] visited = new boolean[this.height][this.width];
         HashMap<Position, Position> path = new HashMap<>();
-        ArrayList<Position> queue = new ArrayList();
+        ArrayList<Position> queue = new ArrayList<Position>();
 
         visited[source.getCoord().getY()][source.getCoord().getX()] = true;     // Initialisation
         queue.add(source.getCoord());

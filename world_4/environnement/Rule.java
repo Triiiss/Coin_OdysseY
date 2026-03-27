@@ -3,7 +3,10 @@
  * @version 1.0
  */
 
-package world_4;
+package world_4.environnement;
+
+import world_4.characters.Enemy;
+import world_4.types.*;
 
 import java.util.Scanner;
 import java.util.List;
