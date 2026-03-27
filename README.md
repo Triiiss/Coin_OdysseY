@@ -56,6 +56,7 @@ Monde 4 :
  - Niveau 3 : Cellules occupées par ennemis est dans un hashset. Redéfinition des hashcode()
  - Niveau 4 : Modélisation d'un fantôme (méthode enemyCollision)
  - Niveau 5 : Modélisation d'un chasseur (BFS pour le plus court chemin)
+ - Niveau 6 : Mise en place des sous-packages
 
 
 Pour compiler :
