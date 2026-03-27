@@ -3,15 +3,21 @@ SRC_W1 = $(wildcard world_1/*.java)
 SRC_W2 = $(wildcard world_2/*.java)
 SRC_W3 = $(wildcard world_3/*.java)
 SRC_W4 := $(shell find world_4 -name "*.java")
+SRC_W5 := $(shell find world_5 -name "*.java")
 
 CLASS_TUTO = $(wildcard Tutorial/*.class)
 CLASS_W1 = $(wildcard world_1/*.class)
 CLASS_W2 = $(wildcard world_2/*.class)
 CLASS_W3 = $(wildcard world_3/*.class)
-CLASS_W4 = $(wildcard out/*.class)
+OUT = $(wildcard out/*.class)
 
-all: w4
+all: w5
 
+
+w5:
+	javac -d out -cp out $(SRC_W5)
+	jar --create --file Coin_Odyssey.jar --main-class=world_5.Main -C out .
+	rm -rf out
 
 w4:
 	javac -d out -cp out $(SRC_W4)
@@ -45,7 +51,7 @@ run_tuto:
 	java Tutorial.Tutorial
 
 
-clean_w4:
+clean:
 	rm -rf out
 	rm -f Coin_Odyssey.jar
 
