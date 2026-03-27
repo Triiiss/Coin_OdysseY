@@ -3,7 +3,12 @@
  * @version 1.0
  */
 
-package world_4;
+package world_4.characters;
+
+import world_4.environnement.Position;
+import world_4.environnement.Cell;
+import world_4.environnement.Level;
+import world_4.types.CellType;
 
 import java.util.Random;
 

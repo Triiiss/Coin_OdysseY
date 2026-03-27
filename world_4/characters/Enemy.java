@@ -3,7 +3,11 @@
  * @version 1.2
  */
 
-package world_4;
+package world_4.characters;
+
+import world_4.environnement.Position;
+import world_4.environnement.Level;
+import world_4.environnement.Cell;
 
 /**
  * The enemy class >:c
