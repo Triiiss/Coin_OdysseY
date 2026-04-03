@@ -3,9 +3,9 @@
  * @version 1.0
  */
 
-package world_4.environnement;
+package world_5.environnement;
 
-import world_4.types.CellType;
+import world_5.types.CellType;
 
 /**
  * Cell class
@@ -118,6 +118,10 @@ public class Cell{
      */
     public void removeCoin(){
         this.coin = false;
+    }
+
+    public void removeItem(){
+        
     }
 
     /**

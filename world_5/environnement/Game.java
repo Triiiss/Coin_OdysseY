@@ -3,11 +3,11 @@
  * @version 1.0
  */
 
-package world_4.environnement;
+package world_5.environnement;
 
-import world_4.types.*;
-import world_4.exceptions.*;
-import world_4.characters.*;
+import world_5.types.*;
+import world_5.exceptions.*;
+import world_5.characters.*;
 
 import java.util.Scanner;
 import java.io.FileNotFoundException;

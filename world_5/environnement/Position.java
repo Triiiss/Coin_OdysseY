@@ -3,7 +3,7 @@
  * @version 1.0
  */
 
-package world_4.environnement;
+package world_5.environnement;
 
 /**
  * The position x and y
