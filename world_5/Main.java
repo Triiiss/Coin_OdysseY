@@ -1,6 +1,11 @@
 /**
  * @author Thémis Tran Tu Thien :D
  * @version 1.1
+ * 
+ * TODO :
+ * - Lire fichier items/structure
+ * - Changer constructeur w/ item
+ * - Ajouter exceptions structure ?
  */
 
 package world_5;
