@@ -1,13 +1,13 @@
 /**
  * @author Thémis Tran Tu Thien :D
- * @version 1.2
+ * @version 1.3
  */
 
-package world_5.characters;
+package world_4.characters;
 
-import world_5.environnement.Position;
-import world_5.environnement.Level;
-import world_5.environnement.Cell;
+import world_4.environnement.Position;
+import world_4.environnement.Level;
+import world_4.environnement.Cell;
 
 /**
  * The enemy class >:c
@@ -19,12 +19,12 @@ public abstract class Enemy extends Character{
      * Constructor method
      * @param name its name
      * @param coord its current coordinates
-     * @param MAXHEALTH The max health of the enemy
+     * @param maxhealth The max health of the enemy
      * @param collide if the enemy collides with the walls
      */
-    public Enemy(String name, Position coord,int MAXHEALTH){
-        super(name, coord, MAXHEALTH);
-        this.startCoord = new Position(coord.getX(),coord.getY());
+    public Enemy(String name, Position coord,int maxhealth){
+        super(name, coord, maxhealth);
+        this.startCoord = coord.clone();
     }
 
     /**
@@ -54,17 +54,11 @@ public abstract class Enemy extends Character{
      * @param cell the cell it collides
      * @return if the enemy can go on that space or not
      */
-    public abstract boolean enemyCollision(Cell cell);
+    public abstract boolean canMove(Cell cell);
 
     /**
      * The abstract function where the enemy takes life of a player
      * @param player the player that suffers
      */
     public abstract void enemyHit(Player player);
-
-    /**
-     * Gets the char to represent the enemy
-     * @return the char R, H or G
-     */
-    public abstract char getChar();
 }

@@ -1,11 +1,11 @@
 /**
  * @author Thémis Tran Tu Thien :D
- * @version 1.1
+ * @version 1.2
  */
 
-package world_5.characters;
+package world_4.characters;
 
-import world_5.environnement.Position;
+import world_4.environnement.Position;
 
 /**
  * The player class to play a video game
@@ -91,6 +91,6 @@ public class Player extends Character{
      */
     public void reset(){
         this.score = 0;
-        this.healthPoint = this.MAXHEALTH;
+        this.healthPoint = this.maxhealth;
     }
 }
