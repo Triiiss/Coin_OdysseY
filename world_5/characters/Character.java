@@ -3,9 +3,9 @@
  * @version 1.2
  */
 
-package world_4.characters;
+package world_5.characters;
 
-import world_4.environnement.Position;
+import world_5.environnement.Position;
 
 /**
  * The character class to play a video game

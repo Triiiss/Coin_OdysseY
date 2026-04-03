@@ -3,12 +3,12 @@
  * @version 1.1
  */
 
-package world_4.characters;
+package world_5.characters;
 
-import world_4.environnement.Position;
-import world_4.environnement.Cell;
-import world_4.environnement.Level;
-import world_4.types.CellType;
+import world_5.environnement.Position;
+import world_5.environnement.Cell;
+import world_5.environnement.Level;
+import world_5.types.CellType;
 
 /**
  * The ghost (phases through walls enemy)

@@ -3,9 +3,10 @@
  * @version 1.2
  */
 
-package world_4.characters;
+package world_5.characters;
 
-import world_4.environnement.Position;
+import world_5.environnement.Position;
+import world_5.inventory.*;
 
 /**
  * The player class to play a video game
@@ -13,6 +14,9 @@ import world_4.environnement.Position;
 public class Player extends Character{
     private int score;
     private static int nbPlayers = 0;
+    private int inventorySpace;
+    private final int maxInventory;
+    private Element[] inventory;
 
     /**
      * Consctuctor of the Player object (score is automatically at 0)
@@ -24,6 +28,10 @@ public class Player extends Character{
 
         System.out.println("[Creation] Number of total players : " + Player.nbPlayers);
         Player.nbPlayers++;
+
+        this.maxInventory = 5;
+        this.inventorySpace = 0;
+        this.inventory = new Element[this.maxInventory];
     }
 
     /**
@@ -63,6 +71,18 @@ public class Player extends Character{
      */
     public int getScore(){
         return this.score;
+    }
+
+    public int getInventorySpace(){
+        return this.inventorySpace;
+    }
+
+    public int getMaxInventory(){
+        return this.maxInventory;
+    }
+
+    public Element[] getInventory(){
+        return this.inventory;
     }
 
     /**

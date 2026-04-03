@@ -3,10 +3,10 @@
  * @version 1.1
  */
 
-package world_4.characters;
+package world_5.characters;
 
-import world_4.environnement.*;
-import world_4.types.CellType;
+import world_5.environnement.*;
+import world_5.types.CellType;
 
 import java.util.List;
 
