@@ -4,11 +4,11 @@
 
  */
 
-package world_4;
+package world_5;
 
-import world_4.environnement.*;
-import world_4.characters.*;
-import world_4.types.Direction;
+import world_5.environnement.*;
+import world_5.characters.*;
+import world_5.types.Direction;
 
 
 /**
