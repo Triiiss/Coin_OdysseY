@@ -77,6 +77,12 @@ public class Position{
 
         return result;
     }
+    
+    public Position clone(){
+        Position clone = new Position(this.x, this.y);
+
+        return clone;
+    }
 
     /**
      * Change the x coordinate

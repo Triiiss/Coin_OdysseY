@@ -128,7 +128,7 @@ public class Cell{
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (obj == null || this.getClass() != obj.getClass()) return false;
 
         Cell cell = (Cell) obj;
 

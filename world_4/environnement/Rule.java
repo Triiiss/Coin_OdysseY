@@ -5,13 +5,15 @@
 
 package world_4.environnement;
 
-import world_4.characters.Enemy;
+import world_4.characters.*;
 import world_4.types.*;
 
 import java.util.Scanner;
 import java.util.List;
 import java.util.Iterator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.ArrayList;
 
 /**
  * The rules of the game, comportemental things
@@ -32,19 +34,32 @@ public class Rule{
      * @param playerCoord the player's coordinate
      * @return the character of the cell ( ,.,#,*,1,etc)
      */
-    public static String cellChar(Cell cell,HashMap<Cell,Enemy> enemyCells, Position playerCoord){
+    public static String cellChar(Cell cell, Level level){
         String RESET = "\u001B[0m";
         String YELLOW = "\u001B[33m";  // Coin
         String RED = "\u001B[31m";      // Enemy
         String CYAN = "\u001B[36m";     // Player
         String MAGENTA = "\u001B[35m";  // Traps
 
-        if (playerCoord.equals(cell.getCoord())){
+        if (level.getPlayer().getCoord().equals(cell.getCoord())){
             return CYAN + "1" + RESET;
         }
-        for (Cell c : enemyCells.keySet()){
-            if (c.equals(cell)){
-                return RED + enemyCells.get(c).getChar() + RESET;
+
+        if(level.getEnemyCells().contains(cell)){
+            Iterator<Enemy> iterator = level.getEnemies().iterator();
+            while (iterator.hasNext()){
+                Enemy enemy = iterator.next();
+                if (enemy.getCoord().equals(cell.getCoord())){
+                    if (enemy instanceof Zombie){
+                        return RED + "R" + RESET;
+                    }
+                    if (enemy instanceof Ghost){
+                        return RED + "G" + RESET;
+                    }
+                    if (enemy instanceof Hunter){
+                        return RED + "C" + RESET;
+                    }
+                }
             }
         }
 
@@ -161,10 +176,12 @@ public class Rule{
      * @param newPlayer the player's future position
      */
     public static void activateTrap(Level level,Position newPlayer){
-        level.getPlayer().removeHealth(2);
-        level.resetEnemies();
-        level.getLevel()[newPlayer.getY()][newPlayer.getX()].setType(CellType.EMPTY);       // Delete the trap
         System.out.println("\u001B[31mYou fell into a trap !\u001B[0m");
+        level.getPlayer().removeHealth(2);
+
+        level.resetEnemies();        // Resets the entities
+
+        level.getLevel()[newPlayer.getY()][newPlayer.getX()].setType(CellType.EMPTY);       // Delete the trap
         newPlayer.setX(level.getStartPlayer().getX());
         newPlayer.setY(level.getStartPlayer().getY());
     }
@@ -177,5 +194,56 @@ public class Rule{
     public static void collectCoin(Level level, Position newPlayer){
         level.getPlayer().addScore(10);
         level.getLevel()[newPlayer.getY()][newPlayer.getX()].removeCoin();
+    }
+
+     /**
+     * Return the next path to take to get from enemy.coord to the target
+     * @param source The enemy mostly the hunter
+     * @param target The target usually the player
+     * @return the next step
+     */
+    public static Position shortestPath(Level level, Position source, Position target, Enemy enemy){
+        boolean[][] visited = new boolean[level.getHeight()][level.getWidth()];
+        HashMap<Position, Position> path = new HashMap<>();
+        ArrayList<Position> queue = new ArrayList<Position>();
+
+        visited[source.getY()][source.getX()] = true;     // Initialisation
+        queue.add(source);
+        path.put(source, null);
+
+        int[][] directions = {      // directions of x an dy
+            {0, -1}, // up
+            {0, 1},  // down
+            {-1, 0}, // left
+            {1, 0}   // right
+        };
+
+        while (!queue.isEmpty()){
+            Position current = queue.remove(0);
+
+            if (current.equals(target)){
+                break;
+            }
+
+            for (int[] dir : directions){       // Check all "children" (all four directions)
+                Position next = new Position(current.getX() + dir[0],current.getY() + dir[1]);
+
+                if (level.isAvailable(next, enemy) && !visited[next.getY()][next.getX()]){       // Adds a new step
+                    visited[next.getY()][next.getX()] = true;
+                    path.put(next,current);
+                    queue.add(next);
+                }
+            }
+        }
+        if (!path.containsKey(target)){       // The target and source aren't connected
+            return source;
+        }
+
+        Position step = target;
+        while (path.get(step) != null && !path.get(step).equals(source)){       // From target to "just before source"
+            step = path.get(step);
+        }
+
+        return step;
     }
 }
