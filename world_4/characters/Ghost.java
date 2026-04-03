@@ -1,6 +1,6 @@
 /**
  * @author Thémis Tran Tu Thien :D
- * @version 1.0
+ * @version 1.1
  */
 
 package world_4.characters;
@@ -20,10 +20,10 @@ public class Ghost extends Enemy{
      * The ghost enemy
      * @param name The name of the zombie
      * @param coord The starting position of the enemy
-     * @param MAXHEALTH The maximum health
+     * @param maxhealth The maximum health
      */
-    public Ghost(String name, Position coord,int MAXHEALTH){
-        super(name, coord, MAXHEALTH);
+    public Ghost(String name, Position coord,int maxhealth){
+        super(name, coord, maxhealth);
     }
 
     /**
@@ -31,7 +31,7 @@ public class Ghost extends Enemy{
      * @param level the level where the enemy moves
      */
     public void move(Level level){
-        Position newEnemy = new Position(this.getCoord().getX(),this.getCoord().getY());
+        Position newEnemy = this.getCoord().clone();
         
         if (this.coord.getX() < level.getPlayer().getCoord().getX()){
             newEnemy.addX(1);
@@ -49,7 +49,7 @@ public class Ghost extends Enemy{
         }
 
         if (level.isAvailable(newEnemy,this)){
-            this.move(newEnemy.getX(),newEnemy.getY());
+            this.moveTo(newEnemy.getX(),newEnemy.getY());
         }
     }
 
@@ -68,15 +68,7 @@ public class Ghost extends Enemy{
      * @param cell the cell it collides
      * @return if the enemy can go on that space or not
      */
-    public boolean enemyCollision(Cell cell){
+    public boolean canMove(Cell cell){
         return true;
-    }
-
-    /**
-     * Gets the char to represent the enemy
-     * @return the char G
-     */
-    public char getChar(){
-        return 'G';
     }
 }

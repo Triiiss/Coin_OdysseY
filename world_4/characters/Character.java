@@ -1,6 +1,6 @@
 /**
  * @author Thémis Tran Tu Thien :D
- * @version 1.1
+ * @version 1.2
  */
 
 package world_4.characters;
@@ -18,19 +18,19 @@ public abstract class Character{
     /**The current health points */
     protected int healthPoint;
     /**The maximum amount of health */
-    final protected int MAXHEALTH;
+    final protected int maxhealth;
 
     /**
      * The character, parent to enemy and player
      * @param name the name of the player
      * @param coord their current coords
-     * @param MAXHEALTH The max health of the player
+     * @param maxhealth The max health of the player
      */
-    public Character(String name, Position coord, int MAXHEALTH){
+    public Character(String name, Position coord, int maxhealth){
         this.name = name;
         this.coord = coord;
-        this.healthPoint = MAXHEALTH;
-        this.MAXHEALTH = MAXHEALTH;
+        this.healthPoint = maxhealth;
+        this.maxhealth = maxhealth;
     }
 
     /**
@@ -51,10 +51,10 @@ public abstract class Character{
 
     /**
      * Get the max health points of the character
-     * @return The MAXHEALTH
+     * @return The maxhealth
      */
     public int getMaxHealth(){
-        return this.MAXHEALTH;
+        return this.maxhealth;
     }
 
     /**
@@ -98,7 +98,7 @@ public abstract class Character{
      */
     public void addHealth(int heal){
         if (heal >= 0){
-            this.healthPoint = (this.healthPoint + heal < this.MAXHEALTH) ? this.healthPoint + heal : this.MAXHEALTH;
+            this.healthPoint = (this.healthPoint + heal < this.maxhealth) ? this.healthPoint + heal : this.maxhealth;
         }
     }
 
@@ -118,7 +118,7 @@ public abstract class Character{
      * @param x The x coordinate
      * @param y The y coordinate
      */
-    public void move(int x, int y){
+    public void moveTo(int x, int y){
         this.coord.setX(x);
         this.coord.setY(y);
     }

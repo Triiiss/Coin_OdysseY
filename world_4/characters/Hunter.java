@@ -1,13 +1,11 @@
 /**
  * @author Thémis Tran Tu Thien :D
- * @version 1.0
+ * @version 1.1
  */
 
 package world_4.characters;
 
-import world_4.environnement.Position;
-import world_4.environnement.Cell;
-import world_4.environnement.Level;
+import world_4.environnement.*;
 import world_4.types.CellType;
 
 import java.util.List;
@@ -22,9 +20,9 @@ public class Hunter extends Enemy{
      * The hunter enemy
      * @param name The name of the zombie
      * @param coord The starting position of the enemy
-     * @param MAXHEALTH The maximum health
+     * @param maxhealth The maximum health
      */
-    public Hunter(String name, Position coord,int MAXHEALTH){
+    public Hunter(String name, Position coord,int maxhealth){
         super(name, coord, 3);
     }
 
@@ -33,10 +31,10 @@ public class Hunter extends Enemy{
      * @param level the level where the enemy moves
      */
     public void move(Level level){
-        Position newEnemy = level.shortestPath(this, level.getPlayer().getCoord());
+        Position newEnemy = Rule.shortestPath(level, this.coord, level.getPlayer().getCoord(), this);
             
         if (level.isAvailable(newEnemy,this)){
-            this.move(newEnemy.getX(),newEnemy.getY());
+            this.moveTo(newEnemy.getX(),newEnemy.getY());
         }
     }
 
@@ -55,15 +53,7 @@ public class Hunter extends Enemy{
      * @param cell the cell it collides
      * @return if the enemy can go on (true) that space or not
      */
-    public boolean enemyCollision(Cell cell){
+    public boolean canMove(Cell cell){
         return !cell.getCollision()&& cell.getType() != CellType.TRAP;
-    }
-
-    /**
-     * Gets the char to represent the enemy
-     * @return the char C
-     */
-    public char getChar(){
-        return 'C';
     }
 }

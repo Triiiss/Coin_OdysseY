@@ -1,6 +1,6 @@
 /**
  * @author Thémis Tran Tu Thien :D
- * @version 1.1
+ * @version 1.2
  */
 
 package world_4.characters;
@@ -91,6 +91,6 @@ public class Player extends Character{
      */
     public void reset(){
         this.score = 0;
-        this.healthPoint = this.MAXHEALTH;
+        this.healthPoint = this.maxhealth;
     }
 }
