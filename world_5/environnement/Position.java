@@ -3,7 +3,7 @@
  * @version 1.0
  */
 
-package world_5.environnement;
+package world_4.environnement;
 
 /**
  * The position x and y
@@ -76,6 +76,12 @@ public class Position{
         result = 31*result + this.y;
 
         return result;
+    }
+    
+    public Position clone(){
+        Position clone = new Position(this.x, this.y);
+
+        return clone;
     }
 
     /**

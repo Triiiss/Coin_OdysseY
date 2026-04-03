@@ -3,9 +3,9 @@
  * @version 1.0
  */
 
-package world_5.environnement;
+package world_4.environnement;
 
-import world_5.types.CellType;
+import world_4.types.CellType;
 
 /**
  * Structure class to make walls in the level
