@@ -355,10 +355,17 @@ public class Level{
             }
             else if (index == i/2){
                 inventory.append("#" + BLUE + " * " + this.player.getInventory()[i/2].getName() + RESET );
+                for (int j=0;j<this.width - 3 - this.player.getInventory()[i/2].getName().length();j++){
+                    inventory.append(" ");
+                }
                 inventory.append('\n');
             }
             else{
                 inventory.append("#   " + this.player.getInventory()[i/2].getName());
+                for (int j=0;j<this.width - 3 - this.player.getInventory()[i/2].getName().length();j++){
+                    inventory.append(" ");
+                }
+                inventory.append("#");
                 inventory.append('\n');
             }
         }
