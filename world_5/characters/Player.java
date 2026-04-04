@@ -25,13 +25,17 @@ public class Player extends Character{
     public Player(String name){
         super(name,new Position(-1,-1),5);
         this.score = 0;
+        this.inventorySpace = 0;
+
+        this.maxInventory = 5;
+        this.inventory = new Element[this.maxInventory];
+
+        for (int i=0;i<this.maxInventory;i++){
+            this.inventory[i] = null;
+        }
 
         System.out.println("[Creation] Number of total players : " + Player.nbPlayers);
         Player.nbPlayers++;
-
-        this.maxInventory = 5;
-        this.inventorySpace = 0;
-        this.inventory = new Element[this.maxInventory];
     }
 
     /**
@@ -105,12 +109,52 @@ public class Player extends Character{
             this.score -= this.score - points <= 0 ? this.score : points;
         }
     }
+
+    public boolean addInventory(Element element){
+        if (this.inventorySpace <= this.maxInventory && this.inventory[this.inventorySpace] == null){
+            this.inventory[this.inventorySpace] = element;
+            this.inventorySpace++;
+            return true;
+        }
+
+        return false;
+    }
+
+    public Element removeInventory(int index){
+        if (this.inventorySpace > 0 && index >= 0 && index < this.maxInventory && this.inventory[index] != null){
+            Element e = this.inventory[index];
+            this.inventory[index] = null;
+            this.inventorySpace--;
+
+            int last = -1;
+            int i= this.maxInventory-1;
+            while (i>=0){               // Pushes all real elements to the begining of the list
+                if (this.inventory[i] != null){
+                    last = i;
+                }
+                else if (last != -1){
+                    this.inventory[i] = this.inventory[last];
+                    last = -1;
+                    i = this.maxInventory-1;
+                    continue;
+                }
+                i--;
+            }
+
+            return e;
+        }
+        return null;
+    }
     
     /**
      * Resets the character in case of game over (no need to create it again, just reset the score and the health)
      */
     public void reset(){
         this.score = 0;
-        this.healthPoint = this.maxhealth;
+        this.healthPoint = this.maxHealth;
+
+        for (int i=0;i<this.maxInventory;i++){
+            this.inventory[i] = null;
+        }
     }
 }
