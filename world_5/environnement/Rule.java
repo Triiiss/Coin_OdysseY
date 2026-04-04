@@ -201,9 +201,10 @@ public class Rule{
      * @param level The level we take the coin from
      * @param newPlayer the player's future position
      */
-    public static void collectCoin(Level level, Position newPlayer){
-        level.getPlayer().addScore(10);
-        level.getLevel()[newPlayer.getY()][newPlayer.getX()].removeItem();
+    public static void collectItem(Level level, Position newPlayer){
+        if (level.getLevel()[newPlayer.getY()][newPlayer.getX()].getItem().pickUp(level)){      // If it got picked up
+            level.getLevel()[newPlayer.getY()][newPlayer.getX()].removeItem();                  // Delete the item from the cell
+        }
     }
 
      /**

@@ -275,6 +275,10 @@ public class Level{
         return this.startPlayer;
     }
 
+    public void removeOneNbCoin(){
+        this.nbCoins--;
+    }
+
     /**
      * Displays the map and the structures within
      * @return The string to print out of the map, its edges and the UI
@@ -550,15 +554,6 @@ public class Level{
         }
     }
 
-    /**
-     * Moves the player up, down, left, or rigth based on the direction
-     * Checks if it can move there, updates the map, and update the score if it went on a coin
-     * @param direction the direction from the enum class Direction
-     */
-    public void move(Direction direction){
-    
-    }
-
     public Position handleInput(){
         Position newPlayer = this.player.getCoord().clone();
         Position oldPlayer = this.player.getCoord().clone();
@@ -603,9 +598,8 @@ public class Level{
         boolean trap = false;
         boolean validInput = !this.player.getCoord().equals(oldPlayer);
 
-        if (this.level[this.player.getCoord().getY()][this.player.getCoord().getX()].hasCoin() && this.nbCoins > 0){      // Get coin
-            nbCoins -= 1;
-            Rule.collectCoin(this,this.player.getCoord());
+        if (this.level[this.player.getCoord().getY()][this.player.getCoord().getX()].getHasItem()){      // Get item
+            Rule.collectItem(this,this.player.getCoord());
         }
         if (this.level[this.player.getCoord().getY()][this.player.getCoord().getX()].getType() == CellType.TRAP && this.player.getHealthPoint() > 0){         // Get on a trap
             trap = true;
