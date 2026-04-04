@@ -19,15 +19,6 @@ public enum CellType{
     DOOR;
 
     /**
-     * Gets an int and checks if it corresponds to a type (used during creation, and file reading)
-     * @param type The type of the structure/cell
-     * @return If the type is valid or not
-     */
-    public static boolean isValidType(int type){
-        return type >= 0 && type < CellType.values().length;
-    }
-
-    /**
      * Some cells have collision, and some are manually changed. With no manual change, we take the default one
      * @return if the cell has collision
      */
