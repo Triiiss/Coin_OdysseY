@@ -24,5 +24,5 @@ public abstract class Element{
 
     public abstract boolean pickUp(Level level);
 
-    public abstract void use();
+    public abstract void use(Player player);
 }

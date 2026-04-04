@@ -27,17 +27,13 @@ public class Competence extends Element{
     
     public boolean pickUp(Level level){
         if (level.getPlayer().getInventorySpace() < level.getPlayer().getMaxInventory()){
-            switch(this.type){
-                case CompetenceType.LOCKPICK:
-                    break;
-                case CompetenceType.TELEPORTATION:
-                    break;
-            }
+            level.getPlayer().addInventory(this);
+            return true;
         }
         return false;
     }
 
-    public void use(){
+    public void use(Player player){
         
     }
 }

@@ -47,7 +47,7 @@ public class Item extends Element{
         return false;
     }
 
-    public void use(){
+    public void use(Player player){
         switch(this.type){
             case ItemType.WEAPON:
                 break;
