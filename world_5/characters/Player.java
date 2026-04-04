@@ -111,7 +111,7 @@ public class Player extends Character{
     }
 
     public boolean addInventory(Element element){
-        if (this.inventorySpace <= this.maxInventory && this.inventory[this.inventorySpace] == null){
+        if (this.inventorySpace < this.maxInventory && this.inventory[this.inventorySpace] == null){
             this.inventory[this.inventorySpace] = element;
             this.inventorySpace++;
             return true;
