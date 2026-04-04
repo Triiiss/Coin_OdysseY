@@ -26,7 +26,7 @@ public class Structure{
      * @param height The size of the y coordonate
      */
     public Structure(int type, int width, int height, int x, int y){
-        if (CellType.isValidType(type) && width >= 0 && height >= 0 && x >= 0 && y >= 0){
+        if (width >= 0 && height >= 0 && x >= 0 && y >= 0){
             this.type = type;
             this.x = x;
             this.y = y;

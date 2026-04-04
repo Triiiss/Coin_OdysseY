@@ -5,16 +5,18 @@
 
 package world_5.environnement;
 
-import world_5.types.CellType;
+import world_5.types.*;
+import world_5.inventory.*;
 
 /**
  * Cell class
  */
 public class Cell{
     private Position coord;
-    private boolean coin;
     private CellType type;
     private boolean collision;
+    private boolean hasItem;
+    private Item item;
 
     /**
      * The cell is a space that can either be a wall, empty, or a trap
@@ -23,18 +25,22 @@ public class Cell{
      * @param coin if it has a coin on it or not
      * @param type the type of the cell (0: a wall; 1: empty; 2: a trap)
      */
-    public Cell(Position coord, boolean coin, CellType type){
+    public Cell(Position coord, CellType type){
         this.coord = coord;
-        this.coin = coin;
-        if (coin && type == CellType.WALL){      // Checks the type and no coins inside a wall
-            this.type = CellType.EMPTY;
-        }
-        else{
-            this.type = type;
-        }
+        this.type = type;
         this.collision = this.type.defaultCollision();
+        this.hasItem = false;
+        this.item = null;
     }
 
+    public Cell(Position coord, CellType type, Item item){
+        this(coord,type);
+        if (item != null && type != CellType.WALL){     // No items within walls
+            this.hasItem = true;
+            this.item = item;
+        }
+    }
+    
     /**
      * The cell is a space that can either be a wall, empty, or a trap
      * The player can be on it, and it can have a coin or not
@@ -43,9 +49,18 @@ public class Cell{
      * @param type the type of the cell (0: a wall; 1: empty; 2: a trap)
      * @param collision the collision with the player
      */
-    public Cell(Position coord,boolean coin, CellType type, boolean collision){
-        this(coord,coin,type);
+    public Cell(Position coord, CellType type, boolean collision){
+        this(coord,type);
         this.collision = collision;
+    }
+
+    public Cell(Position coord, CellType type, boolean collision, Item item){
+        this(coord,type,collision);
+
+        if (item != null && !collision){
+            this.hasItem = true;
+            this.item = item;
+        }
     }
 
     /**
@@ -56,12 +71,11 @@ public class Cell{
         return this.coord;
     }
 
-    /**
-     * Get wether the cell has a coin or not
-     * @return The coin boolean
-     */
-    public boolean getCoin(){
-        return this.coin;
+    public boolean hasCoin(){
+        if (this.hasItem && this.item.getType() == ItemType.COIN){
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -81,13 +95,21 @@ public class Cell{
         return this.collision;
     }
 
+    public boolean getHasItem(){
+        return this.hasItem;
+    }
+
+    public Item getItem(){
+        return this.item;
+    }
+
     /**
      * Sets the type during the creation or for changing levels
      * @param type the new type
      * @param collision if the cell collides with the player
      */
     public void setType(CellType type, boolean collision){
-        if (!(coin && type == CellType.WALL && collision)){
+        if (!(this.hasItem && this.item.getType() == ItemType.COIN && type == CellType.WALL && collision)){
             this.type = type;
             this.collision = collision;
         }
@@ -101,27 +123,19 @@ public class Cell{
         setType(type,type.defaultCollision());
     }
 
-    /**
-     * Adds a coin during the creation of the level
-     */
-    public void addCoin(){
-        if (this.type != CellType.WALL){        // Not in a wall
-            this.coin = true;
-        }
-        else{
-            this.coin = false;      // Automatically sets it to 0 if it's in a wall
+    public void addItem(Item item){
+        if (item != null && !this.hasItem){     // No writting over an already existing item
+            this.hasItem = true;
+            this.item = item;
         }
     }
 
-    /**
-     * Removes a coin, for instance when the player takes it
-     */
-    public void removeCoin(){
-        this.coin = false;
-    }
+    public Item removeItem(){
+        Item item = this.item;
+        this.item = null;
+        this.hasItem = false;
 
-    public void removeItem(){
-        
+        return item;
     }
 
     /**

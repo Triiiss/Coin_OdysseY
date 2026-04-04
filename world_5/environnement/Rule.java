@@ -40,6 +40,7 @@ public class Rule{
         String RED = "\u001B[31m";      // Enemy
         String CYAN = "\u001B[36m";     // Player
         String MAGENTA = "\u001B[35m";  // Traps
+        String BLUE = "\u001B[94m";     // Items
 
         if (level.getPlayer().getCoord().equals(cell.getCoord())){
             return CYAN + "1" + RESET;
@@ -63,8 +64,17 @@ public class Rule{
             }
         }
 
-        if (cell.getCoin()){
-            return YELLOW + "." + RESET;
+        if (cell.getHasItem()){
+            switch (cell.getItem().getType()){
+                case ItemType.COIN:
+                    return YELLOW + "." + RESET;
+                case ItemType.WEAPON:
+                    return BLUE + "W" + RESET;
+                case ItemType.HOURGLASS:
+                    return BLUE + "H" + RESET;
+                    
+            }
+            
         }
         switch(cell.getType()){
             case CellType.WALL:
@@ -193,7 +203,7 @@ public class Rule{
      */
     public static void collectCoin(Level level, Position newPlayer){
         level.getPlayer().addScore(10);
-        level.getLevel()[newPlayer.getY()][newPlayer.getX()].removeCoin();
+        level.getLevel()[newPlayer.getY()][newPlayer.getX()].removeItem();
     }
 
      /**

@@ -8,6 +8,7 @@ package world_5.environnement;
 import world_5.characters.*;
 import world_5.types.*;
 import world_5.exceptions.*;
+import world_5.inventory.*;
 
 import java.nio.file.*;
 import java.io.FileNotFoundException;
@@ -44,7 +45,7 @@ public class Level{
      * @param playerX the x coordinate of the player
      * @param playerY the y coordinate of the player
      */
-    public Level(int width, int height, Structure[] structs, List<Enemy> enemies, Player player, int playerX, int playerY){
+    public Level(int width, int height, Structure[] structs,List<Enemy> enemies, Player player, int playerX, int playerY){
         if (width > 0 && height > 0){
             this.width = width;
             this.height = height;
@@ -56,7 +57,7 @@ public class Level{
 
             for (int i=0;i<this.height;i++){        // Creates all cells as empty ones
                 for (int j=0;j<this.width;j++){
-                    this.level[i][j] = new Cell(new Position(j,i),false,CellType.EMPTY);
+                    this.level[i][j] = new Cell(new Position(j,i),CellType.EMPTY);
                 }
             }
 
@@ -66,25 +67,34 @@ public class Level{
                         for (int k=0;k<structs[i].getWidth();k++){
                             switch(structs[i].getType()){
                                 case 0:             // If it's a wall
-                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY && !this.level[j+structs[i].getY()][k+structs[i].getX()].getCoin()){
+                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY && !this.level[j+structs[i].getY()][k+structs[i].getX()].hasCoin()){
                                         this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.WALL);
                                     }
                                     break;
-                                // Note : structure.type 1 is coins while cell.type 1 is empty that way all other type are the same and structure 1 and cell 1 is different
-                                case 1:             // If it's coins
-                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() != CellType.WALL && !this.level[j+structs[i].getY()][k+structs[i].getX()].getCoin()){       // Coins can be anywhere except walls and can't count a coin twice
-                                        this.nbCoins += 1;
-                                        this.level[j+structs[i].getY()][k+structs[i].getX()].addCoin();
-                                    }
-                                    break;
-                                case 2:         // If it's a trap
+                                case 1:         // If it's a trap
                                     if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY){
                                         this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.TRAP);
                                     }
                                     break;
-                                case 3:         // If it's a locked door
+                                case 2:         // If it's a locked door
                                     if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY){
                                         this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.DOOR);
+                                    }
+                                    break;
+                                case 100:             // If it's coins
+                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() != CellType.WALL && !this.level[j+structs[i].getY()][k+structs[i].getX()].getHasItem()){       // Items can be anywhere except walls or write over other items
+                                        this.nbCoins += 1;
+                                        this.level[j+structs[i].getY()][k+structs[i].getX()].addItem(new Item("coin", ItemType.COIN));
+                                    }
+                                    break;
+                                case 101:
+                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() != CellType.WALL && !this.level[j+structs[i].getY()][k+structs[i].getX()].getHasItem()){
+                                        this.level[j+structs[i].getY()][k+structs[i].getX()].addItem(new Item("Weapon",ItemType.WEAPON));
+                                    }
+                                    break;
+                                case 102:
+                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() != CellType.WALL && !this.level[j+structs[i].getY()][k+structs[i].getX()].getHasItem()){
+                                        this.level[j+structs[i].getY()][k+structs[i].getX()].addItem(new Item("Hourglass",ItemType.HOURGLASS));
                                     }
                                     break;
                             }
@@ -97,7 +107,7 @@ public class Level{
                 Enemy foe = iterator.next();
                 enemyCells.add(this.level[foe.getCoord().getY()][foe.getCoord().getX()]);
             }
-            
+
             if (!isAvailable(new Position(playerX,playerY))){      // Player not in map
                 System.out.println(playerX + " " + playerY + " " + this.level[playerY][playerX].getType().name());
                 throw new PlayerOutOfBoundsException("Creation of the level impossible : player out of the map or in a wall");
@@ -111,6 +121,7 @@ public class Level{
                 this.player.moveTo(playerX,playerY);
             }
         }
+        /// THROW HERE
     }
 
     /**
@@ -138,7 +149,7 @@ public class Level{
 
         int section = 0;
         int subSection = 0;
-
+        
         if (Files.exists(p) && Files.isRegularFile(p) && Files.isReadable(p)){
             try{
                 List<String> lignes = Files.readAllLines(p);
@@ -592,7 +603,7 @@ public class Level{
         boolean trap = false;
         boolean validInput = !this.player.getCoord().equals(oldPlayer);
 
-        if (this.level[this.player.getCoord().getY()][this.player.getCoord().getX()].getCoin() && this.nbCoins > 0){      // Get coin
+        if (this.level[this.player.getCoord().getY()][this.player.getCoord().getX()].hasCoin() && this.nbCoins > 0){      // Get coin
             nbCoins -= 1;
             Rule.collectCoin(this,this.player.getCoord());
         }
