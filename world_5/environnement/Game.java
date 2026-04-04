@@ -61,6 +61,9 @@ public class Game{
                         iLevel += 1;
                         Rule.getInput();
                     }
+                    else if (this.levels[iLevel].getOpenInventory()){       // If the inventory is open
+                        System.out.println(this.levels[iLevel].displayInventory(-1));
+                    }
                     else{               // The actual this.levels
                         System.out.println(this.levels[iLevel].toString());     // Display of the game
                         

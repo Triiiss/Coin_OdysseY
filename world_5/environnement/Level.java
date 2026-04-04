@@ -32,6 +32,7 @@ public class Level{
     private Player player;
     private int nbCoins;
     private Position startPlayer;
+    private boolean openInventory;
 
     private static String CUR = System.getProperty("user.dir");
 
@@ -50,6 +51,7 @@ public class Level{
             this.width = width;
             this.height = height;
             this.nbCoins = 0;
+            this.openInventory = false;
             this.enemies = enemies;
             this.enemyCells = new HashSet<Cell>();
 
@@ -275,6 +277,10 @@ public class Level{
         return this.startPlayer;
     }
 
+    public boolean getOpenInventory(){
+        return this.openInventory;
+    }
+
     public void removeOneNbCoin(){
         this.nbCoins--;
     }
@@ -311,7 +317,7 @@ public class Level{
                 level.append(" ♡ ");
             }
             else{
-                level.append(" \u001B[31m❤︎⁠\u001B[0m ");
+                level.append("\u001B[31m ❤︎ ⁠\u001B[0m");
             }
         }
         level.append('\n');
@@ -319,6 +325,57 @@ public class Level{
         level.append("Z: Up | Q: Right | S: Down | D: Left | N: exit");
 
         return level.toString();
+    }
+
+    public String displayInventory(int index){
+        String RESET = "\u001B[0m";
+        String BLUE = "\u001B[94m";
+        StringBuilder inventory = new StringBuilder();
+
+        for (int j = 0; j < this.width+2; j++) {
+            inventory.append('#');
+        }
+        inventory.append('\n');
+
+        inventory.append('#');
+        for (int j=0;j<this.width;j++){
+            inventory.append(' ');
+        }
+        inventory.append('#');
+        inventory.append('\n');
+
+        for (int i=0;i<player.getMaxInventory()*2;i++){
+            if (i%2 == 1 || this.player.getInventorySpace() <= i/2){
+                inventory.append('#');
+                for (int j=0;j<this.width;j++){
+                    inventory.append(' ');
+                }
+                inventory.append('#');
+                inventory.append('\n');
+            }
+            else if (index == i/2){
+                inventory.append("#" + BLUE + " * " + this.player.getInventory()[i/2].getName() + RESET );
+                inventory.append('\n');
+            }
+            else{
+                inventory.append("#   " + this.player.getInventory()[i/2].getName());
+                inventory.append('\n');
+            }
+        }
+
+        inventory.append('#');
+        for (int j=0;j<this.width;j++){
+            inventory.append(' ');
+        }
+        inventory.append('#');
+        inventory.append('\n');
+
+        for (int j = 0; j < this.width+2; j++) {
+            inventory.append('#');
+        }
+        inventory.append('\n');
+
+        return inventory.toString();
     }
 
     /**
@@ -558,24 +615,27 @@ public class Level{
         Position newPlayer = this.player.getCoord().clone();
         Position oldPlayer = this.player.getCoord().clone();
         Direction direction = Rule.getDirection();
-        boolean validInput = false;
+        boolean playerMoving = false;
 
         switch (direction){
             case Direction.LEFT:
                 newPlayer.addX(-1);
-                validInput = true;
+                playerMoving = true;
                 break;
             case Direction.UP:
                 newPlayer.addY(-1);
-                validInput = true;
+                playerMoving = true;
                 break;
             case Direction.RIGHT:
                 newPlayer.addX(1);
-                validInput = true;
+                playerMoving = true;
                 break;
             case Direction.DOWN:
                 newPlayer.addY(1);
-                validInput = true;
+                playerMoving = true;
+                break;
+            case Direction.INVENTORY:
+                this.openInventory = true;
                 break;
             case Direction.EXIT:
                 System.out.println("Exiting...");
@@ -587,7 +647,7 @@ public class Level{
 
         Rule.tore(this,newPlayer);
 
-        if (validInput && isAvailable(newPlayer)){
+        if (playerMoving && isAvailable(newPlayer)){
             this.player.moveTo(newPlayer.getX(),newPlayer.getY());
         }
 
@@ -596,7 +656,7 @@ public class Level{
 
     public void update(Position oldPlayer){
         boolean trap = false;
-        boolean validInput = !this.player.getCoord().equals(oldPlayer);
+        boolean playerMoving = !this.player.getCoord().equals(oldPlayer);
 
         if (this.level[this.player.getCoord().getY()][this.player.getCoord().getX()].getHasItem()){      // Get item
             Rule.collectItem(this,this.player.getCoord());
@@ -616,7 +676,7 @@ public class Level{
                 enemy.move(this);
                 enemyCells.add(this.level[enemy.getCoord().getY()][enemy.getCoord().getX()]);
 
-                if ((player.getCoord().equals(enemy.getCoord())) || (old.equals(player.getCoord()) && oldPlayer.equals(enemy.getCoord()) && validInput && isAvailable(this.player.getCoord()))){
+                if ((player.getCoord().equals(enemy.getCoord())) || (old.equals(player.getCoord()) && oldPlayer.equals(enemy.getCoord()) && playerMoving && isAvailable(this.player.getCoord()))){
                     enemy.enemyHit(this.player);
                     this.resetEnemies();
                     break;

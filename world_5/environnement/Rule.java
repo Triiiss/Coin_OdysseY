@@ -126,6 +126,7 @@ public class Rule{
         char upKey = 'z';
         char rightKey = 'd';
         char downKey = 's';
+        char inventoryKey = 'i';
         char exitKey = 'n';
         char restartKey = 'r';
 
@@ -138,6 +139,9 @@ public class Rule{
         }
         if (input.charAt(0) == rightKey) {
             return Direction.RIGHT;
+        }
+        if (input.charAt(0) == inventoryKey){
+            return Direction.INVENTORY;
         }
         if (input.charAt(0) == downKey) {
             return Direction.DOWN;
