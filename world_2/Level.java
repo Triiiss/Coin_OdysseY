@@ -81,6 +81,7 @@ public class Level{
      * 
      * @param file The file path in the directory files
      * @return a level object based on the info of the file
+     * @throws FileNotFoundException If the file given isn't there
      */
     public static Level getLevelFromFile(String file) throws FileNotFoundException{
         Path p = Paths.get(CUR+"/files/"+file);
