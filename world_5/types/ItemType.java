@@ -25,6 +25,10 @@ public enum ItemType{
         return type >= 0 && type < CellType.values().length;
     }
 
+    /**
+     * Gets the default consumability of an item
+     * @return the value of consumable for a specific type
+     */
     public boolean defaultConsumable(){
         return (this == COIN);
     }
