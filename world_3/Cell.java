@@ -21,7 +21,7 @@ public class Cell{
      * @param x the x coordinate of the cell
      * @param y the y coordinate of the cell
      * @param coin if it has a coin on it or not
-     * @param type the type of the cell (0: a wall; 1: empty; 2: a trap)
+     * @param type the type of the cell
      */
     public Cell(int x, int y, boolean coin, CellType type){
         this.x = x;
@@ -36,6 +36,14 @@ public class Cell{
         this.collision = this.type.defaultCollision();
     }
 
+    /**
+     * Constructor method
+     * @param x the x coordinate of the cell
+     * @param y the y coordinate of the cell
+     * @param coin if it has a coin on it or not
+     * @param type the type of the cell
+     * @param collision the special collision of the cell
+     */
     public Cell(int x,int y,boolean coin, CellType type, boolean collision){
         this(x,y,coin,type);
         this.collision = collision;
@@ -85,6 +93,7 @@ public class Cell{
     /**
      * Sets the type during the creation or for changing levels
      * @param type the new type
+     * @param collision the collision of the cell
      */
     public void setType(CellType type, boolean collision){
         if (!(coin && type == CellType.WALL && collision)){
@@ -93,6 +102,11 @@ public class Cell{
         }
     }
 
+
+    /**
+     * Sets the type during the creation or for changing levels with default collision
+     * @param type the new type
+     */
     public void setType(CellType type){
         setType(type,type.defaultCollision());
     }

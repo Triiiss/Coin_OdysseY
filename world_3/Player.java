@@ -71,6 +71,10 @@ public class Player{
         return this.MAXHEALTH;
     }
 
+    /**
+     * Get the coordinates of the player
+     * @return the position of the player
+     */
     public Position getCoord(){
         return this.coord;
     }
@@ -163,6 +167,11 @@ public class Player{
         }
     }
 
+    /**
+     * Moving the player
+     * @param x the x coordinate to move it to
+     * @param y the y coordinate to move it to
+     */
     public void move(int x, int y){
         this.coord.setX(x);
         this.coord.setY(y);

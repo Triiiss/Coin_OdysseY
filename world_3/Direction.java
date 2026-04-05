@@ -33,6 +33,8 @@ public enum Direction{
      * Key to go restart after a game over made with the letter N
      */
     RESTART,
-    
+    /**
+     * An unknown key
+     */
     UNKNOWN;
 }

@@ -105,6 +105,8 @@ public class Level{
      * @param file The file path in the directory files
      * @param p1 The player. It doesn't have to be created with the level, it is given so the player can stay the same in different levels
      * @return a level object based on the info of the file
+     * @throws IOException If the format read is not valid
+     * @throws FileNotFoundException If the file given isn't there
      */
     public static Level getLevelFromFile(String file, Player p1) throws FileNotFoundException, IOException{
         Path p = Paths.get(CUR+"/files/"+file);
@@ -193,10 +195,18 @@ public class Level{
         return this.nbCoins;
     }
 
+    /**
+     * Get the char table of the map
+     * @return the level
+     */
     public Cell[][] getLevel(){
         return this.level;
     }
 
+    /**
+     * Get the starting position of the player
+     * @return the starting position of player
+     */
     public Position getStartPlayer(){
         return this.startPlayer;
     }
@@ -446,8 +456,7 @@ public class Level{
 
     /**
      * Checks the space for movePlayer functions
-     * @param x the x coordinate
-     * @param y the y coordinate
+     * @param coord the position of the cell we want to check availability
      * @return true if the player can move to the space (x,y)
      */
     public boolean isAvailable(Position coord){
