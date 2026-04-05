@@ -3,11 +3,11 @@
  * @version 1.3
  */
 
-package world_5.characters;
+package world_4.characters;
 
-import world_5.environnement.Position;
-import world_5.environnement.Level;
-import world_5.environnement.Cell;
+import world_4.environnement.Position;
+import world_4.environnement.Level;
+import world_4.environnement.Cell;
 
 /**
  * The enemy class >:c
@@ -43,17 +43,17 @@ public abstract class Enemy extends Character{
     }
 
     /**
+     * move prototype 
+     * @param level The level where the enemy moves
+     */
+    public abstract void move(Level level);
+
+    /**
      * Checks if an enemy collides with a cell or not
      * @param cell the cell it collides
      * @return if the enemy can go on that space or not
      */
     public abstract boolean canMove(Cell cell);
-
-    /**
-     * move prototype 
-     * @param level The level where the enemy moves
-     */
-    public abstract void move(Level level);
 
     /**
      * The abstract function where the enemy takes life of a player
