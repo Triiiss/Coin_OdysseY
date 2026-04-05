@@ -34,6 +34,11 @@ public class Competence extends Element{
     }
 
     public void use(Player player){
-        
+        switch(this.type){
+            case CompetenceType.LOCKPICK:
+                break;
+            case CompetenceType.TELEPORTATION:
+                break;
+        }
     }
 }

@@ -50,8 +50,11 @@ public class Item extends Element{
     public void use(Player player){
         switch(this.type){
             case ItemType.WEAPON:
+                // stuff
+                player.removeInventory();
                 break;
             case ItemType.HOURGLASS:
+                player.removeInventory();
                 break;
         }
     }
