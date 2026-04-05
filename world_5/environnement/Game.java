@@ -62,7 +62,11 @@ public class Game{
                         Rule.getInput();
                     }
                     else if (this.levels[iLevel].getOpenInventory()){       // If the inventory is open
-                        System.out.println(this.levels[iLevel].displayInventory(-1));
+                        System.out.println(this.levels[iLevel].displayInventory(this.levels[iLevel].getPlayer().getInventoryIndex()));
+
+                        if(this.levels[iLevel].handleInputInventory()){
+                            this.levels[iLevel].getPlayer().getInventory()[this.levels[iLevel].getPlayer().getInventoryIndex()].use(this.levels[iLevel].getPlayer());
+                        }
                     }
                     else{               // The actual this.levels
                         System.out.println(this.levels[iLevel].toString());     // Display of the game
@@ -72,9 +76,10 @@ public class Game{
                             exit = true;
                             break;
                         }
-
+                        if (this.levels[iLevel].getOpenInventory()){
+                            continue;
+                        }
                         this.levels[iLevel].update(oldPlayer);        //Updates enemies, events (coins, trap)
-            
                     }
                 }
             } catch (FileNotFoundException e){

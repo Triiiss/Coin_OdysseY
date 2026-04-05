@@ -354,10 +354,11 @@ public class Level{
                 inventory.append('\n');
             }
             else if (index == i/2){
-                inventory.append("#" + BLUE + " * " + this.player.getInventory()[i/2].getName() + RESET );
-                for (int j=0;j<this.width - 3 - this.player.getInventory()[i/2].getName().length();j++){
+                inventory.append("#" + BLUE + " * " + this.player.getInventory()[i/2].getName() + " [USE]" + RESET );
+                for (int j=0;j<this.width - 9 - this.player.getInventory()[i/2].getName().length();j++){
                     inventory.append(" ");
                 }
+                inventory.append("#");
                 inventory.append('\n');
             }
             else{
@@ -381,6 +382,19 @@ public class Level{
             inventory.append('#');
         }
         inventory.append('\n');
+
+
+        inventory.append(this.player.toString() + " | ");
+        for (int h=1; h<=this.player.getMaxHealth();h++){
+            if (h > this.player.getHealthPoint()){
+                inventory.append(" ♡ ");
+            }
+            else{
+                inventory.append("\u001B[31m ❤︎ ⁠\u001B[0m");
+            }
+        }
+        inventory.append('\n');
+        inventory.append("Z: Up | S: Down | U: Use | N or I: exit");
 
         return inventory.toString();
     }
@@ -659,6 +673,37 @@ public class Level{
         }
 
         return oldPlayer;
+    }
+
+    public boolean handleInputInventory(){
+        Direction direction = Rule.getDirection();
+
+        switch (direction){
+            case Direction.UP:
+                if (this.player.getInventoryIndex() > 0){
+                    this.player.removeInventoryIndex();
+                }
+                return false;
+            case Direction.DOWN:
+                if (this.player.getInventoryIndex() + 1 < this.getPlayer().getInventorySpace()){
+                    this.player.addInventoryIndex();
+                }
+                return false;
+            case Direction.USE:
+                this.openInventory = false;
+                return true;
+            case Direction.INVENTORY:
+                this.openInventory = false;
+                this.player.resetInventoryIndex();
+                return false;
+            case Direction.EXIT:
+                this.openInventory = false;
+                this.player.resetInventoryIndex();
+                return false;
+            default:
+                System.out.println("Input invalid");
+                return false;
+        }
     }
 
     public void update(Position oldPlayer){
