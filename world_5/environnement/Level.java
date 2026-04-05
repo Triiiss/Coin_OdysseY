@@ -761,9 +761,20 @@ public class Level{
                 enemy.move(this);
                 enemyCells.add(this.level[enemy.getCoord().getY()][enemy.getCoord().getX()]);
 
-                if ((player.getCoord().equals(enemy.getCoord())) || (old.equals(player.getCoord()) && oldPlayer.equals(enemy.getCoord()) && playerMoving && isAvailable(this.player.getCoord()))){
-                    enemy.enemyHit(this.player);
-                    this.resetEnemies();
+                if (enemy.getHealthPoint() <= 0){       // Delete an enemy
+
+                }
+
+                if ((player.getCoord().equals(enemy.getCoord())) || (old.equals(player.getCoord()) && oldPlayer.equals(enemy.getCoord()) && playerMoving && isAvailable(this.player.getCoord()))){      // Enemy collides with player
+                    if (this.player.hasWeapon() != -1){     // Player have weapon
+                        player.attackEnemy(enemy);
+                        enemy.resetPosition();
+                        player.removeInventory(this.player.hasWeapon());
+                    }
+                    else{       // Player gets hit
+                        enemy.attackPlayer(this.player);
+                        this.resetEnemies();  
+                    }
                     break;
                 }
             }
