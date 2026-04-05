@@ -30,6 +30,10 @@ public enum Direction{
      */
     INVENTORY,
     /**
+     * Key to use an element in inventory
+     */
+    USE,
+    /**
      * Key to go exit made with the letter N
      */
     EXIT,
