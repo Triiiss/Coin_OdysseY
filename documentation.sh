@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if(( ! doc -d ))
-then
+if [ ! -d doc ] ; then
     mkdir doc
 fi
-javadoc -d doc world_4/*.java 
+
+javadoc -d doc $(find world_5 -name "*.java")
