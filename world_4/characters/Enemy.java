@@ -20,7 +20,6 @@ public abstract class Enemy extends Character{
      * @param name its name
      * @param coord its current coordinates
      * @param maxhealth The max health of the enemy
-     * @param collide if the enemy collides with the walls
      */
     public Enemy(String name, Position coord,int maxhealth){
         super(name, coord, maxhealth);
