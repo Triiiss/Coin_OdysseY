@@ -53,7 +53,7 @@ public class Position{
 
     /**
      * Checks if two positions are equal (same coord)
-     * @param coord the other position to check
+     * @param o the other position to check
      * @return if the two position are equal or not
      */
     @Override

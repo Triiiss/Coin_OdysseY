@@ -248,10 +248,18 @@ public class Level{
         return this.level;
     }
 
+    /**
+     * Get the enemies list
+     * @return the list of the enemies
+     */
     public List<Enemy> getEnemies(){
         return this.enemies;
     }
 
+    /**
+     * Get the set of the cells the enemies are on
+     * @return the enemyCells
+     */
     public Set<Cell> getEnemyCells(){
         return this.enemyCells;
     }
@@ -548,6 +556,10 @@ public class Level{
     
     }
 
+    /**
+     * Handle the inputs and movement of the player
+     * @return the old position of the player
+     */
     public Position handleInput(){
         Position newPlayer = this.player.getCoord().clone();
         Position oldPlayer = this.player.getCoord().clone();
@@ -588,6 +600,10 @@ public class Level{
         return oldPlayer;
     }
 
+    /**
+     * Updates the events and enemy
+     * @param oldPlayer the old position of the player
+     */
     public void update(Position oldPlayer){
         boolean trap = false;
         boolean validInput = !this.player.getCoord().equals(oldPlayer);

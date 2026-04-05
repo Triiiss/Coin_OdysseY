@@ -122,7 +122,7 @@ public class Cell{
 
     /**
      * Checks if two cells are equal (coordinate)
-     * @param cell The cell we want to check
+     * @param obj The cell we want to check
      * @return If two cells are equal or not
      */
     @Override

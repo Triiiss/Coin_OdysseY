@@ -13,10 +13,17 @@ import java.util.Scanner;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+/**
+ * The game class
+ */
 public class Game{
     Level[] levels;
     Player player;
 
+    /**
+     * Constructor
+     * @param args the arguments for the file management
+     */
     public Game(String[] args){
         if (args.length >= 1){       // If no arguments, error message
             System.out.println("What is your name?");       // Gets player name and creates player

@@ -30,8 +30,7 @@ public class Rule{
      * The player is priority, then coins then the actual type
      * So a coin can be on a trap and just show the coin (it's a hidden trap hehe)
      * @param cell The cell we want to give the char of
-     * @param enemies The list of enemies
-     * @param playerCoord the player's coordinate
+     * @param level The level we want to print to
      * @return the character of the cell ( ,.,#,*,1,etc)
      */
     public static String cellChar(Cell cell, Level level){
@@ -198,8 +197,10 @@ public class Rule{
 
      /**
      * Return the next path to take to get from enemy.coord to the target
+     * @param level the level we try to get the shortest path
      * @param source The enemy mostly the hunter
      * @param target The target usually the player
+     * @param enemy the enemy that is at the source
      * @return the next step
      */
     public static Position shortestPath(Level level, Position source, Position target, Enemy enemy){
