@@ -22,8 +22,7 @@ public class Cell{
      * The cell is a space that can either be a wall, empty, or a trap
      * The player can be on it, and it can have a coin or not
      * @param coord the coords
-     * @param coin if it has a coin on it or not
-     * @param type the type of the cell (0: a wall; 1: empty; 2: a trap)
+     * @param type the type of the cell
      */
     public Cell(Position coord, CellType type){
         this.coord = coord;
@@ -33,6 +32,12 @@ public class Cell{
         this.item = null;
     }
 
+    /**
+     * The cell with an item
+     * @param coord the coords
+     * @param type the type of the cell
+     * @param item the item in the space
+     */
     public Cell(Position coord, CellType type, Item item){
         this(coord,type);
         if (item != null && type != CellType.WALL){     // No items within walls
@@ -42,11 +47,9 @@ public class Cell{
     }
     
     /**
-     * The cell is a space that can either be a wall, empty, or a trap
-     * The player can be on it, and it can have a coin or not
+     * The cell with a special collision
      * @param coord the coordinates
-     * @param coin if it has a coin on it or not
-     * @param type the type of the cell (0: a wall; 1: empty; 2: a trap)
+     * @param type the type of the cell
      * @param collision the collision with the player
      */
     public Cell(Position coord, CellType type, boolean collision){
@@ -54,6 +57,13 @@ public class Cell{
         this.collision = collision;
     }
 
+    /**
+     * The cell with the special collision and an item
+     * @param coord the coordinates
+     * @param type the type of the cell
+     * @param collision the collision with the player
+     * @param item the item in the space
+     */
     public Cell(Position coord, CellType type, boolean collision, Item item){
         this(coord,type,collision);
 
@@ -69,13 +79,6 @@ public class Cell{
      */
     public Position getCoord(){
         return this.coord;
-    }
-
-    public boolean hasCoin(){
-        if (this.hasItem && this.item.getType() == ItemType.COIN){
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -95,12 +98,31 @@ public class Cell{
         return this.collision;
     }
 
+    /**
+     * Get the hasItem (if there is an item here or not)
+     * @return if the cell has an item or not
+     */
     public boolean getHasItem(){
         return this.hasItem;
     }
 
+    /**
+     * Get the item of the cell
+     * @return the item of the cell
+     */
     public Item getItem(){
         return this.item;
+    }
+
+    /**
+     * To know if a cell has an item which is a coin
+     * @return true if the cell has a coin or false if not
+     */
+    public boolean hasCoin(){
+        if (this.hasItem && this.item.getType() == ItemType.COIN){
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -123,13 +145,24 @@ public class Cell{
         setType(type,type.defaultCollision());
     }
 
-    public void addItem(Item item){
-        if (item != null && !this.hasItem){     // No writting over an already existing item
+    /**
+     * Adds an item in a cell
+     * @param item the item we want to add
+     * @return if the item was added or not
+     */
+    public boolean addItem(Item item){
+        if (item != null && !this.hasItem && type != CellType.WALL){     // No writting over an already existing item
             this.hasItem = true;
             this.item = item;
+            return true;
         }
+        return false;
     }
 
+    /**
+     * Removes the item from a cell
+     * @return the item that was on the cell
+     */
     public Item removeItem(){
         Item item = this.item;
         this.item = null;
@@ -140,7 +173,7 @@ public class Cell{
 
     /**
      * Checks if two cells are equal (coordinate)
-     * @param cell The cell we want to check
+     * @param obj The cell we want to check
      * @return If two cells are equal or not
      */
     @Override

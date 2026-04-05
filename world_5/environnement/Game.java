@@ -13,10 +13,17 @@ import java.util.Scanner;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+/**
+ * The game class
+ */
 public class Game{
     Level[] levels;
     Player player;
 
+    /**
+     * Constructor method
+     * @param args the list of arguments given in main (for the file management)
+     */
     public Game(String[] args){
         if (args.length >= 1){       // If no arguments, error message
             System.out.println("What is your name?");       // Gets player name and creates player
@@ -62,9 +69,9 @@ public class Game{
                         Rule.getInput();
                     }
                     else if (this.levels[iLevel].getOpenInventory()){       // If the inventory is open
-                        System.out.println(this.levels[iLevel].displayInventory(this.levels[iLevel].getPlayer().getInventoryIndex()));
+                        System.out.println(this.levels[iLevel].displayInventory());
 
-                        if(this.levels[iLevel].handleInputInventory()){
+                        if(this.levels[iLevel].handleInventory()){
                             this.levels[iLevel].getPlayer().getInventory()[this.levels[iLevel].getPlayer().getInventoryIndex()].use(this.levels[iLevel].getPlayer());
                         }
                     }
@@ -79,7 +86,7 @@ public class Game{
                         if (this.levels[iLevel].getOpenInventory()){
                             continue;
                         }
-                        this.levels[iLevel].update(oldPlayer);        //Updates enemies, events (coins, trap)
+                        this.levels[iLevel].updateMap(oldPlayer);        //Updates enemies, events (coins, trap)
                     }
                 }
             } catch (FileNotFoundException e){

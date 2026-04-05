@@ -261,10 +261,18 @@ public class Level{
         return this.level;
     }
 
+    /**
+     * Get the list of enemies in the level
+     * @return the enemies
+     */
     public List<Enemy> getEnemies(){
         return this.enemies;
     }
 
+    /**
+     * Get the set of cells enemies are in
+     * @return the enemyCells
+     */
     public Set<Cell> getEnemyCells(){
         return this.enemyCells;
     }
@@ -277,11 +285,19 @@ public class Level{
         return this.startPlayer;
     }
 
+    /**
+     * Get if the player has an open inventory or not
+     * @return the open inventory
+     */
     public boolean getOpenInventory(){
         return this.openInventory;
     }
 
-    public void removeOneNbCoin(){
+    /**
+     * Decreases the number of coins in the level by one
+     * Used by pickUp in item to pick up a coin
+     */
+    public void decreaseNbCoin(){
         this.nbCoins--;
     }
 
@@ -327,7 +343,11 @@ public class Level{
         return level.toString();
     }
 
-    public String displayInventory(int index){
+    /**
+     * Displays the inventory UI
+     * @return The string to print out the inventory, its edges and the UI
+     */
+    public String displayInventory(){
         String RESET = "\u001B[0m";
         String BLUE = "\u001B[94m";
         StringBuilder inventory = new StringBuilder();
@@ -353,7 +373,7 @@ public class Level{
                 inventory.append('#');
                 inventory.append('\n');
             }
-            else if (index == i/2){
+            else if (this.player.getInventoryIndex() == i/2){
                 inventory.append("#" + BLUE + " * " + this.player.getInventory()[i/2].getName() + " [USE]" + RESET );
                 for (int j=0;j<this.width - 9 - this.player.getInventory()[i/2].getName().length();j++){
                     inventory.append(" ");
@@ -632,6 +652,10 @@ public class Level{
         }
     }
 
+    /**
+     * Handle the input of the player, and moves the player accordingly
+     * @return the old position of the player to check enemy collision
+     */
     public Position handleInput(){
         Position newPlayer = this.player.getCoord().clone();
         Position oldPlayer = this.player.getCoord().clone();
@@ -675,13 +699,17 @@ public class Level{
         return oldPlayer;
     }
 
-    public boolean handleInputInventory(){
+    /**
+     * Handle the inventory inputs and action
+     * @return if the player used an element or not
+     */
+    public boolean handleInventory(){
         Direction direction = Rule.getDirection();
 
         switch (direction){
             case Direction.UP:
                 if (this.player.getInventoryIndex() > 0){
-                    this.player.removeInventoryIndex();
+                    this.player.decreaseInventoryIndex();
                 }
                 return false;
             case Direction.DOWN:
@@ -706,7 +734,12 @@ public class Level{
         }
     }
 
-    public void update(Position oldPlayer){
+    /**
+     * Updates the map after the player's move
+     * Takes care of events (items and traps) and the enemies
+     * @param oldPlayer used to check if the player moved and the collision to enemy
+     */
+    public void updateMap(Position oldPlayer){
         boolean trap = false;
         boolean playerMoving = !this.player.getCoord().equals(oldPlayer);
 

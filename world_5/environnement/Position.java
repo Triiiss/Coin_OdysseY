@@ -39,52 +39,6 @@ public class Position{
     }
 
     /**
-     * Checks if a position is equal to x and y
-     * @param x the x coordinate we want to check
-     * @param y the y coordinate we want to check
-     * @return if the two coordinate set are equal or not
-     */
-    public boolean equals(int x, int y){
-        if (this.x == x && this.y == y){
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Checks if two positions are equal (same coord)
-     * @param coord the other position to check
-     * @return if the two position are equal or not
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Position coord = (Position) o;
-        return this.x == coord.getX() && this.y == coord.getY();
-    }
-
-    /**
-     * Redefine the hashCode
-     * @return The hash of an object based on equals
-     */
-    @Override
-    public int hashCode(){
-        int result = 11;     // My favorite prime number
-        result = 31*result + this.x;
-        result = 31*result + this.y;
-
-        return result;
-    }
-    
-    public Position clone(){
-        Position clone = new Position(this.x, this.y);
-
-        return clone;
-    }
-
-    /**
      * Change the x coordinate
      * @param x the new coordinate of the position
      */
@@ -114,5 +68,55 @@ public class Position{
      */
     public void addY(int y){
         this.y += y;
+    }
+
+    /**
+     * Checks if a position is equal to x and y
+     * @param x the x coordinate we want to check
+     * @param y the y coordinate we want to check
+     * @return if the two coordinate set are equal or not
+     */
+    public boolean equals(int x, int y){
+        if (this.x == x && this.y == y){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if two positions are equal (same coord)
+     * @param o the other object to check
+     * @return if the two position are equal or not
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Position coord = (Position) o;
+        return this.x == coord.getX() && this.y == coord.getY();
+    }
+
+    /**
+     * Redefine the hashCode
+     * @return The hash of an object based on equals
+     */
+    @Override
+    public int hashCode(){
+        int result = 11;     // My favorite prime number
+        result = 31*result + this.x;
+        result = 31*result + this.y;
+
+        return result;
+    }
+    
+    /**
+     * Clone a position by creating a new object
+     * @return the new Position object
+     */
+    public Position clone(){
+        Position clone = new Position(this.x, this.y);
+
+        return clone;
     }
 }
