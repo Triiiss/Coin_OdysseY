@@ -25,6 +25,15 @@ public class Zombie extends Enemy{
     public Zombie(String name, Position coord,int maxhealth){
         super(name, coord, maxhealth/*, true*/);
     }
+    
+    /**
+     * Checks if an enemy collides with a cell or not
+     * @param cell the cell it collides
+     * @return if the enemy can go on that space or not
+     */
+    public boolean canMove(Cell cell){
+        return !cell.getCollision() && cell.getType() != CellType.TRAP;
+    }
 
     /**
      * Moves the enemy with the type RANDOM
@@ -61,14 +70,5 @@ public class Zombie extends Enemy{
         player.removeHealth(1);
 
         System.out.println("\u001B[31mYou've been hit by " + this.name + "\u001B[0m");
-    }
-    
-    /**
-     * Checks if an enemy collides with a cell or not
-     * @param cell the cell it collides
-     * @return if the enemy can go on that space or not
-     */
-    public boolean canMove(Cell cell){
-        return !cell.getCollision() && cell.getType() != CellType.TRAP;
     }
 }

@@ -20,7 +20,6 @@ public abstract class Enemy extends Character{
      * @param name its name
      * @param coord its current coordinates
      * @param maxhealth The max health of the enemy
-     * @param collide if the enemy collides with the walls
      */
     public Enemy(String name, Position coord,int maxhealth){
         super(name, coord, maxhealth);
@@ -44,17 +43,17 @@ public abstract class Enemy extends Character{
     }
 
     /**
-     * move prototype 
-     * @param level The level where the enemy moves
-     */
-    public abstract void move(Level level);
-
-    /**
      * Checks if an enemy collides with a cell or not
      * @param cell the cell it collides
      * @return if the enemy can go on that space or not
      */
     public abstract boolean canMove(Cell cell);
+
+    /**
+     * move prototype 
+     * @param level The level where the enemy moves
+     */
+    public abstract void move(Level level);
 
     /**
      * The abstract function where the enemy takes life of a player

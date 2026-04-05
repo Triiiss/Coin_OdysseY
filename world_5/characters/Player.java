@@ -48,22 +48,6 @@ public class Player extends Character{
     }
 
     /**
-     * Displays the information of your Player object
-     */
-    public void display(){
-        System.out.println("Player : " + this.name + " | score : " + this.score);
-    }
-
-    /**
-     * Puts the character object in the form of a string
-     * @return the string in the form of [name] : [score] pts
-     */
-    public String toString(){
-        String s = this.score > 1 ? "s" : "";
-        return this.name + " : " + this.score + " pt" + s;
-    }
-    
-    /**
      * Count the players that were created using the constructor method
      * @return the number of player total
      */
@@ -79,20 +63,52 @@ public class Player extends Character{
         return this.score;
     }
 
+    /**
+     * Get the space used in the inventory
+     * @return the index of the last element in inventory
+     */
     public int getInventorySpace(){
         return this.inventorySpace;
     }
 
+    /**
+     * Get the maximum space in the inventory
+     * @return max inventory
+     */
     public int getMaxInventory(){
         return this.maxInventory;
     }
 
+    /**
+     * Get the list of Elements used as inventory
+     * @return the inventory
+     */
     public Element[] getInventory(){
         return this.inventory;
     }
 
+    /**
+     * Get what index the cursor in the inventory is (to know which element to use)
+     * @return the inventory index
+     */
     public int getInventoryIndex(){
         return this.inventoryIndex;
+    }
+
+    /**
+     * Displays the information of your Player object
+     */
+    public void display(){
+        System.out.println("Player : " + this.name + " | score : " + this.score);
+    }
+
+    /**
+     * Puts the character object in the form of a string
+     * @return the string in the form of [name] : [score] pts
+     */
+    public String toString(){
+        String s = this.score > 1 ? "s" : "";
+        return this.name + " : " + this.score + " pt" + s;
     }
 
     /**
@@ -116,6 +132,11 @@ public class Player extends Character{
         }
     }
 
+    /**
+     * Add an element to the inventory (item from cell or competence from gains)
+     * @param element the element to add to the inventory
+     * @return if the element was added to the inventory (true) or not (false)
+     */
     public boolean addInventory(Element element){
         if (this.inventorySpace < this.maxInventory && this.inventory[this.inventorySpace] == null){
             this.inventory[this.inventorySpace] = element;
@@ -126,6 +147,11 @@ public class Player extends Character{
         return false;
     }
 
+    /**
+     * Removes the element in the this.inventoryIndex slot
+     * Pushes all the elements to the begining of the list
+     * @return the Element we remove (in case)
+     */
     public Element removeInventory(){
         if (this.inventorySpace > 0 && this.inventoryIndex >= 0 && this.inventoryIndex < this.inventorySpace && this.inventory[this.inventoryIndex] != null){
             Element e = this.inventory[this.inventoryIndex];
@@ -154,18 +180,27 @@ public class Player extends Character{
         return null;
     }
 
+    /**
+     * Augment the inventoryIndex by one (used the key DOWN while in inventory)
+     */
     public void addInventoryIndex(){
         if (this.inventoryIndex < this.inventorySpace){
             this.inventoryIndex++;
         }
     }
 
-    public void removeInventoryIndex(){
+    /**
+     * Decrease the inventoryIndex by one (used the key UP while in inventory)
+     */
+    public void decreaseInventoryIndex(){
         if (this.inventoryIndex>0){
             this.inventoryIndex--;
         }
     }
 
+    /**
+     * Resets the inventoryIndex (used while quitting the inventory)
+     */
     public void resetInventoryIndex(){
         this.inventoryIndex = 0;
     }

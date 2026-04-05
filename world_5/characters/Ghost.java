@@ -13,8 +13,6 @@ import world_5.types.CellType;
 /**
  * The ghost (phases through walls enemy)
  */
-
-
 public class Ghost extends Enemy{
     /**
      * The ghost enemy
@@ -24,6 +22,15 @@ public class Ghost extends Enemy{
      */
     public Ghost(String name, Position coord,int maxhealth){
         super(name, coord, maxhealth);
+    }
+    
+    /**
+     * Checks if an enemy collides with a cell or not
+     * @param cell the cell it collides
+     * @return if the enemy can go on that space or not
+     */
+    public boolean canMove(Cell cell){
+        return true;
     }
 
     /**
@@ -61,14 +68,5 @@ public class Ghost extends Enemy{
         player.removeHealth(1);
 
         System.out.println("\u001B[31mYou've been hit by " + this.name + "\u001B[0m");
-    }
-    
-    /**
-     * Checks if an enemy collides with a cell or not
-     * @param cell the cell it collides
-     * @return if the enemy can go on that space or not
-     */
-    public boolean canMove(Cell cell){
-        return true;
     }
 }

@@ -13,8 +13,6 @@ import java.util.List;
 /**
  * The hunter (phases through walls enemy)
  */
-
-
 public class Hunter extends Enemy{
     /**
      * The hunter enemy
@@ -24,6 +22,15 @@ public class Hunter extends Enemy{
      */
     public Hunter(String name, Position coord,int maxhealth){
         super(name, coord, 3);
+    }
+
+    /**
+     * Checks if an enemy collides with a cell or not
+     * @param cell the cell it collides
+     * @return if the enemy can go on (true) that space or not
+     */
+    public boolean canMove(Cell cell){
+        return !cell.getCollision()&& cell.getType() != CellType.TRAP;
     }
 
     /**
@@ -46,14 +53,5 @@ public class Hunter extends Enemy{
         player.removeHealth(2);
 
         System.out.println("\u001B[31mYou've been hit by " + this.name + " (hunter) \u001B[0m");
-    }
-    
-    /**
-     * Checks if an enemy collides with a cell or not
-     * @param cell the cell it collides
-     * @return if the enemy can go on (true) that space or not
-     */
-    public boolean canMove(Cell cell){
-        return !cell.getCollision()&& cell.getType() != CellType.TRAP;
     }
 }

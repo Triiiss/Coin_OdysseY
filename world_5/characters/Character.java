@@ -18,19 +18,19 @@ public abstract class Character{
     /**The current health points */
     protected int healthPoint;
     /**The maximum amount of health */
-    final protected int maxhealth;
+    final protected int maxHealth;
 
     /**
      * The character, parent to enemy and player
      * @param name the name of the player
      * @param coord their current coords
-     * @param maxhealth The max health of the player
+     * @param maxHealth The max health of the player
      */
-    public Character(String name, Position coord, int maxhealth){
+    public Character(String name, Position coord, int maxHealth){
         this.name = name;
         this.coord = coord;
-        this.healthPoint = maxhealth;
-        this.maxhealth = maxhealth;
+        this.healthPoint = maxHealth;
+        this.maxHealth = maxHealth;
     }
 
     /**
@@ -51,10 +51,10 @@ public abstract class Character{
 
     /**
      * Get the max health points of the character
-     * @return The maxhealth
+     * @return The maxHealth
      */
     public int getMaxHealth(){
-        return this.maxhealth;
+        return this.maxHealth;
     }
 
     /**
@@ -63,6 +63,27 @@ public abstract class Character{
      */
     public Position getCoord(){
         return this.coord;
+    }
+
+    /**
+     * Adds health points to the character
+     * @param heal The number of health points to add (positive)
+     */
+    public void addHealth(int heal){
+        if (heal >= 0){
+            this.healthPoint = (this.healthPoint + heal < this.maxHealth) ? this.healthPoint + heal : this.maxHealth;
+        }
+    }
+
+    /**
+     * Remove health points of the character
+     * If the update would result in a health below zero, the health points is reset to zero
+     * @param damage The number of points to remove (positive)
+     */
+    public void removeHealth(int damage){
+        if (damage >= 0){
+            this.healthPoint -= (this.healthPoint - damage <= 0) ? this.healthPoint : damage;
+        }
     }
 
     /**
@@ -90,27 +111,6 @@ public abstract class Character{
         result = 31*result + this.name.toLowerCase().hashCode();
 
         return result;
-    }
-
-    /**
-     * Adds health points to the character
-     * @param heal The number of health points to add (positive)
-     */
-    public void addHealth(int heal){
-        if (heal >= 0){
-            this.healthPoint = (this.healthPoint + heal < this.maxhealth) ? this.healthPoint + heal : this.maxhealth;
-        }
-    }
-
-    /**
-     * Remove health points of the character
-     * If the update would result in a health below zero, the health points is reset to zero
-     * @param damage The number of points to remove (positive)
-     */
-    public void removeHealth(int damage){
-        if (damage >= 0){
-            this.healthPoint -= (this.healthPoint - damage <= 0) ? this.healthPoint : damage;
-        }
     }
 
     /**
