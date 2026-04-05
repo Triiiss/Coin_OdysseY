@@ -73,8 +73,8 @@ public class Item extends Element{
      */
     public void use(Player player){
         switch(this.type){
-            case ItemType.WEAPON:
-                player.removeInventory();
+            case ItemType.WEAPON:       // Item deleted after hitting an enemy
+                System.out.println("You will be able to hit enemies");
                 break;
             case ItemType.HOURGLASS:
                 player.removeInventory();
