@@ -17,6 +17,7 @@ public class Player extends Character{
     private int inventorySpace;
     private final int maxInventory;
     private Element[] inventory;
+    private int inventoryIndex;
 
     /**
      * Consctuctor of the Player object (score is automatically at 0)
@@ -26,6 +27,7 @@ public class Player extends Character{
         super(name,new Position(-1,-1),5);
         this.score = 0;
         this.inventorySpace = 0;
+        this.inventoryIndex = 0;
 
         this.maxInventory = 5;
         this.inventory = new Element[this.maxInventory];
@@ -89,6 +91,10 @@ public class Player extends Character{
         return this.inventory;
     }
 
+    public int getInventoryIndex(){
+        return this.inventoryIndex;
+    }
+
     /**
      * Adds points to the score of the player
      * @param points The number of points to add (positive)
@@ -120,10 +126,10 @@ public class Player extends Character{
         return false;
     }
 
-    public Element removeInventory(int index){
-        if (this.inventorySpace > 0 && index >= 0 && index < this.maxInventory && this.inventory[index] != null){
-            Element e = this.inventory[index];
-            this.inventory[index] = null;
+    public Element removeInventory(){
+        if (this.inventorySpace > 0 && this.inventoryIndex >= 0 && this.inventoryIndex < this.inventorySpace && this.inventory[this.inventoryIndex] != null){
+            Element e = this.inventory[this.inventoryIndex];
+            this.inventory[this.inventoryIndex] = null;
             this.inventorySpace--;
 
             int last = -1;
@@ -134,16 +140,34 @@ public class Player extends Character{
                 }
                 else if (last != -1){
                     this.inventory[i] = this.inventory[last];
+                    this.inventory[last] = null;
                     last = -1;
                     i = this.maxInventory-1;
                     continue;
                 }
                 i--;
             }
+            this.resetInventoryIndex();
 
             return e;
         }
         return null;
+    }
+
+    public void addInventoryIndex(){
+        if (this.inventoryIndex < this.inventorySpace){
+            this.inventoryIndex++;
+        }
+    }
+
+    public void removeInventoryIndex(){
+        if (this.inventoryIndex>0){
+            this.inventoryIndex--;
+        }
+    }
+
+    public void resetInventoryIndex(){
+        this.inventoryIndex = 0;
     }
     
     /**
