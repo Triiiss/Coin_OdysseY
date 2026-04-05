@@ -244,6 +244,10 @@ public class Player extends Character{
         }
     }
 
+    /**
+     * Checks if the player has a weapon in case of an enemy collision
+     * @return -1 if there is no weapon or the index of the weapon in the inventory
+     */
     public int hasWeapon(){
         for (int i=0;i<this.inventorySpace;i++){
             if (this.inventory[i] instanceof Item){
@@ -256,9 +260,18 @@ public class Player extends Character{
         return -1;
     }
 
+    /**
+     * Attacks an enemy
+     * @param enemy the enemy that gets hit
+     */
     public void attackEnemy(Enemy enemy){
         enemy.removeHealth(1);
-        System.out.println("\u001B[31mYou've hit " + enemy.getName() + " " + enemy.getHealthPoint() + " HP left \u001B[0m");
+        if (enemy.getHealthPoint() > 0){
+            System.out.println("\u001B[31mYou've hit " + enemy.getName() + " " + enemy.getHealthPoint() + " HP left \u001B[0m");
+        }
+        else{
+            System.out.println("\u001B[31mEnemy " + enemy.getName() + " defeated \u001B[0m");
+        }
     }
 
     /**
