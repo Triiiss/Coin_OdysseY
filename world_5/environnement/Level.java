@@ -759,11 +759,6 @@ public class Level{
                 Enemy enemy = iterator.next();
                 Position old = enemy.getCoord().clone();
                 enemy.move(this);
-                enemyCells.add(this.level[enemy.getCoord().getY()][enemy.getCoord().getX()]);
-
-                if (enemy.getHealthPoint() <= 0){       // Delete an enemy
-
-                }
 
                 if ((player.getCoord().equals(enemy.getCoord())) || (old.equals(player.getCoord()) && oldPlayer.equals(enemy.getCoord()) && playerMoving && isAvailable(this.player.getCoord()))){      // Enemy collides with player
                     if (this.player.hasWeapon() != -1){     // Player have weapon
@@ -774,9 +769,16 @@ public class Level{
                     else{       // Player gets hit
                         enemy.attackPlayer(this.player);
                         this.resetEnemies();  
+                        break;
                     }
-                    break;
                 }
+
+                if (enemy.getHealthPoint() <= 0){       // Delete an enemy
+                    iterator.remove();
+                    continue;
+                }
+
+                enemyCells.add(this.level[enemy.getCoord().getY()][enemy.getCoord().getX()]);
             }
         }
     }
