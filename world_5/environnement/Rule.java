@@ -141,28 +141,28 @@ public class Rule{
         char restartKey = 'r';
 
 
-        if (input.charAt(0) == leftKey) {
+        if (java.lang.Character.toLowerCase(input.charAt(0)) == leftKey) {
             return Direction.LEFT;
         }
-        if (input.charAt(0) == upKey) {
+        if (java.lang.Character.toLowerCase(input.charAt(0)) == upKey) {
             return Direction.UP;
         }
-        if (input.charAt(0) == rightKey) {
+        if (java.lang.Character.toLowerCase(input.charAt(0)) == rightKey) {
             return Direction.RIGHT;
         }
-        if (input.charAt(0) == inventoryKey){
+        if (java.lang.Character.toLowerCase(input.charAt(0)) == inventoryKey){
             return Direction.INVENTORY;
         }
-        if (input.charAt(0) == useKey){
+        if (java.lang.Character.toLowerCase(input.charAt(0)) == useKey){
             return Direction.USE;
         }
-        if (input.charAt(0) == downKey) {
+        if (java.lang.Character.toLowerCase(input.charAt(0)) == downKey) {
             return Direction.DOWN;
         }
-        if (input.charAt(0) == exitKey) {
+        if (java.lang.Character.toLowerCase(input.charAt(0)) == exitKey) {
             return Direction.EXIT;
         }
-        if (input.charAt(0) == restartKey) {
+        if (java.lang.Character.toLowerCase(input.charAt(0)) == restartKey) {
             return Direction.RESTART;
         }
 
