@@ -11,14 +11,16 @@ import world_5.types.*;
 import world_5.exceptions.*;
 import world_5.inventory.*;
 
-import java.nio.file.*;
 import java.io.FileNotFoundException;
-import java.util.List;
-import java.util.ArrayList;
 import java.io.IOException;
+import java.nio.file.*;
+
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.Random;
+import java.util.List;
+import java.util.HashSet;
 
 /**
  * Level class
@@ -674,11 +676,45 @@ public class Level{
     }
 
     /**
+     * If there is AT LEAST ONE available space for the player to move to
+     * @param taken the position already taken that cannot count
+     * @return if such cell exists or not
+     */
+    public boolean hasAvailableSpace(Position taken){
+        for (int i=0;i<this.height;i++){
+            for (int j=0;j<this.width;j++){
+                if (!taken.equals(j,i)){        // Don't take the same position as taken
+                    if (this.level[i][j].getType() == CellType.EMPTY && !this.level[i][j].getCollision() && !this.enemyCells.contains(this.level[i][j])){       // Empty cell, no collision and no enemies
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * Teleports the player to a random empty space
      * @return if the teleportation was done or not
      */
-    public boolean teleportation(){
-        
+    public boolean teleportationPlayer(){
+        Random rand = new Random();
+
+        if (!hasAvailableSpace(this.player.getCoord())){
+            return false;
+        }
+
+        int newX = this.player.getCoord().getX();
+        int newY = this.player.getCoord().getY();
+
+        while(this.player.getCoord().equals(newX,newY) || this.level[newY][newX].getType() != CellType.EMPTY || this.level[newY][newX].getCollision() || this.enemyCells.contains(this.level[newY][newX])){
+            System.out.println("caca");
+            newX = rand.nextInt(this.width);
+            newY = rand.nextInt(this.height);
+        }
+        this.player.moveTo(newX,newY);
+
+        return true;
     }
 
     /**
@@ -835,8 +871,6 @@ public class Level{
         if (!this.player.hasLockpick() && this.player.getScore() >= 100){        // Adds lockpicking 
             this.player.addInventory(new Competence("Lockpicking",CompetenceType.LOCKPICK));
         }
-        System.out.println(this.player.hasTeleportation());
-        System.out.println(this.player.getKills());
         if (!this.player.hasTeleportation() && this.player.getKills() >= 3){    // Adds teleportation
             this.player.addInventory(new Competence("Teleportation", CompetenceType.TELEPORTATION));
         }
