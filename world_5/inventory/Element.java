@@ -41,5 +41,5 @@ public abstract class Element{
      * Use the element
      * @param player the player using the element (to erase the item from inventory)
      */
-    public abstract void use(Player player);
+    public abstract void use(Level level);
 }

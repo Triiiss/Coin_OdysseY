@@ -71,13 +71,16 @@ public class Item extends Element{
      * Use the item and deletes it from the inventory
      * @param player the player using the item
      */
-    public void use(Player player){
+    public void use(Level level){
         switch(this.type){
             case ItemType.WEAPON:       // Item deleted after hitting an enemy
-                System.out.println("You will be able to hit enemies");
+                System.out.println("\u001B[94mYou will be able to hit enemies\u001B[0m");
+                level.getPlayer().resetInventoryIndex();
                 break;
             case ItemType.HOURGLASS:
-                player.removeInventory();
+                level.freezeEnemies(10);
+                level.getPlayer().removeInventory();
+                System.out.println("\u001B[36mEnemies are frozen for 10 movements\u001B[0m");
                 break;
         }
     }

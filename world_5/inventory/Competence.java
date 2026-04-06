@@ -51,7 +51,7 @@ public class Competence extends Element{
      * Use the competence (does not disapear from the inventory)
      * @param player the player using the competence
      */
-    public void use(Player player){
+    public void use(Level level){
         switch(this.type){
             case CompetenceType.LOCKPICK:
                 break;
