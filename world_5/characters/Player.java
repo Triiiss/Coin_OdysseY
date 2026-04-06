@@ -260,6 +260,18 @@ public class Player extends Character{
         return -1;
     }
 
+    public boolean hasLockpick(){
+        for (int i=0;i<this.inventorySpace;i++){
+            if (this.inventory[i] instanceof Competence){
+                Competence competence = (Competence) this.inventory[i];
+                if (competence.getType() == CompetenceType.LOCKPICK) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     /**
      * Attacks an enemy
      * @param enemy the enemy that gets hit
