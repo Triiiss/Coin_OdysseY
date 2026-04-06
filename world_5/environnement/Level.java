@@ -5,6 +5,7 @@
 
 package world_5.environnement;
 
+import world_5.characters.Character;
 import world_5.characters.*;
 import world_5.types.*;
 import world_5.exceptions.*;
@@ -116,7 +117,7 @@ public class Level{
                 enemyCells.add(this.level[foe.getCoord().getY()][foe.getCoord().getX()]);
             }
 
-            if (!isAvailable(new Position(playerX,playerY))){      // Player not in map
+            if (!this.isAccessible(new Position(playerX,playerY), null)){      // Player not in map
                 System.out.println(playerX + " " + playerY + " " + this.level[playerY][playerX].getType().name());
                 throw new PlayerOutOfBoundsException("Creation of the level impossible : player out of the map or in a wall");
             }
@@ -662,8 +663,11 @@ public class Level{
      * @param coord The coordinate of the cell
      * @return true if the player can move to the space (x,y)
      */
-    public boolean isAvailable(Position coord){
-        return (coord.getX() >= 0 && coord.getX() < this.width && coord.getY() >= 0 && coord.getY() < this.height && !this.level[coord.getY()][coord.getX()].getCollision());
+    public boolean isAccessible(Position coord, Character character){
+        if (character != null){
+            return (coord.validPosition() && coord.getX() < this.width && coord.getY() < this.height && character.canMove(this.level[coord.getY()][coord.getX()]));
+        }
+        return (coord.validPosition() && coord.getX() < this.width && coord.getY() < this.height && !this.level[coord.getY()][coord.getX()].getCollision());        // If we just the position
     }
 
     /**
@@ -672,9 +676,9 @@ public class Level{
      * @param enemy checks if the ennemy collids with the walls
      * @return true if the player can move to the space (x,y)
      */
-    public boolean isAvailable(Position coord, Enemy enemy){
-        return (coord.getX() >= 0 && coord.getX() < this.width && coord.getY() >= 0 && coord.getY() < this.height && enemy.canMove(this.level[coord.getY()][coord.getX()]));
-    }
+    /*public boolean isAccessible(Position coord, Enemy enemy){
+        return (coord.validPosition() && coord.getX() < this.width && coord.getY() < this.height && enemy.canMove(this.level[coord.getY()][coord.getX()]));
+    }*/ // HERE
 
     /**
      * Resets all the enemies when the player is hurt
@@ -729,7 +733,7 @@ public class Level{
 
         Rule.tore(this,newPlayer);
 
-        if (playerMoving && isAvailable(newPlayer)){
+        if (playerMoving && this.isAccessible(newPlayer, null)){
             this.player.moveTo(newPlayer.getX(),newPlayer.getY());
         }
 
@@ -805,7 +809,7 @@ public class Level{
                     enemy.move(this);
                 }
 
-                if ((player.getCoord().equals(enemy.getCoord())) || (old.equals(player.getCoord()) && oldPlayer.equals(enemy.getCoord()) && playerMoving && isAvailable(this.player.getCoord()))){      // Enemy collides with player
+                if ((player.getCoord().equals(enemy.getCoord())) || (old.equals(player.getCoord()) && oldPlayer.equals(enemy.getCoord()) && playerMoving && this.isAccessible(this.player.getCoord(), player))){      // Enemy collides with player
                     if (this.player.hasWeapon() != -1){     // Player have weapon
                         player.attackEnemy(enemy);
                         enemy.resetPosition();

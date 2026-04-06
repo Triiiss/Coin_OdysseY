@@ -40,7 +40,7 @@ public class Rule{
         String CYAN = "\u001B[36m";     // Enemies frozen
         String MAGENTA = "\u001B[35m";  // Traps
         String BLUE = "\u001B[94m";     // Items
-        String GREEN = "\u001B[92m";
+        String GREEN = "\u001B[92m";    // Player
 
         if (level.getPlayer().getCoord().equals(cell.getCoord())){
             return GREEN + "1" + RESET;
@@ -258,7 +258,7 @@ public class Rule{
             for (int[] dir : directions){       // Check all "children" (all four directions)
                 Position next = new Position(current.getX() + dir[0],current.getY() + dir[1]);
 
-                if (level.isAvailable(next, enemy) && !visited[next.getY()][next.getX()]){       // Adds a new step
+                if (level.isAccessible(next, enemy) && !visited[next.getY()][next.getX()]){       // Adds a new step
                     visited[next.getY()][next.getX()] = true;
                     path.put(next,current);
                     queue.add(next);

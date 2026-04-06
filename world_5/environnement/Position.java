@@ -119,4 +119,8 @@ public class Position{
 
         return clone;
     }
+
+    public boolean validPosition(){
+        return (this.x >= 0 && this.y >= 0);
+    }
 }
