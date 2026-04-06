@@ -120,6 +120,10 @@ public class Position{
         return clone;
     }
 
+    /**
+     * If the position object is not corrupted
+     * @return true if all values are valid
+     */
     public boolean validPosition(){
         return (this.x >= 0 && this.y >= 0);
     }
