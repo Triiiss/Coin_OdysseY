@@ -370,6 +370,9 @@ public class Level{
         level.append('\n');
         level.append("x: " + this.player.getCoord().getX() + " y: " + this.player.getCoord().getY() + " | coins left : \u001B[33m"+ this.getNbCoins() + "⁠\u001B[0m\n");
         level.append("Z: Up | Q: Right | S: Down | D: Left | N: exit");
+        if (this.freeze > 0){
+            level.append("  |  Enemies frozen for \u001B[36m" + this.freeze + " movements\u001B[0m");
+        }
 
         return level.toString();
     }
@@ -446,6 +449,9 @@ public class Level{
         }
         inventory.append('\n');
         inventory.append("Z: Up | S: Down | U: Use | N or I: exit");
+        if (this.freeze > 0){
+            inventory.append("  |  Enemies frozen for \u001B[36m" + this.freeze + " movements\u001B[0m");
+        }
 
         return inventory.toString();
     }
