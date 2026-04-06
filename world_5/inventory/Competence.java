@@ -41,6 +41,8 @@ public class Competence extends Element{
     public void use(Level level){
         switch(this.type){
             case CompetenceType.LOCKPICK:
+                System.out.println("\u001B[35mYou can walk through closed doors\u001B[0m");
+                level.getPlayer().resetInventoryIndex();
                 break;
             case CompetenceType.TELEPORTATION:
                 break;
