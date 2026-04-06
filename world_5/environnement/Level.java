@@ -826,7 +826,7 @@ public class Level{
                 enemyCells.add(this.level[enemy.getCoord().getY()][enemy.getCoord().getX()]);
             }
         }
-        if (this.player.hasLockpick() && this.player.getScore() >= 100){        // Adds lockpicking 
+        if (!this.player.hasLockpick() && this.player.getScore() >= 100){        // Adds lockpicking 
             this.player.addInventory(new Competence("Lockpicking",CompetenceType.LOCKPICK));
         }
 
