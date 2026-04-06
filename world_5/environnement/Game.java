@@ -94,6 +94,9 @@ public class Game{
             } catch (IOException e){
                 System.err.println(e.getMessage());
             }
+            catch (InvalidLevelException e){
+                System.err.println(e.getMessage());
+            }
         }
         else{
             System.out.println("\nTo play a level, use the command : java -jar exec.jar [FILE_NAME]\n[FILE_NAME] is a file placed in the directory files (no need to do files/[FILE_NAME], just [FILE_NAME]) of a level, like pacMan.txt or mario.txt\n");

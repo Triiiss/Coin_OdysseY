@@ -45,8 +45,9 @@ public class Level{
      * @param player The player with the name and the score
      * @param playerX the x coordinate of the player
      * @param playerY the y coordinate of the player
+     * @throws InvalidLevelException if the width and height are invalid
      */
-    public Level(int width, int height, Structure[] structs,List<Enemy> enemies, Player player, int playerX, int playerY){
+    public Level(int width, int height, Structure[] structs,List<Enemy> enemies, Player player, int playerX, int playerY) throws InvalidLevelException{
         if (width > 0 && height > 0){
             this.width = width;
             this.height = height;
@@ -64,41 +65,44 @@ public class Level{
             }
 
             for (int i=0;i<structs.length; i++){            // Fill the structures
-                if (this.isInLevel(structs[i])){
-                    for (int j=0;j<structs[i].getHeight();j++){
-                        for (int k=0;k<structs[i].getWidth();k++){
-                            switch(structs[i].getType()){
-                                case 0:             // If it's a wall
-                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY && !this.level[j+structs[i].getY()][k+structs[i].getX()].hasCoin()){
-                                        this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.WALL);
-                                    }
-                                    break;
-                                case 1:         // If it's a trap
-                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY){
-                                        this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.TRAP);
-                                    }
-                                    break;
-                                case 2:         // If it's a locked door
-                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY){
-                                        this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.DOOR);
-                                    }
-                                    break;
-                                case 100:             // If it's coins
-                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() != CellType.WALL && !this.level[j+structs[i].getY()][k+structs[i].getX()].getHasItem()){       // Items can be anywhere except walls or write over other items
-                                        this.nbCoins += 1;
-                                        this.level[j+structs[i].getY()][k+structs[i].getX()].addItem(new Item("coin", ItemType.COIN));
-                                    }
-                                    break;
-                                case 101:
-                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() != CellType.WALL && !this.level[j+structs[i].getY()][k+structs[i].getX()].getHasItem()){
-                                        this.level[j+structs[i].getY()][k+structs[i].getX()].addItem(new Item("Weapon",ItemType.WEAPON));
-                                    }
-                                    break;
-                                case 102:
-                                    if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() != CellType.WALL && !this.level[j+structs[i].getY()][k+structs[i].getX()].getHasItem()){
-                                        this.level[j+structs[i].getY()][k+structs[i].getX()].addItem(new Item("Hourglass",ItemType.HOURGLASS));
-                                    }
-                                    break;
+                if (structs[i] != null){
+                    
+                    if (this.isInLevel(structs[i])){
+                        for (int j=0;j<structs[i].getHeight();j++){
+                            for (int k=0;k<structs[i].getWidth();k++){
+                                switch(structs[i].getType()){
+                                    case 0:             // If it's a wall
+                                        if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY && !this.level[j+structs[i].getY()][k+structs[i].getX()].hasCoin()){
+                                            this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.WALL);
+                                        }
+                                        break;
+                                    case 1:         // If it's a trap
+                                        if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY){
+                                            this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.TRAP);
+                                        }
+                                        break;
+                                    case 2:         // If it's a locked door
+                                        if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY){
+                                            this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.DOOR);
+                                        }
+                                        break;
+                                    case 100:             // If it's coins
+                                        if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() != CellType.WALL && !this.level[j+structs[i].getY()][k+structs[i].getX()].getHasItem()){       // Items can be anywhere except walls or write over other items
+                                            this.nbCoins += 1;
+                                            this.level[j+structs[i].getY()][k+structs[i].getX()].addItem(new Item("coin", ItemType.COIN));
+                                        }
+                                        break;
+                                    case 101:
+                                        if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() != CellType.WALL && !this.level[j+structs[i].getY()][k+structs[i].getX()].getHasItem()){
+                                            this.level[j+structs[i].getY()][k+structs[i].getX()].addItem(new Item("Weapon",ItemType.WEAPON));
+                                        }
+                                        break;
+                                    case 102:
+                                        if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() != CellType.WALL && !this.level[j+structs[i].getY()][k+structs[i].getX()].getHasItem()){
+                                            this.level[j+structs[i].getY()][k+structs[i].getX()].addItem(new Item("Hourglass",ItemType.HOURGLASS));
+                                        }
+                                        break;
+                                }
                             }
                         }
                     }
@@ -123,7 +127,9 @@ public class Level{
                 this.player.moveTo(playerX,playerY);
             }
         }
-        /// THROW HERE
+        else{
+            throw new InvalidLevelException("The level's arguments are invalid");
+        }
     }
 
     /**
@@ -138,8 +144,9 @@ public class Level{
      * @return a level object based on the info of the file
      * @throws IOException If the format read is not valid
      * @throws FileNotFoundException If the file given isn't there
+     * @throws InvalidLevelException if the width or height aren't valid
      */
-    public static Level getLevelFromFile(String file, Player p1) throws FileNotFoundException, IOException{
+    public static Level getLevelFromFile(String file, Player p1) throws FileNotFoundException, IOException, InvalidLevelException{
         Path p = Paths.get(CUR+"/files/"+file);
         Structure[] structLevel = null;
         List<Enemy> enemies = new ArrayList<Enemy>();
@@ -171,8 +178,13 @@ public class Level{
                             case 1:     // Structures info
                                 String[] structInfo = ligne.split(" ");
                                 if (structInfo.length == 5){
-                                    structLevel[subSection] = new Structure(Integer.parseInt(structInfo[0]),Integer.parseInt(structInfo[1]),Integer.parseInt(structInfo[2]),Integer.parseInt(structInfo[3]),Integer.parseInt(structInfo[4]));
-                                    subSection += 1;
+                                    try{
+                                        structLevel[subSection] = new Structure(Integer.parseInt(structInfo[0]),Integer.parseInt(structInfo[1]),Integer.parseInt(structInfo[2]),Integer.parseInt(structInfo[3]),Integer.parseInt(structInfo[4]));
+                                        subSection += 1;
+                                    }
+                                    catch (InvalidStructureException e){
+                                        System.err.println(e.getMessage());
+                                    }
                                 }
                                 break;
                             case 2:
@@ -208,11 +220,14 @@ public class Level{
                     }
                 }
                 if (structLevel != null && p1 != null){
-                    return new Level(width, height, structLevel, enemies, p1, playerX, playerY);
+                    try{
+                        return new Level(width, height, structLevel, enemies, p1, playerX, playerY);   
+                    } catch (InvalidLevelException e){
+                        throw e;
+                    }
                 }
             } catch(IOException e){
-                System.out.println(e.getMessage());
-                throw new IOException(e.getMessage());
+                throw e;
             }
         }
         else{

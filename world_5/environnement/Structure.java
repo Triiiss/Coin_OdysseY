@@ -6,6 +6,7 @@
 package world_5.environnement;
 
 import world_5.types.CellType;
+import world_5.exceptions.InvalidStructureException;
 
 /**
  * Structure class to make walls in the level
@@ -25,13 +26,16 @@ public class Structure{
      * @param width The size of the x coordonate
      * @param height The size of the y coordonate
      */
-    public Structure(int type, int width, int height, int x, int y){
+    public Structure(int type, int width, int height, int x, int y) throws InvalidStructureException{
         if (width >= 0 && height >= 0 && x >= 0 && y >= 0){
             this.type = type;
             this.x = x;
             this.y = y;
             this.width = width;
             this.height = height;
+        }
+        else{
+            throw new InvalidStructureException("Structure arguments invalid");
         }
     }
     
