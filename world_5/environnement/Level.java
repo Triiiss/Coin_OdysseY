@@ -118,7 +118,6 @@ public class Level{
             }
 
             if (!this.isAccessible(new Position(playerX,playerY), null)){      // Player not in map
-                System.out.println(playerX + " " + playerY + " " + this.level[playerY][playerX].getType().name());
                 throw new PlayerOutOfBoundsException("Creation of the level impossible : player out of the map or in a wall");
             }
             else if (player == null){       // Player not given
@@ -327,6 +326,10 @@ public class Level{
         this.nbCoins--;
     }
 
+    /**
+     * Adds a time to freeze for enemies
+     * @param time the amount of time (usually 10 w/ hourglass) we add
+     */
     public void freezeEnemies(int time){
         if (time >= 0){
             this.freeze += time;
@@ -671,14 +674,12 @@ public class Level{
     }
 
     /**
-     * Checks the space for moveEnemy functions
-     * @param coord The coordinate of the cell
-     * @param enemy checks if the ennemy collids with the walls
-     * @return true if the player can move to the space (x,y)
+     * Teleports the player to a random empty space
+     * @return if the teleportation was done or not
      */
-    /*public boolean isAccessible(Position coord, Enemy enemy){
-        return (coord.validPosition() && coord.getX() < this.width && coord.getY() < this.height && enemy.canMove(this.level[coord.getY()][coord.getX()]));
-    }*/ // HERE
+    public boolean teleportation(){
+        
+    }
 
     /**
      * Resets all the enemies when the player is hurt
@@ -733,7 +734,7 @@ public class Level{
 
         Rule.tore(this,newPlayer);
 
-        if (playerMoving && this.isAccessible(newPlayer, null)){
+        if (playerMoving && this.isAccessible(newPlayer, this.player)){
             this.player.moveTo(newPlayer.getX(),newPlayer.getY());
         }
 
@@ -823,6 +824,7 @@ public class Level{
                 }
 
                 if (enemy.getHealthPoint() <= 0){       // Delete an enemy
+                    this.player.addKill();
                     iterator.remove();
                     continue;
                 }
@@ -832,6 +834,11 @@ public class Level{
         }
         if (!this.player.hasLockpick() && this.player.getScore() >= 100){        // Adds lockpicking 
             this.player.addInventory(new Competence("Lockpicking",CompetenceType.LOCKPICK));
+        }
+        System.out.println(this.player.hasTeleportation());
+        System.out.println(this.player.getKills());
+        if (!this.player.hasTeleportation() && this.player.getKills() >= 3){    // Adds teleportation
+            this.player.addInventory(new Competence("Teleportation", CompetenceType.TELEPORTATION));
         }
 
         if (freeze > 0){        // Each movement freeze decreases
