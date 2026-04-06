@@ -6,6 +6,7 @@
 package world_5.characters;
 
 import world_5.environnement.Position;
+import world_5.environnement.Cell;
 import world_5.inventory.*;
 import world_5.types.*;
 
@@ -291,6 +292,13 @@ public class Player extends Character{
      */
     public void resetInventoryIndex(){
         this.inventoryIndex = 0;
+    }
+
+    public boolean canMove(Cell cell){
+        if (this.hasLockpick()){
+            return !cell.getCollision() || cell.getType() == CellType.DOOR;
+        }
+        return !cell.getCollision();
     }
     
     /**

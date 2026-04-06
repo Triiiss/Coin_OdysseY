@@ -40,7 +40,7 @@ public class Hunter extends Enemy{
     public void move(Level level){
         Position newEnemy = Rule.shortestPath(level, this.coord, level.getPlayer().getCoord(), this);
             
-        if (level.isAvailable(newEnemy,this)){
+        if (level.isAccessible(newEnemy,this)){
             this.moveTo(newEnemy.getX(),newEnemy.getY());
         }
     }

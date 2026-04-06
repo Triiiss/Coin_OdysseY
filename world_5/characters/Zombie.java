@@ -57,7 +57,7 @@ public class Zombie extends Enemy{
                 break;
         }
 
-        if (level.isAvailable(newEnemy,this)){
+        if (level.isAccessible(newEnemy,this)){
             this.moveTo(newEnemy.getX(),newEnemy.getY());
         }
     }

@@ -6,6 +6,7 @@
 package world_5.characters;
 
 import world_5.environnement.Position;
+import world_5.environnement.Cell;
 
 /**
  * The character class to play a video game
@@ -112,6 +113,13 @@ public abstract class Character{
 
         return result;
     }
+
+    /**
+     * Checks if an enemy collides with a cell or not
+     * @param cell the cell it collides
+     * @return if the enemy can go on that space or not
+     */
+    public abstract boolean canMove(Cell cell);
 
     /**
      * Moves the character
