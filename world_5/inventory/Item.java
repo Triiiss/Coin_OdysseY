@@ -80,7 +80,7 @@ public class Item extends Element{
             case ItemType.HOURGLASS:
                 level.freezeEnemies(10);
                 level.getPlayer().removeInventory();
-                System.out.println("\u001B[36mEnemies are frozen for 10 movements\u001B[0m");
+                System.out.println("\u001B[36mEnemies are frozen for 10 mov.\u001B[0m");
                 break;
         }
     }

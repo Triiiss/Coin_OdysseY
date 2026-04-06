@@ -33,19 +33,6 @@ public class Competence extends Element{
     public CompetenceType getType(){
         return this.type;
     }
-    
-    /**
-     * Pick up the competence
-     * @param level the level the player picking up the competence is in
-     * @return if the competence was picked up or not
-     */
-    public boolean pickUp(Level level){
-        if (level.getPlayer().getInventorySpace() < level.getPlayer().getMaxInventory()){
-            level.getPlayer().addInventory(this);
-            return true;
-        }
-        return false;
-    }
 
     /**
      * Use the competence (does not disapear from the inventory)

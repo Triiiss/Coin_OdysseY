@@ -31,13 +31,6 @@ public abstract class Element{
     }
 
     /**
-     * Try to put an element into the inventory
-     * @param level the level we are in
-     * @return if the element was picked up or not
-     */
-    public abstract boolean pickUp(Level level);
-
-    /**
      * Use the element
      * @param player the player using the element (to erase the item from inventory)
      */
