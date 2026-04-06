@@ -8,6 +8,7 @@ package world_5.environnement;
 import world_5.types.*;
 import world_5.exceptions.*;
 import world_5.characters.*;
+import world_5.inventory.*;
 
 import java.util.Scanner;
 import java.io.FileNotFoundException;

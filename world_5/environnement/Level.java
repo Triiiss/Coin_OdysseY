@@ -371,7 +371,7 @@ public class Level{
         level.append("x: " + this.player.getCoord().getX() + " y: " + this.player.getCoord().getY() + " | coins left : \u001B[33m"+ this.getNbCoins() + "⁠\u001B[0m\n");
         level.append("Z: Up | Q: Right | S: Down | D: Left | N: exit");
         if (this.freeze > 0){
-            level.append("  |  Enemies frozen for \u001B[36m" + this.freeze + " movements\u001B[0m");
+            level.append("  |  Enemies frozen for \u001B[36m" + this.freeze + " mov.\u001B[0m");
         }
 
         return level.toString();
@@ -450,7 +450,7 @@ public class Level{
         inventory.append('\n');
         inventory.append("Z: Up | S: Down | U: Use | N or I: exit");
         if (this.freeze > 0){
-            inventory.append("  |  Enemies frozen for \u001B[36m" + this.freeze + " movements\u001B[0m");
+            inventory.append("  |  Enemies frozen for \u001B[36m" + this.freeze + " mov.\u001B[0m");
         }
 
         return inventory.toString();
@@ -756,7 +756,12 @@ public class Level{
                 return false;
             case Direction.USE:
                 this.openInventory = false;
-                return true;
+                if (this.player.getInventoryIndex() < this.player.getInventorySpace()){     // Checks if an actual element was chosen
+                    return true;
+                }
+                else{
+                    return false;
+                }
             case Direction.INVENTORY:
                 this.openInventory = false;
                 this.player.resetInventoryIndex();
@@ -820,6 +825,9 @@ public class Level{
 
                 enemyCells.add(this.level[enemy.getCoord().getY()][enemy.getCoord().getX()]);
             }
+        }
+        if (this.player.hasLockpick() && this.player.getScore() >= 100){        // Adds lockpicking 
+            this.player.addInventory(new Competence("Lockpicking",CompetenceType.LOCKPICK));
         }
 
         if (freeze > 0){        // Each movement freeze decreases
