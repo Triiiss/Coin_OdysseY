@@ -33,6 +33,7 @@ public class Level{
     private int nbCoins;
     private Position startPlayer;
     private boolean openInventory;
+    private int freeze;
 
     private static String CUR = System.getProperty("user.dir");
 
@@ -52,6 +53,7 @@ public class Level{
             this.width = width;
             this.height = height;
             this.nbCoins = 0;
+            this.freeze = 0;
             this.openInventory = false;
             this.enemies = enemies;
             this.enemyCells = new HashSet<Cell>();
@@ -309,11 +311,25 @@ public class Level{
     }
 
     /**
+     * Get the time enemies are frozen
+     * @return the freeze time
+     */
+    public int getFreeze(){
+        return this.freeze;
+    }
+
+    /**
      * Decreases the number of coins in the level by one
      * Used by pickUp in item to pick up a coin
      */
     public void decreaseNbCoin(){
         this.nbCoins--;
+    }
+
+    public void freezeEnemies(int time){
+        if (time >= 0){
+            this.freeze += time;
+        }
     }
 
     /**
@@ -641,7 +657,7 @@ public class Level{
      * @return true if the player can move to the space (x,y)
      */
     public boolean isAvailable(Position coord){
-        return (coord.getX() >= 0 && coord.getX() < this.width && coord.getY() >= 0 && coord.getY() < this.height && !this.level[coord.getY()][coord.getX()].getCollision()) ? true : false;
+        return (coord.getX() >= 0 && coord.getX() < this.width && coord.getY() >= 0 && coord.getY() < this.height && !this.level[coord.getY()][coord.getX()].getCollision());
     }
 
     /**
@@ -651,7 +667,7 @@ public class Level{
      * @return true if the player can move to the space (x,y)
      */
     public boolean isAvailable(Position coord, Enemy enemy){
-        return (coord.getX() >= 0 && coord.getX() < this.width && coord.getY() >= 0 && coord.getY() < this.height && enemy.canMove(this.level[coord.getY()][coord.getX()])) ? true : false;
+        return (coord.getX() >= 0 && coord.getX() < this.width && coord.getY() >= 0 && coord.getY() < this.height && enemy.canMove(this.level[coord.getY()][coord.getX()]));
     }
 
     /**
@@ -773,7 +789,10 @@ public class Level{
             while (iterator.hasNext()){         // Check if enemy hits whether the player moved or not
                 Enemy enemy = iterator.next();
                 Position old = enemy.getCoord().clone();
-                enemy.move(this);
+
+                if (this.freeze == 0){      // Don't move the enemies if frozen
+                    enemy.move(this);
+                }
 
                 if ((player.getCoord().equals(enemy.getCoord())) || (old.equals(player.getCoord()) && oldPlayer.equals(enemy.getCoord()) && playerMoving && isAvailable(this.player.getCoord()))){      // Enemy collides with player
                     if (this.player.hasWeapon() != -1){     // Player have weapon
@@ -795,6 +814,10 @@ public class Level{
 
                 enemyCells.add(this.level[enemy.getCoord().getY()][enemy.getCoord().getX()]);
             }
+        }
+
+        if (freeze > 0){        // Each movement freeze decreases
+            freeze--;
         }
     }
 }

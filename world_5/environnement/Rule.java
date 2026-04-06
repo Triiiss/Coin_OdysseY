@@ -37,12 +37,13 @@ public class Rule{
         String RESET = "\u001B[0m";
         String YELLOW = "\u001B[33m";  // Coin
         String RED = "\u001B[31m";      // Enemy
-        String CYAN = "\u001B[36m";     // Player
+        String CYAN = "\u001B[36m";     // Enemies frozen
         String MAGENTA = "\u001B[35m";  // Traps
         String BLUE = "\u001B[94m";     // Items
+        String GREEN = "\u001B[92m";
 
         if (level.getPlayer().getCoord().equals(cell.getCoord())){
-            return CYAN + "1" + RESET;
+            return GREEN + "1" + RESET;
         }
 
         if(level.getEnemyCells().contains(cell)){
@@ -51,13 +52,22 @@ public class Rule{
                 Enemy enemy = iterator.next();
                 if (enemy.getCoord().equals(cell.getCoord())){
                     if (enemy instanceof Zombie){
-                        return RED + "R" + RESET;
+                        if (level.getFreeze() == 0){
+                            return RED + "R" + RESET;
+                        }
+                        return CYAN + "R" + RESET;
                     }
                     if (enemy instanceof Ghost){
-                        return RED + "G" + RESET;
+                        if (level.getFreeze() == 0){
+                            return RED + "G" + RESET;
+                        }
+                        return CYAN + "G" + RESET;
                     }
                     if (enemy instanceof Hunter){
-                        return RED + "C" + RESET;
+                        if (level.getFreeze() == 0){
+                            return RED + "C" + RESET;
+                        }
+                        return CYAN + "C" + RESET;
                     }
                 }
             }

@@ -71,8 +71,8 @@ public class Game{
                     else if (this.levels[iLevel].getOpenInventory()){       // If the inventory is open
                         System.out.println(this.levels[iLevel].displayInventory());
 
-                        if(this.levels[iLevel].handleInventory()){
-                            this.levels[iLevel].getPlayer().getInventory()[this.levels[iLevel].getPlayer().getInventoryIndex()].use(this.levels[iLevel].getPlayer());
+                        if(this.levels[iLevel].handleInventory()){      // Use an element
+                            this.levels[iLevel].getPlayer().getInventory()[this.levels[iLevel].getPlayer().getInventoryIndex()].use(this.levels[iLevel]);
                         }
                     }
                     else{               // The actual this.levels
