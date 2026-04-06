@@ -23,6 +23,7 @@ public class Player extends Character{
     private int inventoryIndex;
 
     private boolean weapon;
+    private int kills;
 
     /**
      * Consctuctor of the Player object (score is automatically at 0)
@@ -40,6 +41,7 @@ public class Player extends Character{
             this.inventory[i] = null;
         }
         this.weapon = false;
+        this.kills = 0;
 
         System.out.println("[Creation] Number of total players : " + Player.nbPlayers);
         Player.nbPlayers++;
@@ -109,6 +111,14 @@ public class Player extends Character{
     }
 
     /**
+     * Get the number of enemy killed by the player
+     * @return the number of kills
+     */
+    public int getKills(){
+        return this.kills;
+    }
+
+    /**
      * Displays the information of your Player object
      */
     public void display(){
@@ -143,6 +153,11 @@ public class Player extends Character{
         if (points >= 0){
             this.score -= this.score - points <= 0 ? this.score : points;
         }
+    }
+
+    public void addKill(){
+        this.addScore(20);
+        this.kills++;
     }
 
     /**
@@ -261,11 +276,31 @@ public class Player extends Character{
         return -1;
     }
 
+    /**
+     * Checks if the player has a lockpick competence in case of a closed door
+     * @return true if lockpick false if not
+     */
     public boolean hasLockpick(){
         for (int i=0;i<this.inventorySpace;i++){
             if (this.inventory[i] instanceof Competence){
                 Competence competence = (Competence) this.inventory[i];
                 if (competence.getType() == CompetenceType.LOCKPICK) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks if the player has a teleportation competence to not add it multiple times
+     * @return true if lockpick false if not
+     */
+    public boolean hasTeleportation(){
+        for (int i=0;i<this.inventorySpace;i++){
+            if (this.inventory[i] instanceof Competence){
+                Competence competence = (Competence) this.inventory[i];
+                if (competence.getType() == CompetenceType.TELEPORTATION) {
                     return true;
                 }
             }
@@ -294,6 +329,11 @@ public class Player extends Character{
         this.inventoryIndex = 0;
     }
 
+    /**
+     * Checks if the player can move to a cell
+     * @param cell The cell the player wants to go to
+     * @return if the player is able to walk to the cell
+     */
     public boolean canMove(Cell cell){
         if (this.hasLockpick()){
             return !cell.getCollision() || cell.getType() == CellType.DOOR;
