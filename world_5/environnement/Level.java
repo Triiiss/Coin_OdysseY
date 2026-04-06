@@ -708,7 +708,6 @@ public class Level{
         int newY = this.player.getCoord().getY();
 
         while(this.player.getCoord().equals(newX,newY) || this.level[newY][newX].getType() != CellType.EMPTY || this.level[newY][newX].getCollision() || this.enemyCells.contains(this.level[newY][newX])){
-            System.out.println("caca");
             newX = rand.nextInt(this.width);
             newY = rand.nextInt(this.height);
         }
