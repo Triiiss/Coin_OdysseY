@@ -45,6 +45,12 @@ public class Competence extends Element{
                 level.getPlayer().resetInventoryIndex();
                 break;
             case CompetenceType.TELEPORTATION:
+                if (level.teleportationPlayer()){
+                    System.out.println("\u001B[35mYou got teleported in a random space\u001B[0m");
+                }
+                else{
+                    System.out.println("\u001B[31mYou tried to teleport but failed\u001B[0m");
+                }
                 break;
         }
     }
