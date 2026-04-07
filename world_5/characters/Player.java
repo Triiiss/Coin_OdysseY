@@ -10,6 +10,12 @@ import world_5.environnement.Cell;
 import world_5.inventory.*;
 import world_5.types.*;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+
 /**
  * The player class to play a video game
  */
@@ -17,9 +23,8 @@ public class Player extends Character{
     private int score;
     private static int nbPlayers = 0;
 
-    private int inventorySpace;
     private final int maxInventory;
-    private Element[] inventory;
+    private List<Element> inventory;
     private int inventoryIndex;
 
     private boolean weapon;
@@ -32,14 +37,10 @@ public class Player extends Character{
     public Player(String name){
         super(name,new Position(-1,-1),5);
         this.score = 0;
-        this.inventorySpace = 0;
         this.inventoryIndex = 0;
         this.maxInventory = 5;
-        this.inventory = new Element[this.maxInventory];
+        this.inventory = new ArrayList<Element>();
 
-        for (int i=0;i<this.maxInventory;i++){
-            this.inventory[i] = null;
-        }
         this.weapon = false;
         this.kills = 0;
 
@@ -74,9 +75,9 @@ public class Player extends Character{
      * Get the space used in the inventory
      * @return the index of the last element in inventory
      */
-    public int getInventorySpace(){
+    /*public int getInventorySpace(){
         return this.inventorySpace;
-    }
+    }*/
 
     /**
      * Get the maximum space in the inventory
@@ -90,7 +91,7 @@ public class Player extends Character{
      * Get the list of Elements used as inventory
      * @return the inventory
      */
-    public Element[] getInventory(){
+    public List<Element> getInventory(){
         return this.inventory;
     }
 
@@ -155,10 +156,26 @@ public class Player extends Character{
         }
     }
 
+    /**
+     * Adds a kill to the player's counter & adds score
+     */
     public void addKill(){
         this.addScore(20);
         this.kills++;
     }
+
+    /**
+     * Checks if the inventory is sorted or not HERE
+     * @return true if it is sorted, false if not
+     */
+    /*public boolean hasSortedInventory(){
+        for (int i=0;i<this.inventorySpace-1;i++){
+            if (this.inventory[i]){
+                return false;
+            }
+        }
+        return true;
+    }*/
 
     /**
      * Add an element to the inventory (item from cell or competence from gains)
@@ -166,9 +183,10 @@ public class Player extends Character{
      * @return if the element was added to the inventory (true) or not (false)
      */
     public boolean addInventory(Element element){
-        if (this.inventorySpace < this.maxInventory && this.inventory[this.inventorySpace] == null){
-            this.inventory[this.inventorySpace] = element;
-            this.inventorySpace++;
+        if (this.inventory.size() < this.maxInventory && this.inventory != null){
+            this.inventory.add(element);
+            //this.inventorySpace++;
+            Collections.sort(this.inventory);        // Sorts inventory everytime we add something
             return true;
         }
 
@@ -181,12 +199,12 @@ public class Player extends Character{
      * @return the Element we remove (in case)
      */
     public Element removeInventory(){
-        if (this.inventorySpace > 0 && this.inventoryIndex >= 0 && this.inventoryIndex < this.inventorySpace && this.inventory[this.inventoryIndex] != null){
-            Element e = this.inventory[this.inventoryIndex];
-            this.inventory[this.inventoryIndex] = null;
-            this.inventorySpace--;
+        if (/*this.inventorySpace > 0 && */this.inventoryIndex >= 0 && this.inventoryIndex < this.inventory.size() && this.inventory != null){
+            Element e = this.inventory.remove(this.inventoryIndex);
+            //this.inventory[this.inventoryIndex] = null;
+            //this.inventorySpace--;
 
-            int last = -1;
+            /*int last = -1;
             int i= this.maxInventory-1;
             while (i>=0){               // Pushes all real elements to the begining of the list
                 if (this.inventory[i] != null){
@@ -200,7 +218,7 @@ public class Player extends Character{
                     continue;
                 }
                 i--;
-            }
+            }*/
             this.resetInventoryIndex();
 
             return e;
@@ -215,26 +233,8 @@ public class Player extends Character{
      * @return the Element we remove (in case)
      */
     public Element removeInventory(int index){
-        if (this.inventorySpace > 0 && index >= 0 && index < this.inventorySpace && this.inventory[index] != null){
-            Element e = this.inventory[index];
-            this.inventory[index] = null;
-            this.inventorySpace--;
-
-            int last = -1;
-            int i= this.maxInventory-1;
-            while (i>=0){               // Pushes all real elements to the begining of the list
-                if (this.inventory[i] != null){
-                    last = i;
-                }
-                else if (last != -1){
-                    this.inventory[i] = this.inventory[last];
-                    this.inventory[last] = null;
-                    last = -1;
-                    i = this.maxInventory-1;
-                    continue;
-                }
-                i--;
-            }
+        if (this.inventoryIndex >= 0 && index < this.inventory.size() && this.inventory != null){
+            Element e = this.inventory.remove(index);
             this.resetInventoryIndex();
 
             return e;
@@ -246,7 +246,7 @@ public class Player extends Character{
      * Augment the inventoryIndex by one (used the key DOWN while in inventory)
      */
     public void addInventoryIndex(){
-        if (this.inventoryIndex < this.inventorySpace){
+        if (this.inventoryIndex < this.inventory.size()){
             this.inventoryIndex++;
         }
     }
@@ -265,13 +265,18 @@ public class Player extends Character{
      * @return -1 if there is no weapon or the index of the weapon in the inventory
      */
     public int hasWeapon(){
-        for (int i=0;i<this.inventorySpace;i++){
-            if (this.inventory[i] instanceof Item){
-                Item item = (Item) this.inventory[i];
+        Iterator<Element> iterator = this.inventory.iterator();
+        int i = 0;
+
+        while(iterator.hasNext()){
+            Element element = iterator.next();
+            if (element instanceof Item){
+                Item item = (Item) element;
                 if (item.getType() == ItemType.WEAPON) {
                     return i;
                 }
             }
+            i++;
         }
         return -1;
     }
@@ -281,9 +286,12 @@ public class Player extends Character{
      * @return true if lockpick false if not
      */
     public boolean hasLockpick(){
-        for (int i=0;i<this.inventorySpace;i++){
-            if (this.inventory[i] instanceof Competence){
-                Competence competence = (Competence) this.inventory[i];
+        Iterator<Element> iterator = this.inventory.iterator();
+
+        while(iterator.hasNext()){
+            Element element = iterator.next();
+            if (element instanceof Competence){
+                Competence competence = (Competence) element;
                 if (competence.getType() == CompetenceType.LOCKPICK) {
                     return true;
                 }
@@ -297,9 +305,12 @@ public class Player extends Character{
      * @return true if lockpick false if not
      */
     public boolean hasTeleportation(){
-        for (int i=0;i<this.inventorySpace;i++){
-            if (this.inventory[i] instanceof Competence){
-                Competence competence = (Competence) this.inventory[i];
+        Iterator<Element> iterator = this.inventory.iterator();
+
+        while(iterator.hasNext()){
+            Element element = iterator.next();
+            if (element instanceof Competence){
+                Competence competence = (Competence) element;
                 if (competence.getType() == CompetenceType.TELEPORTATION) {
                     return true;
                 }
@@ -348,8 +359,6 @@ public class Player extends Character{
         this.score = 0;
         this.healthPoint = this.maxHealth;
 
-        for (int i=0;i<this.maxInventory;i++){
-            this.inventory[i] = null;
-        }
+        this.inventory.clear();
     }
 }
