@@ -51,6 +51,7 @@ public class Competence extends Element{
                 else{
                     System.out.println("\u001B[31mYou tried to teleport but failed\u001B[0m");
                 }
+                level.getPlayer().resetInventoryIndex();
                 break;
         }
     }
