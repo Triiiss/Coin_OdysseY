@@ -73,7 +73,7 @@ public class Game{
                         System.out.println(this.levels[iLevel].displayInventory());
 
                         if(this.levels[iLevel].handleInventory()){      // Use an element
-                            this.levels[iLevel].getPlayer().getInventory()[this.levels[iLevel].getPlayer().getInventoryIndex()].use(this.levels[iLevel]);
+                            this.levels[iLevel].getPlayer().getInventory().get(this.levels[iLevel].getPlayer().getInventoryIndex()).use(this.levels[iLevel]);
                         }
                     }
                     else{               // The actual this.levels

@@ -405,7 +405,7 @@ public class Level{
         inventory.append('\n');
 
         for (int i=0;i<player.getMaxInventory()*2;i++){
-            if (i%2 == 1 || this.player.getInventorySpace() <= i/2){
+            if (i%2 == 1 || this.player.getInventory().size() <= i/2){
                 inventory.append('#');
                 for (int j=0;j<this.width;j++){
                     inventory.append(' ');
@@ -414,16 +414,16 @@ public class Level{
                 inventory.append('\n');
             }
             else if (this.player.getInventoryIndex() == i/2){
-                inventory.append("#" + BLUE + " * " + this.player.getInventory()[i/2].getName() + " [USE]" + RESET );
-                for (int j=0;j<this.width - 9 - this.player.getInventory()[i/2].getName().length();j++){
+                inventory.append("#" + BLUE + " * " + this.player.getInventory().get(i/2).getName() + " [USE]" + RESET );
+                for (int j=0;j<this.width - 9 - this.player.getInventory().get(i/2).getName().length();j++){
                     inventory.append(" ");
                 }
                 inventory.append("#");
                 inventory.append('\n');
             }
             else{
-                inventory.append("#   " + this.player.getInventory()[i/2].getName());
-                for (int j=0;j<this.width - 3 - this.player.getInventory()[i/2].getName().length();j++){
+                inventory.append("#   " + this.player.getInventory().get(i/2).getName());
+                for (int j=0;j<this.width - 3 - this.player.getInventory().get(i/2).getName().length();j++){
                     inventory.append(" ");
                 }
                 inventory.append("#");
@@ -790,13 +790,13 @@ public class Level{
                 }
                 return false;
             case Direction.DOWN:
-                if (this.player.getInventoryIndex() + 1 < this.getPlayer().getInventorySpace()){
+                if (this.player.getInventoryIndex() + 1 < this.getPlayer().getInventory().size()){
                     this.player.addInventoryIndex();
                 }
                 return false;
             case Direction.USE:
                 this.openInventory = false;
-                if (this.player.getInventoryIndex() < this.player.getInventorySpace()){     // Checks if an actual element was chosen
+                if (this.player.getInventoryIndex() < this.player.getInventory().size()){     // Checks if an actual element was chosen
                     return true;
                 }
                 else{
