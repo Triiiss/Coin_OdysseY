@@ -60,7 +60,7 @@ public class Item extends Element{
             }
             return true;
         }
-        else if (level.getPlayer().getInventorySpace() < level.getPlayer().getMaxInventory()){      // If there is space
+        else if (level.getPlayer().getInventory().size() < level.getPlayer().getMaxInventory()){      // If there is space
             level.getPlayer().addInventory(this);
             return true;
         }
