@@ -21,7 +21,7 @@ public class Hunter extends Enemy{
      * @param maxhealth The maximum health
      */
     public Hunter(String name, Position coord,int maxhealth){
-        super(name, coord, 3);
+        super(name, coord, maxhealth);
     }
 
     /**
