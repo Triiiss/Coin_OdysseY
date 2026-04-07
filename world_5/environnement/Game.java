@@ -44,6 +44,8 @@ public class Game{
                     }
                     else if (this.levels[iLevel] == null){                  // Creation of the level
                         this.levels[iLevel] = Level.getLevelFromFile(args[iLevel], player);
+                        System.out.println(this.levels[iLevel].displayObjective());
+                        Rule.getDirection();
                     }
                     else if (Rule.gameOver(this.levels[iLevel])){        // Lost game
                         System.out.println(this.levels[iLevel].displayGameOver());

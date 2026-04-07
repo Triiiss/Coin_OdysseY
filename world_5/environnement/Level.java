@@ -29,12 +29,16 @@ import java.util.HashSet;
 public class Level{
     private int width;
     private int height;
+
     private Cell[][] level;
+    private int nbCoins;
+    private LevelType type;
+
     private List<Enemy> enemies;
     private Set<Cell> enemyCells;
     private Player player;
-    private int nbCoins;
     private Position startPlayer;
+
     private boolean openInventory;
     private int freeze;
 
@@ -51,11 +55,12 @@ public class Level{
      * @param playerY the y coordinate of the player
      * @throws InvalidLevelException if the width and height are invalid
      */
-    public Level(int width, int height, Structure[] structs,List<Enemy> enemies, Player player, int playerX, int playerY) throws InvalidLevelException{
+    public Level(int width, int height, Structure[] structs,List<Enemy> enemies, Player player, int playerX, int playerY, LevelType type) throws InvalidLevelException{
         if (width > 0 && height > 0){
             this.width = width;
             this.height = height;
             this.nbCoins = 0;
+            this.type = type;
             this.freeze = 0;
             this.openInventory = false;
             this.enemies = enemies;
@@ -159,6 +164,7 @@ public class Level{
         int height = -1;
         int playerX = -1;
         int playerY = -1;
+        LevelType type = LevelType.COINS;
 
         int section = 0;
         int subSection = 0;
@@ -213,11 +219,19 @@ public class Level{
                                 break;
                             case 3:     // Level info
                                 String[] levelInfo = ligne.split(" ");
-                                if (levelInfo.length == 4){
-                                width = Integer.parseInt(levelInfo[0]);
-                                height = Integer.parseInt(levelInfo[1]);
-                                playerX = Integer.parseInt(levelInfo[2]);
-                                playerY = Integer.parseInt(levelInfo[3]);
+                                if (levelInfo.length == 5){
+                                    width = Integer.parseInt(levelInfo[0]);
+                                    height = Integer.parseInt(levelInfo[1]);
+                                    playerX = Integer.parseInt(levelInfo[2]);
+                                    playerY = Integer.parseInt(levelInfo[3]);
+                                    switch(Integer.parseInt(levelInfo[4])){
+                                        case 0:
+                                            type = LevelType.COINS;
+                                            break;
+                                        case 1:
+                                            type = LevelType.ENEMIES;
+                                            break;
+                                    }
                                 }
                                 break;
                         }
@@ -225,7 +239,7 @@ public class Level{
                 }
                 if (structLevel != null && p1 != null){
                     try{
-                        return new Level(width, height, structLevel, enemies, p1, playerX, playerY);   
+                        return new Level(width, height, structLevel, enemies, p1, playerX, playerY, type);   
                     } catch (InvalidLevelException e){
                         throw e;
                     }
@@ -321,6 +335,14 @@ public class Level{
     }
 
     /**
+     * Get the type of the level
+     * @return the level type
+     */
+    public LevelType getType(){
+        return this.type;
+    }
+
+    /**
      * Decreases the number of coins in the level by one
      * Used by pickUp in item to pick up a coin
      */
@@ -374,7 +396,15 @@ public class Level{
             }
         }
         level.append('\n');
-        level.append("x: " + this.player.getCoord().getX() + " y: " + this.player.getCoord().getY() + " | coins left : \u001B[33m"+ this.getNbCoins() + "⁠\u001B[0m\n");
+        level.append("x: " + this.player.getCoord().getX() + " y: " + this.player.getCoord().getY());
+        switch(this.type){
+            case LevelType.COINS:
+                level.append(" | \u001B[33mcoins left : "+ this.nbCoins + "⁠\u001B[0m\n");
+                break;
+            case LevelType.ENEMIES:
+                level.append(" | \u001B[31menemies left : "+ this.enemies.size() + "⁠\u001B[0m\n");
+                break;
+        }
         level.append("Z: Up | Q: Right | S: Down | D: Left | N: exit");
         if (this.freeze > 0){
             level.append("  |  Enemies frozen for \u001B[36m" + this.freeze + " mov.\u001B[0m");
@@ -523,6 +553,89 @@ public class Level{
         winScreen.append("\nPress any key to continue");
 
         return winScreen.toString();
+    }
+    /**
+     * Prints out the outer layer of the level and "LEVEL COMPLETE"
+     * Usually printed out when all the coins a gathered
+     * @return the winning screen as a string to print out
+     */
+    public String displayObjective(){
+        StringBuilder objective = new StringBuilder();
+
+        for (int j=0;j<this.width+2;j++){
+            objective.append('#');
+        }
+        objective.append('\n');
+
+        for (int i=0;i<this.height/2-1;i++){
+            objective.append('#');
+            for (int j=0;j<this.width;j++){
+                objective.append(' ');
+            }
+            objective.append('#');
+            objective.append('\n');
+        }
+
+        objective.append('#');
+        for (int j=0;j<(this.width/2)-6;j++){
+            objective.append(' ');
+        }
+        objective.append("Objective : ");
+        for (int j=0;j<(this.width/2)-6;j++){
+            objective.append(' ');
+        }
+        if (this.width % 2 == 1){
+            objective.append(' ');
+        }
+        objective.append('#');
+        objective.append('\n');
+
+        objective.append('#');
+        for (int j=0;j<(this.width/2)-9;j++){
+            objective.append(' ');
+        }
+        switch (this.type){
+            case LevelType.COINS:
+                objective.append("\u001B[33mCollect all coins \u001B[0m");
+                break;
+            case LevelType.ENEMIES:
+                objective.append("\u001B[31mKill all enemies  \u001B[0m");
+                break;
+        }
+        for (int j=0;j<(this.width/2)-9;j++){
+            objective.append(' ');
+        }
+        if (this.width % 2 == 1){
+            objective.append(' ');
+        }
+        objective.append('#');
+        objective.append('\n');
+
+        for (int i=0;i<this.height/2-1;i++){
+            objective.append('#');
+            for (int j=0;j<this.width;j++){
+                objective.append(' ');
+            }
+            objective.append('#');
+            objective.append('\n');
+        }
+        for (int j=0;j<this.width+2;j++){
+            objective.append('#');
+        }
+        objective.append('\n');
+        objective.append(this.player.toString() + " | ");
+        for (int h=1; h<=this.player.getMaxHealth();h++){
+            if (h > this.player.getHealthPoint()){
+                objective.append(" ♡ ");
+            }
+            else{
+                objective.append(" \u001B[31m❤︎⁠\u001B[0m ");
+            }
+        }
+
+        objective.append("\nPress any key to continue");
+
+        return objective.toString();
     }
 
     /**

@@ -113,7 +113,12 @@ public class Rule{
      * @return if the level is completed or not
      */
     public static boolean levelComplete(Level level){
-        return level.getNbCoins() <= 0;
+        System.out.println(level.getType());
+        System.out.println(level.getType() == LevelType.ENEMIES);
+        if (level.getType() == LevelType.ENEMIES){
+            return level.getEnemies().isEmpty();
+        }
+        return level.getNbCoins() <= 0;     // Default type
     }
 
     /**
