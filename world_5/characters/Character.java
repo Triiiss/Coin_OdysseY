@@ -89,17 +89,18 @@ public abstract class Character{
 
     /**
      * Two characters are considered equals if their name match up (case sensitivity ignored)
-     * @return true if it's equal or false if not
+     * @return true if it's equal or false if not HERE
      */
     @Override
-    public boolean equals(Object obj){
-        if (obj instanceof Character){
-            Character P2 = (Character) obj;
-            if (this.name.equalsIgnoreCase(P2.getName())){
-                return true;
-            }
+    public boolean equals(Object object){
+        if (this == object){
+            return true;
         }
-        return false;
+        if (object == null || this.getClass() != object.getClass()){
+            return false;
+        }
+        Character character = (Character) object;
+        return this.name.equalsIgnoreCase(character.getName());
     }
 
     /**
@@ -109,7 +110,9 @@ public abstract class Character{
     @Override
     public int hashCode(){
         int result = 11;     // My favorite prime number
-        result = 31*result + this.name.toLowerCase().hashCode();
+
+        result = 19*result + this.name.toLowerCase().hashCode();
+        result = 31*result + this.getClass().hashCode();
 
         return result;
     }

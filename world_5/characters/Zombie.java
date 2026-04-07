@@ -23,7 +23,7 @@ public class Zombie extends Enemy{
      * @param maxhealth The maximum health
      */
     public Zombie(String name, Position coord,int maxhealth){
-        super(name, coord, maxhealth/*, true*/);
+        super(name, coord, maxhealth);
     }
     
     /**
