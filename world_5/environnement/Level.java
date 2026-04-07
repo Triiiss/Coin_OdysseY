@@ -122,7 +122,9 @@ public class Level{
             Iterator<Enemy> iterator = this.enemies.iterator();
             while (iterator.hasNext()){
                 Enemy foe = iterator.next();
-                enemyCells.add(this.level[foe.getCoord().getY()][foe.getCoord().getX()]);
+                if (foe.getCoord().validPosition() && foe.getCoord().getY() < this.height && foe.getCoord().getX() < this.width){
+                    enemyCells.add(this.level[foe.getCoord().getY()][foe.getCoord().getX()]);
+                }
             }
 
             if (!this.isAccessible(new Position(playerX,playerY), null)){      // Player not in map
