@@ -32,7 +32,7 @@ public class Level{
 
     private Cell[][] level;
     private int nbCoins;
-    private LevelType type;
+    private ObjectiveType type;
 
     private List<Enemy> enemies;
     private Set<Cell> enemyCells;
@@ -53,9 +53,10 @@ public class Level{
      * @param player The player with the name and the score
      * @param playerX the x coordinate of the player
      * @param playerY the y coordinate of the player
+     * @param type the type of the objective
      * @throws InvalidLevelException if the width and height are invalid
      */
-    public Level(int width, int height, Structure[] structs,List<Enemy> enemies, Player player, int playerX, int playerY, LevelType type) throws InvalidLevelException{
+    public Level(int width, int height, Structure[] structs,List<Enemy> enemies, Player player, int playerX, int playerY, ObjectiveType type) throws InvalidLevelException{
         if (width > 0 && height > 0){
             this.width = width;
             this.height = height;
@@ -164,7 +165,7 @@ public class Level{
         int height = -1;
         int playerX = -1;
         int playerY = -1;
-        LevelType type = LevelType.COINS;
+        ObjectiveType type = ObjectiveType.COINS;
 
         int section = 0;
         int subSection = 0;
@@ -226,10 +227,10 @@ public class Level{
                                     playerY = Integer.parseInt(levelInfo[3]);
                                     switch(Integer.parseInt(levelInfo[4])){
                                         case 0:
-                                            type = LevelType.COINS;
+                                            type = ObjectiveType.COINS;
                                             break;
                                         case 1:
-                                            type = LevelType.ENEMIES;
+                                            type = ObjectiveType.ENEMIES;
                                             break;
                                     }
                                 }
@@ -338,7 +339,7 @@ public class Level{
      * Get the type of the level
      * @return the level type
      */
-    public LevelType getType(){
+    public ObjectiveType getType(){
         return this.type;
     }
 
@@ -398,10 +399,10 @@ public class Level{
         level.append('\n');
         level.append("x: " + this.player.getCoord().getX() + " y: " + this.player.getCoord().getY());
         switch(this.type){
-            case LevelType.COINS:
+            case ObjectiveType.COINS:
                 level.append(" | \u001B[33mcoins left : "+ this.nbCoins + "⁠\u001B[0m\n");
                 break;
-            case LevelType.ENEMIES:
+            case ObjectiveType.ENEMIES:
                 level.append(" | \u001B[31menemies left : "+ this.enemies.size() + "⁠\u001B[0m\n");
                 break;
         }
@@ -595,10 +596,10 @@ public class Level{
             objective.append(' ');
         }
         switch (this.type){
-            case LevelType.COINS:
+            case ObjectiveType.COINS:
                 objective.append("\u001B[33mCollect all coins \u001B[0m");
                 break;
-            case LevelType.ENEMIES:
+            case ObjectiveType.ENEMIES:
                 objective.append("\u001B[31mKill all enemies  \u001B[0m");
                 break;
         }
@@ -779,6 +780,7 @@ public class Level{
     /**
      * Checks the space for movePlayer functions
      * @param coord The coordinate of the cell
+     * @param character the character (player or enemy) that wants to check that place
      * @return true if the player can move to the space (x,y)
      */
     public boolean isAccessible(Position coord, Character character){

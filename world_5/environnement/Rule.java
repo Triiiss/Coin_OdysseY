@@ -114,8 +114,8 @@ public class Rule{
      */
     public static boolean levelComplete(Level level){
         System.out.println(level.getType());
-        System.out.println(level.getType() == LevelType.ENEMIES);
-        if (level.getType() == LevelType.ENEMIES){
+        System.out.println(level.getType() == ObjectiveType.ENEMIES);
+        if (level.getType() == ObjectiveType.ENEMIES){
             return level.getEnemies().isEmpty();
         }
         return level.getNbCoins() <= 0;     // Default type

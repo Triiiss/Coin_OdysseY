@@ -25,6 +25,7 @@ public class Structure{
      * @param y The vertical coordonate within the level
      * @param width The size of the x coordonate
      * @param height The size of the y coordonate
+     * @throws InvalidStructureException if the arguments of a structure are invalid
      */
     public Structure(int type, int width, int height, int x, int y) throws InvalidStructureException{
         if (width >= 0 && height >= 0 && x >= 0 && y >= 0){
