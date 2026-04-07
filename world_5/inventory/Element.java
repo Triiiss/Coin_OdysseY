@@ -32,7 +32,7 @@ public abstract class Element implements Comparable<Element>{
 
     /**
      * Use the element
-     * @param player the player using the element (to erase the item from inventory)
+     * @param level level with the player using the element (to erase the item from inventory)
      */
     public abstract void use(Level level);
 
@@ -70,7 +70,7 @@ public abstract class Element implements Comparable<Element>{
     /**
      * Compare two elements. Item before Competence, then alphabetical order
      * @param e The other element we want to compare it to
-     * @return <0 if this goes first, >0 if e goes first and 0 if they are equal
+     * @return negative if this goes first, positive if e goes first and 0 if they are equal
      */
     @Override
     public int compareTo(Element e){

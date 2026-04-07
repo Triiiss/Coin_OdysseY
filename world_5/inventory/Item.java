@@ -69,7 +69,7 @@ public class Item extends Element{
 
     /**
      * Use the item and deletes it from the inventory
-     * @param player the player using the item
+     * @param level level with the player using the element (to erase the item from inventory)
      */
     public void use(Level level){
         switch(this.type){

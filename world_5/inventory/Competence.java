@@ -36,7 +36,7 @@ public class Competence extends Element{
 
     /**
      * Use the competence (does not disapear from the inventory)
-     * @param player the player using the competence
+     * @param level level with the player using the element (to erase the item from inventory)
      */
     public void use(Level level){
         switch(this.type){
