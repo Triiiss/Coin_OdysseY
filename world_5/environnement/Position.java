@@ -77,23 +77,24 @@ public class Position{
      * @return if the two coordinate set are equal or not
      */
     public boolean equals(int x, int y){
-        if (this.x == x && this.y == y){
-            return true;
-        }
-        return false;
+        return this.equals(new Position(x, y));
     }
 
     /**
      * Checks if two positions are equal (same coord)
-     * @param o the other object to check
+     * @param object the other object to check
      * @return if the two position are equal or not
      */
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object object) {
+        if (this == object){
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
 
-        Position coord = (Position) o;
+        Position coord = (Position) object;
         return this.x == coord.getX() && this.y == coord.getY();
     }
 
@@ -104,7 +105,7 @@ public class Position{
     @Override
     public int hashCode(){
         int result = 11;     // My favorite prime number
-        result = 31*result + this.x;
+        result = 19*result + this.x;
         result = 31*result + this.y;
 
         return result;

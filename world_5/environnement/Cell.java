@@ -173,19 +173,26 @@ public class Cell{
 
     /**
      * Checks if two cells are equal (coordinate)
-     * @param obj The cell we want to check
+     * @param object The cell we want to check
      * @return If two cells are equal or not
      */
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || this.getClass() != obj.getClass()) return false;
+    public boolean equals(Object object) {
+        if (this == object){
+            return true;
+        }
+        if (object == null || this.getClass() != object.getClass()){
+            return false;
+        }
 
-        Cell cell = (Cell) obj;
+        Cell cell = (Cell) object;
 
-        return this.coord.equals(cell.getCoord()) &&
-            this.type.equals(cell.getType());
+        if (this.hasItem){
+            return this.coord.equals(cell.getCoord()) && this.type.equals(cell.getType()) && this.collision == cell.getCollision() && this.hasItem == cell.getHasItem() && this.item.equals(cell.getItem());
+        }
+        return this.coord.equals(cell.getCoord()) && this.type.equals(cell.getType()) && this.collision == cell.getCollision() && this.hasItem == cell.getHasItem();
     }
+
     /**
      * Redefine the hashCode
      * @return The hash of an object based on equals
@@ -193,8 +200,13 @@ public class Cell{
     @Override
     public int hashCode(){
         int result = 11;     // My favorite prime number
-        result = 31*result + this.coord.hashCode();
-        result = 31*result + this.type.hashCode();
+        result = 17*result + this.coord.hashCode();
+        result = 19*result + this.type.hashCode();
+        result = 23*result + Boolean.valueOf(this.collision).hashCode();
+        result = 29*result + Boolean.valueOf(this.hasItem).hashCode();
+        if (this.hasItem){
+            result = 31*result + this.item.hashCode();
+        }
 
         return result;
     }
