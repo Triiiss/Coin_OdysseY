@@ -157,25 +157,12 @@ public class Player extends Character{
     }
 
     /**
-     * Adds a kill to the player's counter & adds score
+     * Adds a kill to the player's counter and adds score
      */
     public void addKill(){
         this.addScore(20);
         this.kills++;
     }
-
-    /**
-     * Checks if the inventory is sorted or not HERE
-     * @return true if it is sorted, false if not
-     */
-    /*public boolean hasSortedInventory(){
-        for (int i=0;i<this.inventorySpace-1;i++){
-            if (this.inventory[i]){
-                return false;
-            }
-        }
-        return true;
-    }*/
 
     /**
      * Add an element to the inventory (item from cell or competence from gains)
@@ -185,7 +172,6 @@ public class Player extends Character{
     public boolean addInventory(Element element){
         if (this.inventory.size() < this.maxInventory && this.inventory != null){
             this.inventory.add(element);
-            //this.inventorySpace++;
             Collections.sort(this.inventory);        // Sorts inventory everytime we add something
             return true;
         }
@@ -199,26 +185,8 @@ public class Player extends Character{
      * @return the Element we remove (in case)
      */
     public Element removeInventory(){
-        if (/*this.inventorySpace > 0 && */this.inventoryIndex >= 0 && this.inventoryIndex < this.inventory.size() && this.inventory != null){
+        if (this.inventoryIndex >= 0 && this.inventoryIndex < this.inventory.size() && this.inventory != null){
             Element e = this.inventory.remove(this.inventoryIndex);
-            //this.inventory[this.inventoryIndex] = null;
-            //this.inventorySpace--;
-
-            /*int last = -1;
-            int i= this.maxInventory-1;
-            while (i>=0){               // Pushes all real elements to the begining of the list
-                if (this.inventory[i] != null){
-                    last = i;
-                }
-                else if (last != -1){
-                    this.inventory[i] = this.inventory[last];
-                    this.inventory[last] = null;
-                    last = -1;
-                    i = this.maxInventory-1;
-                    continue;
-                }
-                i--;
-            }*/
             this.resetInventoryIndex();
 
             return e;
