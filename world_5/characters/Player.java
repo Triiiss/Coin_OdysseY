@@ -173,6 +173,7 @@ public class Player extends Character{
         if (this.inventory.size() < this.maxInventory && this.inventory != null){
             this.inventory.add(element);
             Collections.sort(this.inventory);        // Sorts inventory everytime we add something
+            System.out.println("\u001B[94mYou have obtained " + element.getName() + "\u001B[0m");
             return true;
         }
 
