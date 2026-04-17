@@ -10,10 +10,6 @@ import world_5.environnement.Cell;
 import world_5.inventory.*;
 import world_5.types.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 
 /**
@@ -23,11 +19,7 @@ public class Player extends Character{
     private int score;
     private static int nbPlayers = 0;
 
-    private final int maxInventory;
-    private List<Element> inventory;
-    private int inventoryIndex;
-
-    private boolean weapon;
+    private Inventory inventory;
     private int kills;
 
     /**
@@ -37,12 +29,9 @@ public class Player extends Character{
     public Player(String name){
         super(name,new Position(-1,-1),5);
         this.score = 0;
-        this.inventoryIndex = 0;
-        this.maxInventory = 5;
-        this.inventory = new ArrayList<Element>();
-
-        this.weapon = false;
         this.kills = 0;
+
+        this.inventory = new Inventory(5);
 
         System.out.println("[Creation] Number of total players : " + Player.nbPlayers);
         Player.nbPlayers++;
@@ -71,44 +60,13 @@ public class Player extends Character{
         return this.score;
     }
 
-    /**
-     * Get the space used in the inventory
-     * @return the index of the last element in inventory
-     */
-    /*public int getInventorySpace(){
-        return this.inventorySpace;
-    }*/
-
-    /**
-     * Get the maximum space in the inventory
-     * @return max inventory
-     */
-    public int getMaxInventory(){
-        return this.maxInventory;
-    }
 
     /**
      * Get the list of Elements used as inventory
      * @return the inventory
      */
-    public List<Element> getInventory(){
+    public Inventory getInventory(){
         return this.inventory;
-    }
-
-    /**
-     * Get what index the cursor in the inventory is (to know which element to use)
-     * @return the inventory index
-     */
-    public int getInventoryIndex(){
-        return this.inventoryIndex;
-    }
-
-    /**
-     * Get if a weapon is drawn are not
-     * @return the weapon
-     */
-    public boolean getWeapon(){
-        return this.weapon;
     }
 
     /**
@@ -165,130 +123,6 @@ public class Player extends Character{
     }
 
     /**
-     * Add an element to the inventory (item from cell or competence from gains)
-     * @param element the element to add to the inventory
-     * @return if the element was added to the inventory (true) or not (false)
-     */
-    public boolean addInventory(Element element){
-        if (this.inventory.size() < this.maxInventory && this.inventory != null){
-            this.inventory.add(element);
-            Collections.sort(this.inventory);        // Sorts inventory everytime we add something
-            System.out.println("\u001B[94mYou have obtained " + element.getName() + "\u001B[0m");
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Removes the element in the this.inventoryIndex slot
-     * Pushes all the elements to the begining of the list
-     * @return the Element we remove (in case)
-     */
-    public Element removeInventory(){
-        if (this.inventoryIndex >= 0 && this.inventoryIndex < this.inventory.size() && this.inventory != null){
-            Element e = this.inventory.remove(this.inventoryIndex);
-            this.resetInventoryIndex();
-
-            return e;
-        }
-        return null;
-    }
-
-    /**
-     * Removes the element in the index slot
-     * Pushes all the elements to the begining of the list
-     * @param index the index we want to remove the element
-     * @return the Element we remove (in case)
-     */
-    public Element removeInventory(int index){
-        if (this.inventoryIndex >= 0 && index < this.inventory.size() && this.inventory != null){
-            Element e = this.inventory.remove(index);
-            this.resetInventoryIndex();
-
-            return e;
-        }
-        return null;
-    }
-
-    /**
-     * Augment the inventoryIndex by one (used the key DOWN while in inventory)
-     */
-    public void addInventoryIndex(){
-        if (this.inventoryIndex < this.inventory.size()){
-            this.inventoryIndex++;
-        }
-    }
-
-    /**
-     * Decrease the inventoryIndex by one (used the key UP while in inventory)
-     */
-    public void decreaseInventoryIndex(){
-        if (this.inventoryIndex>0){
-            this.inventoryIndex--;
-        }
-    }
-
-    /**
-     * Checks if the player has a weapon in case of an enemy collision
-     * @return -1 if there is no weapon or the index of the weapon in the inventory
-     */
-    public int hasWeapon(){
-        Iterator<Element> iterator = this.inventory.iterator();
-        int i = 0;
-
-        while(iterator.hasNext()){
-            Element element = iterator.next();
-            if (element instanceof Item){
-                Item item = (Item) element;
-                if (item.getType() == ItemType.WEAPON) {
-                    return i;
-                }
-            }
-            i++;
-        }
-        return -1;
-    }
-
-    /**
-     * Checks if the player has a lockpick competence in case of a closed door
-     * @return true if lockpick false if not
-     */
-    public boolean hasLockpick(){
-        Iterator<Element> iterator = this.inventory.iterator();
-
-        while(iterator.hasNext()){
-            Element element = iterator.next();
-            if (element instanceof Competence){
-                Competence competence = (Competence) element;
-                if (competence.getType() == CompetenceType.LOCKPICK) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Checks if the player has a teleportation competence to not add it multiple times
-     * @return true if lockpick false if not
-     */
-    public boolean hasTeleportation(){
-        Iterator<Element> iterator = this.inventory.iterator();
-
-        while(iterator.hasNext()){
-            Element element = iterator.next();
-            if (element instanceof Competence){
-                Competence competence = (Competence) element;
-                if (competence.getType() == CompetenceType.TELEPORTATION) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
      * Attacks an enemy
      * @param enemy the enemy that gets hit
      */
@@ -303,19 +137,12 @@ public class Player extends Character{
     }
 
     /**
-     * Resets the inventoryIndex (used while quitting the inventory)
-     */
-    public void resetInventoryIndex(){
-        this.inventoryIndex = 0;
-    }
-
-    /**
      * Checks if the player can move to a cell
      * @param cell The cell the player wants to go to
      * @return if the player is able to walk to the cell
      */
     public boolean canMove(Cell cell){
-        if (this.hasLockpick()){
+        if (this.inventory.getLockpick()){
             return !cell.getCollision() || cell.getType() == CellType.DOOR;
         }
         return !cell.getCollision();
@@ -328,6 +155,6 @@ public class Player extends Character{
         this.score = 0;
         this.healthPoint = this.maxHealth;
 
-        this.inventory.clear();
+        this.inventory.resetInventory();
     }
 }
