@@ -42,7 +42,7 @@ public class Competence extends Element{
         switch(this.type){
             case CompetenceType.LOCKPICK:
                 System.out.println("\u001B[35mYou can walk through closed doors\u001B[0m");
-                level.getPlayer().resetInventoryIndex();
+                level.getPlayer().getInventory().resetIndex();
                 break;
             case CompetenceType.TELEPORTATION:
                 if (level.teleportationPlayer()){
@@ -51,7 +51,7 @@ public class Competence extends Element{
                 else{
                     System.out.println("\u001B[31mYou tried to teleport but failed\u001B[0m");
                 }
-                level.getPlayer().resetInventoryIndex();
+                level.getPlayer().getInventory().resetIndex();
                 break;
         }
     }

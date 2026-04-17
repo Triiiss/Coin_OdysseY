@@ -60,8 +60,8 @@ public class Item extends Element{
             }
             return true;
         }
-        else if (level.getPlayer().getInventory().size() < level.getPlayer().getMaxInventory()){      // If there is space
-            level.getPlayer().addInventory(this);
+        else if (level.getPlayer().getInventory().getBag().size() < level.getPlayer().getInventory().getMaxInventory()){      // If there is space
+            level.getPlayer().getInventory().addInventory(this);
             return true;
         }
         return false;
@@ -75,11 +75,11 @@ public class Item extends Element{
         switch(this.type){
             case ItemType.WEAPON:       // Item deleted after hitting an enemy
                 System.out.println("\u001B[94mYou will be able to hit enemies\u001B[0m");
-                level.getPlayer().resetInventoryIndex();
+                level.getPlayer().getInventory().resetIndex();
                 break;
             case ItemType.HOURGLASS:
                 level.freezeEnemies(10);
-                level.getPlayer().removeInventory();
+                level.getPlayer().getInventory().removeInventory();
                 System.out.println("\u001B[36mEnemies are frozen for 10 mov.\u001B[0m");
                 break;
         }
