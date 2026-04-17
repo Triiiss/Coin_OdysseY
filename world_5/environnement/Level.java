@@ -437,8 +437,8 @@ public class Level{
         inventory.append('#');
         inventory.append('\n');
 
-        for (int i=0;i<player.getMaxInventory()*2;i++){
-            if (i%2 == 1 || this.player.getInventory().size() <= i/2){
+        for (int i=0;i<player.getInventory().getMaxInventory()*2;i++){
+            if (i%2 == 1 || this.player.getInventory().getBag().size() <= i/2){
                 inventory.append('#');
                 for (int j=0;j<this.width;j++){
                     inventory.append(' ');
@@ -446,17 +446,17 @@ public class Level{
                 inventory.append('#');
                 inventory.append('\n');
             }
-            else if (this.player.getInventoryIndex() == i/2){
-                inventory.append("#" + BLUE + " * " + this.player.getInventory().get(i/2).getName() + " [USE]" + RESET );
-                for (int j=0;j<this.width - 9 - this.player.getInventory().get(i/2).getName().length();j++){
+            else if (this.player.getInventory().getIndex() == i/2){
+                inventory.append("#" + BLUE + " * " + this.player.getInventory().getBag().get(i/2).getName() + " [USE]" + RESET );
+                for (int j=0;j<this.width - 9 - this.player.getInventory().getBag().get(i/2).getName().length();j++){
                     inventory.append(" ");
                 }
                 inventory.append("#");
                 inventory.append('\n');
             }
             else{
-                inventory.append("#   " + this.player.getInventory().get(i/2).getName());
-                for (int j=0;j<this.width - 3 - this.player.getInventory().get(i/2).getName().length();j++){
+                inventory.append("#   " + this.player.getInventory().getBag().get(i/2).getName());
+                for (int j=0;j<this.width - 3 - this.player.getInventory().getBag().get(i/2).getName().length();j++){
                     inventory.append(" ");
                 }
                 inventory.append("#");
@@ -902,18 +902,18 @@ public class Level{
 
         switch (direction){
             case Direction.UP:
-                if (this.player.getInventoryIndex() > 0){
-                    this.player.decreaseInventoryIndex();
+                if (this.player.getInventory().getIndex() > 0){
+                    this.player.getInventory().decreaseIndex();
                 }
                 return false;
             case Direction.DOWN:
-                if (this.player.getInventoryIndex() + 1 < this.getPlayer().getInventory().size()){
-                    this.player.addInventoryIndex();
+                if (this.player.getInventory().getIndex() + 1 < this.getPlayer().getInventory().getBag().size()){
+                    this.player.getInventory().addIndex();
                 }
                 return false;
             case Direction.USE:
                 this.openInventory = false;
-                if (this.player.getInventoryIndex() < this.player.getInventory().size()){     // Checks if an actual element was chosen
+                if (this.player.getInventory().getIndex() < this.player.getInventory().getBag().size()){     // Checks if an actual element was chosen
                     return true;
                 }
                 else{
@@ -921,11 +921,11 @@ public class Level{
                 }
             case Direction.INVENTORY:
                 this.openInventory = false;
-                this.player.resetInventoryIndex();
+                this.player.getInventory().resetIndex();
                 return false;
             case Direction.EXIT:
                 this.openInventory = false;
-                this.player.resetInventoryIndex();
+                this.player.getInventory().resetIndex();
                 return false;
             default:
                 System.out.println("Input invalid");
@@ -963,14 +963,14 @@ public class Level{
                 }
 
                 if ((player.getCoord().equals(enemy.getCoord())) || (old.equals(player.getCoord()) && oldPlayer.equals(enemy.getCoord()) && playerMoving && this.isAccessible(this.player.getCoord(), player))){      // Enemy collides with player
-                    if (this.player.hasWeapon() != -1){     // Player have weapon
+                    if (this.player.getInventory().getWeapon() > 0){     // Player have weapon
                         player.attackEnemy(enemy);
                         enemy.resetPosition();
-                        player.removeInventory(this.player.hasWeapon());
+                        player.getInventory().removeInventory(this.player.getInventory().getWeaponIndex());
                     }
                     else{       // Player gets hit
                         enemy.attackPlayer(this.player);
-                        this.resetEnemies();  
+                        this.resetEnemies();
                         break;
                     }
                 }
@@ -984,11 +984,11 @@ public class Level{
                 enemyCells.add(this.level[enemy.getCoord().getY()][enemy.getCoord().getX()]);
             }
         }
-        if (!this.player.hasLockpick() && this.player.getScore() >= 100){        // Adds lockpicking 
-            this.player.addInventory(new Competence("Lockpicking",CompetenceType.LOCKPICK));
+        if (!this.player.getInventory().getLockpick() && this.player.getScore() >= 100){        // Adds lockpicking 
+            this.player.getInventory().addInventory(new Competence("Lockpicking",CompetenceType.LOCKPICK));
         }
-        if (!this.player.hasTeleportation() && this.player.getKills() >= 3){    // Adds teleportation
-            this.player.addInventory(new Competence("Teleportation", CompetenceType.TELEPORTATION));
+        if (!this.player.getInventory().getTeleportation() && this.player.getKills() >= 3){    // Adds teleportation
+            this.player.getInventory().addInventory(new Competence("Teleportation", CompetenceType.TELEPORTATION));
         }
 
         if (freeze > 0){        // Each movement freeze decreases
