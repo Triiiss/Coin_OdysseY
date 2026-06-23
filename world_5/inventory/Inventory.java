@@ -5,7 +5,6 @@
 
 package world_5.inventory;
 
-import world_5.types.*;
 import world_5.inventory.interfaces.*;
 import world_5.inventory.item.*;
 import world_5.inventory.competence.*;
@@ -16,15 +15,28 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
+/**
+ * The class that is in charge of the inventory
+ */
 public class Inventory{
+    /**The maximum amount of elements stored in the bag */
     private final int maxInventory;
+    /**The current index the player is looking at */
     private int index;
+    /**The bag storing every storable */
     private List<Element> bag;
 
+    /**The number of weapons in the player's bag */
     private int weapon;
+    /**If the player has a lockpick competence in their bag */
     private boolean lockpick;
+    /**If the player has a teleportation competence in their bag */
     private boolean teleportation;
 
+    /**
+     * Constructor method of the inventory
+     * @param maxInventory the maximum amount of elements in the element
+     */
     public Inventory(int maxInventory){
         this.maxInventory = maxInventory;
         this.index = 0;
@@ -35,32 +47,68 @@ public class Inventory{
         this.teleportation = false;
     }
 
+    /**
+     * @return the maximum amount of elements in the inventory
+     */
     public int getMaxInventory(){
         return this.maxInventory;
     }
 
+    /**
+     * @return the current index
+     */
     public int getIndex(){
         return this.index;
     }
 
+    /**
+     * @return the bag where the elements are stored
+     */
     public List<Element> getBag(){
         return this.bag;
     }
 
+    /**
+     * @return the amount of weapon stored in the inventory
+     */
     public int getWeapon(){
         return this.weapon;
     }
 
+    /**
+     * @return if the player have a lockpick or not
+     */
     public boolean getLockpick(){
         return this.lockpick;
     }
 
+    /**
+     * @return if the player have the teleportation ability or not
+     */
     public boolean getTeleportation(){
         return this.teleportation;
     }
 
     /**
-     * Augment the inventoryIndex by one (used the key DOWN while in inventory)
+     * Checks if the player has a weapon in case of an enemy collision
+     * @return -1 if there is no weapon or the index of the weapon in the inventory
+     */
+    public int getWeaponIndex(){
+        Iterator<Element> iterator = this.bag.iterator();
+        int i = 0;
+
+        while(iterator.hasNext()){
+            Element element = iterator.next();
+            if (element instanceof Weapon){
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
+
+    /**
+     * Increase the inventoryIndex by one (used the key DOWN while in inventory)
      */
     public void increaseIndex(){
         if (this.index < this.bag.size()){
@@ -84,11 +132,10 @@ public class Inventory{
         this.index = 0;
     }
 
-
     /**
-     * Add an element to the inventory (item from cell or competence from gains)
+     * Add an element to the inventory
      * @param element the element to add to the inventory
-     * @return if the element was added to the inventory (true) or not (false)
+     * @return if the element was added to the inventory or not
      */
     private boolean addInventory(Element element){
         if (this.bag.size() < this.maxInventory && this.bag != null){
@@ -112,7 +159,7 @@ public class Inventory{
     }
 
     /**
-     * Removes the element in the this.inventoryIndex slot
+     * Removes the element in the inventoryIndex slot
      * Pushes all the elements to the begining of the list
      * @return the Element we remove (in case)
      */
@@ -120,7 +167,6 @@ public class Inventory{
         if (this.index >= 0 && this.index < this.bag.size() && this.bag != null){
             Element e = this.bag.remove(this.index);
             this.index = 0;
-
             if (e instanceof Weapon){
                 this.weapon--;
             }
@@ -140,7 +186,6 @@ public class Inventory{
         if (index >= 0 && index < this.bag.size() && this.bag != null){
             Element e = this.bag.remove(index);
             this.index = 0;
-
             if (e instanceof Weapon){
                 this.weapon--;
             }
@@ -151,23 +196,8 @@ public class Inventory{
     }
 
     /**
-     * Checks if the player has a weapon in case of an enemy collision
-     * @return -1 if there is no weapon or the index of the weapon in the inventory
+     * Reset the inventory by clearing it and reset all variables
      */
-    public int getWeaponIndex(){
-        Iterator<Element> iterator = this.bag.iterator();
-        int i = 0;
-
-        while(iterator.hasNext()){
-            Element element = iterator.next();
-            if (element instanceof Weapon){
-                return i;
-            }
-            i++;
-        }
-        return -1;
-    }
-
     public void resetInventory(){
         this.bag.clear();
         this.index = 0;
@@ -176,22 +206,38 @@ public class Inventory{
         this.teleportation = false;
     }
 
+    /**
+     * Picks up an element if it can be stored of pickup without checking inventory
+     * @param element the element we want to pick up
+     * @param level the level the element is in
+     * @return if the element has been picked up to remove it from the grid
+     */
     public boolean pickUp(Element element, Level level){
-        if (element instanceof IPickable pickable){
+        if (element != null && element instanceof IPickable pickable){
             if (pickable.pickUp(level)){
-                this.addInventory(element);
+                return stock(element);
             }
             return true;
         }
         return false;
     }
 
-    public void stock(Element element){
+    /**
+     * Stores an element in the inventory if it is stockable and if there's enough space in the inventory
+     * @param element the element we want to store
+     * @return if the element has been stored in the inventory
+     */
+    public boolean stock(Element element){
         if (element instanceof IStockable stockable && stockable.stock()){
-            this.addInventory(element);
+            return this.addInventory(element);
         }
+        return false;
     }
 
+    /**
+     * Uses the element
+     * @param level the level to use event
+     */
     public void use(Level level){
         if (this.bag.get(this.index) instanceof IUsable usable){
             if (usable.use(level)){

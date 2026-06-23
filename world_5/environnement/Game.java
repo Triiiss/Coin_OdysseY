@@ -5,25 +5,25 @@
 
 package world_5.environnement;
 
-import world_5.types.*;
-import world_5.exceptions.*;
-import world_5.characters.*;
-import world_5.inventory.*;
+import world_5.types.Direction;
+import world_5.exceptions.InvalidLevelException;
+import world_5.characters.Player;
 
-import java.util.Scanner;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
- * The game class
+ * The game class : the conductor of Coin Odyssey
  */
 public class Game{
+    /**The list of levels played consecutively */
     Level[] levels;
+    /**The player that stays the same throughout levels */
     Player player;
 
     /**
      * Constructor method
-     * @param args the list of arguments given in main (for the file management)
+     * @param args the list of arguments given in main (usually a list of files need to be read for levels)
      */
     public Game(String[] args){
         if (args.length >= 1){       // If no arguments, error message
@@ -38,7 +38,7 @@ public class Game{
                 int iLevel = 0;
                 
                 while (!exit){
-                    if (iLevel >= args.length){          // Winning game
+                    if (iLevel >= args.length){          // Winning game/no more levels to play
                         System.out.println(this.levels[iLevel-1].displayWin());
                         break;
                     }
@@ -47,7 +47,7 @@ public class Game{
                         System.out.println(this.levels[iLevel].displayObjective());
                         Rule.getDirection();
                     }
-                    else if (Rule.gameOver(this.levels[iLevel])){        // Lost game
+                    else if (Rule.gameOver(this.levels[iLevel].getPlayer())){        // Lost game
                         System.out.println(this.levels[iLevel].displayGameOver());
                         
                         Direction action = Rule.getDirection();
@@ -69,9 +69,9 @@ public class Game{
                     else if (Rule.levelComplete(this.levels[iLevel])){       // Winning level
                         System.out.println(this.levels[iLevel].displayLevelComplete());
                         iLevel += 1;
-                        Rule.getInput();
+                        Rule.getDirection();
                     }
-                    else if (this.levels[iLevel].getOpenInventory()){       // If the inventory is open
+                    else if (this.levels[iLevel].isInventoryOpen()){       // If the inventory is open
                         System.out.println(this.levels[iLevel].displayInventory());
 
                         if(this.levels[iLevel].handleInventory()){      // Use an element
@@ -82,11 +82,11 @@ public class Game{
                         System.out.println(this.levels[iLevel].toString());     // Display of the game
                         
                         Position oldPlayer = this.levels[iLevel].handleInput();    // Move the player
-                        if (oldPlayer == null){     // If the oldPlayer is null, the Player pressed the escape key or something is wrong. We get out
+                        if (oldPlayer == null){     // If the Player pressed the escape key or something is wrong. We get out
                             exit = true;
                             break;
                         }
-                        if (this.levels[iLevel].getOpenInventory()){
+                        if (this.levels[iLevel].isInventoryOpen()){
                             continue;
                         }
                         this.levels[iLevel].updateMap(oldPlayer);        //Updates enemies, events (coins, trap)
@@ -96,8 +96,7 @@ public class Game{
                 System.err.println(e.getMessage());
             } catch (IOException e){
                 System.err.println(e.getMessage());
-            }
-            catch (InvalidLevelException e){
+            } catch (InvalidLevelException e){
                 System.err.println(e.getMessage());
             }
         }

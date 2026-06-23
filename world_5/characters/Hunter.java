@@ -5,20 +5,23 @@
 
 package world_5.characters;
 
-import world_5.environnement.*;
+import world_5.environnement.Position;
+import world_5.environnement.Cell;
+import world_5.environnement.Level;
+import world_5.environnement.Rule;
 import world_5.types.CellType;
 
 import java.util.List;
 
 /**
- * The hunter (phases through walls enemy)
+ * The hunter (chases the player)
  */
 public class Hunter extends Enemy{
     /**
-     * The hunter enemy
-     * @param name The name of the zombie
-     * @param coord The starting position of the enemy
-     * @param maxhealth The maximum health
+     * The hunter enemy : chases the player with the most optimal path
+     * @param name the unique name of the hunter
+     * @param coord its current coordinates
+     * @param maxhealth The max health of the hunter
      */
     public Hunter(String name, Position coord,int maxhealth){
         super(name, coord, maxhealth);
@@ -26,6 +29,7 @@ public class Hunter extends Enemy{
 
     /**
      * Checks if an enemy collides with a cell or not
+     * Hunter don't go on traps and cannot phase through collision paths
      * @param cell the cell it collides
      * @return if the enemy can go on (true) that space or not
      */
@@ -34,7 +38,7 @@ public class Hunter extends Enemy{
     }
 
     /**
-     * Moves the enemy with the type HUNTER
+     * Moves the enemy with the type hunter
      * @param level the level where the enemy moves
      */
     public void move(Level level){
@@ -47,6 +51,7 @@ public class Hunter extends Enemy{
 
     /**
      * The function where the enemy takes life of a player
+     * The hunter takes 2 life from the player
      * @param player the player that suffers
      */
     public void attackPlayer(Player player){

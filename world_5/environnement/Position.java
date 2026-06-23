@@ -9,11 +9,13 @@ package world_5.environnement;
  * The position x and y
  */
 public class Position{
+    /**The x coordinate */
     private int x;
+    /**The y coordinate */
     private int y;
 
     /**
-     * The constructor of a position
+     * The constructor of a Position
      * @param x the x coordinate
      * @param y the y coordinate
      */
@@ -23,7 +25,6 @@ public class Position{
     }
 
     /**
-     * Get the x coordinate
      * @return the x coordinate
      */
     public int getX(){
@@ -31,7 +32,6 @@ public class Position{
     }
 
     /**
-     * Get the y coordinate
      * @return the y coordinate
      */
     public int getY(){
@@ -39,7 +39,6 @@ public class Position{
     }
 
     /**
-     * Change the x coordinate
      * @param x the new coordinate of the position
      */
     public void setX(int x){
@@ -47,11 +46,18 @@ public class Position{
     }
 
     /**
-     * Change the y coordinate
      * @param y the new coordinate of the position
      */
     public void setY(int y){
         this.y = y;
+    }
+
+    /**
+     * If the position object is not corrupted
+     * @return true if all values are valid
+     */
+    public boolean validPosition(){
+        return (this.x >= 0 && this.y >= 0);
     }
 
     /**
@@ -69,12 +75,22 @@ public class Position{
     public void addY(int y){
         this.y += y;
     }
+    
+    /**
+     * Clone a position by creating a new object
+     * @return the new Position object
+     */
+    public Position clone(){
+        Position clone = new Position(this.x, this.y);
+
+        return clone;
+    }
 
     /**
      * Checks if a position is equal to x and y
      * @param x the x coordinate we want to check
      * @param y the y coordinate we want to check
-     * @return if the two coordinate set are equal or not
+     * @return if the two coordinate sets are equal or not
      */
     public boolean equals(int x, int y){
         return this.equals(new Position(x, y));
@@ -99,7 +115,7 @@ public class Position{
     }
 
     /**
-     * Redefine the hashCode
+     * Redefine the hashCode based on x and y
      * @return The hash of an object based on equals
      */
     @Override
@@ -109,23 +125,5 @@ public class Position{
         result = 31*result + this.y;
 
         return result;
-    }
-    
-    /**
-     * Clone a position by creating a new object
-     * @return the new Position object
-     */
-    public Position clone(){
-        Position clone = new Position(this.x, this.y);
-
-        return clone;
-    }
-
-    /**
-     * If the position object is not corrupted
-     * @return true if all values are valid
-     */
-    public boolean validPosition(){
-        return (this.x >= 0 && this.y >= 0);
     }
 }

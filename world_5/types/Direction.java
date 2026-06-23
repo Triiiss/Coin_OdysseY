@@ -6,44 +6,25 @@
 package world_5.types;
 
 /**
- * Enumeration of the keys zqsd and exit n (because it's far from the zqsd to avoid missclicks)
+ * Enumeration of the keys zqsd, exit n (it's far from the zqsd to avoid missclicks), 
  */
 public enum Direction{
-    /**
-     * Key to go left made with the letter Q
-     */
+    /**Key to go left (letter Q) */
     LEFT,
-    /**
-     * Key to go up made with the letter Z
-     */
+    /**Key to go up (letter Z) */
     UP,
-    /**
-     * Key to go rigth made with the letter D
-     */
+    /**Key to go rigth (letter D) */
     RIGHT,
-    /**
-     * Key to go down made with the letter S
-     */
+    /**Key to go down (letter S) */
     DOWN,
-    /**
-     * Key to open and use the inventory
-     */
+    /**Key to open or close the inventory (letter I) */
     INVENTORY,
-    /**
-     * Key to use an element in inventory
-     */
+    /**Key to use an element in the inventory (letter U) */
     USE,
-    /**
-     * Key to go exit made with the letter N
-     */
+    /**Key to exit (letter N) */
     EXIT,
-    /**
-     * Key to go restart after a game over made with the letter N
-     */
+    /**Key to go restart after a game over (letter R) */
     RESTART,
-    
-    /**
-     * An unknown key 
-     */
+    /**An unknown key  */
     UNKNOWN;
 }

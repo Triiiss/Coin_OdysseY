@@ -5,24 +5,28 @@
 
 package world_5.environnement;
 
-import world_5.types.CellType;
 import world_5.exceptions.InvalidStructureException;
 
 /**
- * Structure class to make walls in the level
+ * Structure class to make walls, doors, trap, and items in the level
  */
 public class Structure{
+    /**The type of the structure (item, wall, etc..) */
     private int type;
+    /**The x coordinate of the structure bottom left */
     private int x;
+    /**The y coordinate of the structure bottom left */
     private int y;
+    /**The width of the structure (horizontal) */
     private int width;
+    /**The height of the structure (vertical) */
     private int height;
 
     /**
      * Constructor method
-     * @param type Whether it's a wall(0), a coin(1) or else(...)
-     * @param x The horizontal coordonate within the level
-     * @param y The vertical coordonate within the level
+     * @param type Whether it's a wall(0), a trap(1), a door(2), a coin(100), a weapon(101) or an hourglass(102)
+     * @param x The horizontal coordonate within the level of the bottom left corner
+     * @param y The vertical coordonate within the level of the bottom left corner
      * @param width The size of the x coordonate
      * @param height The size of the y coordonate
      * @throws InvalidStructureException if the arguments of a structure are invalid
@@ -41,7 +45,6 @@ public class Structure{
     }
     
     /**
-     * Returns the width of the structure
      * @return the width
     */
     public int getWidth(){
@@ -49,7 +52,6 @@ public class Structure{
     }
 
     /**
-     * Returns the height of the structure
      * @return the height
     */
     public int getHeight(){
@@ -57,7 +59,6 @@ public class Structure{
     }
 
     /**
-     * Returns the x coordinate of the structure
      * @return the x coordinate
     */
     public int getX(){
@@ -65,7 +66,6 @@ public class Structure{
     }
 
     /**
-     * Returns the y coordinate of the structure
      * @return the y coordinate
     */
     public int getY(){
@@ -73,7 +73,6 @@ public class Structure{
     }
 
     /**
-     * Returns the type of the structure
      * @return the type
     */
     public int getType(){

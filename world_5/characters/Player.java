@@ -7,24 +7,25 @@ package world_5.characters;
 
 import world_5.environnement.Position;
 import world_5.environnement.Cell;
-import world_5.inventory.*;
-import world_5.types.*;
-
-
+import world_5.inventory.Inventory;
+import world_5.types.CellType;
 
 /**
- * The player class to play a video game
+ * The player class to play Coin Odyssey
  */
 public class Player extends Character{
+    /**The score of the player */
     private int score;
+    /**The inventory where elements are stored */
+    private Inventory inventory;
+    /**The number of enemies killed by the player */
+    private int kills;
+    /**The number of players created in this class */
     private static int nbPlayers = 0;
 
-    private Inventory inventory;
-    private int kills;
-
     /**
-     * Consctuctor of the Player object (score is automatically at 0)
-     * @param name name of the player
+     * Consctuctor of the Player object (score is automatically at 0, and position is set to (-1;-1))
+     * @param name The unique name of the player
      */
     public Player(String name){
         super(name,new Position(-1,-1),5);
@@ -45,24 +46,20 @@ public class Player extends Character{
     }
 
     /**
-     * Count the players that were created using the constructor method
-     * @return the number of player total
+     * @return the number of player total created with the Player class
      */
-    public static int getNbPlayer() {
+    public static int getNbPlayer(){
         return Player.nbPlayers;
     }
 
     /**
-     * Get the score of the player
-     * @return The score
+     * @return The score of the player
      */
     public int getScore(){
         return this.score;
     }
 
-
     /**
-     * Get the list of Elements used as inventory
      * @return the inventory
      */
     public Inventory getInventory(){
@@ -70,27 +67,10 @@ public class Player extends Character{
     }
 
     /**
-     * Get the number of enemy killed by the player
-     * @return the number of kills
+     * @return the number of enemy killed by the player
      */
     public int getKills(){
         return this.kills;
-    }
-
-    /**
-     * Displays the information of your Player object
-     */
-    public void display(){
-        System.out.println("Player : " + this.name + " | score : " + this.score);
-    }
-
-    /**
-     * Puts the character object in the form of a string
-     * @return the string in the form of [name] : [score] pts
-     */
-    public String toString(){
-        String s = this.score > 1 ? "s" : "";
-        return this.name + " : " + this.score + " pt" + s;
     }
 
     /**
@@ -98,7 +78,7 @@ public class Player extends Character{
      * @param points The number of points to add (positive)
      */
     public void addScore(int points){
-        if (points >= 0){
+        if (points > 0){
             this.score += points;
         }
     }
@@ -123,7 +103,17 @@ public class Player extends Character{
     }
 
     /**
-     * Attacks an enemy
+     * Puts the character object in the form of a string
+     * @return the string in the form of [name] : [score] pts
+     */
+    @Override
+    public String toString(){
+        String s = this.score > 1 ? "s" : "";       // Checks if points are plural
+        return this.name + " : " + this.score + " pt" + s;
+    }
+
+    /**
+     * Attacks an enemy (because the player has a weapon)
      * @param enemy the enemy that gets hit
      */
     public void attackEnemy(Enemy enemy){
@@ -149,7 +139,7 @@ public class Player extends Character{
     }
     
     /**
-     * Resets the character in case of game over (no need to create it again, just reset the score and the health)
+     * Resets the character in case of game over
      */
     public void reset(){
         this.score = 0;

@@ -9,7 +9,7 @@ import world_5.environnement.Position;
 import world_5.environnement.Cell;
 
 /**
- * The character class to play a video game
+ * The character class, entity of Coin Odyssey
  */
 public abstract class Character{
     /**The unique name of the character */
@@ -25,7 +25,7 @@ public abstract class Character{
      * The character, parent to enemy and player
      * @param name the name of the player
      * @param coord their current coords
-     * @param maxHealth The max health of the player
+     * @param maxHealth The maximum amount of health a character can have
      */
     public Character(String name, Position coord, int maxHealth){
         this.name = name;
@@ -35,31 +35,27 @@ public abstract class Character{
     }
 
     /**
-     * Get the name of the character
-     * @return The name
+     * @return The name of the character
      */
     public String getName(){
         return this.name;
     }
 
     /**
-     * Get the health points of the character
-     * @return The healthPoint
+     * @return The healthPoint of the character
      */
     public int getHealthPoint(){
         return this.healthPoint;
     }
 
     /**
-     * Get the max health points of the character
-     * @return The maxHealth
+     * @return The maxHealth of the character
      */
     public int getMaxHealth(){
         return this.maxHealth;
     }
 
     /**
-     * Get the position of the character
      * @return The position of the character
      */
     public Position getCoord(){
@@ -67,12 +63,12 @@ public abstract class Character{
     }
 
     /**
-     * Adds health points to the character
-     * @param heal The number of health points to add (positive)
+     * Adds healthPoints to the character
+     * @param heal The number of healthPoints to add (positive)
      */
     public void addHealth(int heal){
-        if (heal >= 0){
-            this.healthPoint = (this.healthPoint + heal < this.maxHealth) ? this.healthPoint + heal : this.maxHealth;
+        if (heal >= 0 && this.healthPoint + heal < this.maxHealth){
+            this.healthPoint += heal;
         }
     }
 
@@ -88,8 +84,18 @@ public abstract class Character{
     }
 
     /**
-     * Two characters are considered equals if their name match up (case sensitivity ignored)
-     * @return true if it's equal or false if not HERE
+     * Moves the character
+     * @param x The x coordinate
+     * @param y The y coordinate
+     */
+    public void moveTo(int x, int y){
+        this.coord.setX(x);
+        this.coord.setY(y);
+    }
+
+    /**
+     * Two characters are considered equals if their name match up and are the same class(case sensitivity ignored)
+     * @return true if it's equal or false if not
      */
     @Override
     public boolean equals(Object object){
@@ -104,8 +110,8 @@ public abstract class Character{
     }
 
     /**
-     * Redefine the hashCode
-     * @return The hash of an object based on equals
+     * Redefine the hashCode based on equals
+     * @return The hash of an object
      */
     @Override
     public int hashCode(){
@@ -118,19 +124,9 @@ public abstract class Character{
     }
 
     /**
-     * Checks if an enemy collides with a cell or not
+     * Checks if an character can move on a cell or not
      * @param cell the cell it collides
-     * @return if the enemy can go on that space or not
+     * @return if the character can go on that space or not
      */
     public abstract boolean canMove(Cell cell);
-
-    /**
-     * Moves the character
-     * @param x The x coordinate
-     * @param y The y coordinate
-     */
-    public void moveTo(int x, int y){
-        this.coord.setX(x);
-        this.coord.setY(y);
-    }
 }

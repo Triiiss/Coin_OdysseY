@@ -6,7 +6,7 @@
 package world_5.types;
 
 /**
- * Enumeration of the keys zqsd and exit n (because it's far from the zqsd to avoid missclicks)
+ * All the different types of Cells
  */
 public enum CellType{
     /**A wall # */

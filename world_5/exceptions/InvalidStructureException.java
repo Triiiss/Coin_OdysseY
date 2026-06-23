@@ -6,7 +6,7 @@
 package world_5.exceptions;
 
 /**
- * The exception if the player wants to be generated out of bounds or in a wall
+ * The exception if the structures are in an invalid format (if width, height, x or y are negative)
  */
 public class InvalidStructureException extends Exception{
     /**

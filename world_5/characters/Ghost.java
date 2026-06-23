@@ -8,17 +8,16 @@ package world_5.characters;
 import world_5.environnement.Position;
 import world_5.environnement.Cell;
 import world_5.environnement.Level;
-import world_5.types.CellType;
 
 /**
- * The ghost (phases through walls enemy)
+ * The ghost (phases through walls enemy type)
  */
 public class Ghost extends Enemy{
     /**
      * The ghost enemy
-     * @param name The name of the zombie
-     * @param coord The starting position of the enemy
-     * @param maxhealth The maximum health
+     * @param name the unique name of the ghost
+     * @param coord its current coordinates
+     * @param maxhealth The max health of the ghost
      */
     public Ghost(String name, Position coord,int maxhealth){
         super(name, coord, maxhealth);
@@ -26,15 +25,17 @@ public class Ghost extends Enemy{
     
     /**
      * Checks if an enemy collides with a cell or not
+     * The ghost can move no matter what
      * @param cell the cell it collides
-     * @return if the enemy can go on that space or not
+     * @return if the enemy can go on that space or not (yes it can)
      */
     public boolean canMove(Cell cell){
         return true;
     }
 
     /**
-     * Moves the enemy with the type GHOST
+     * Moves the enemy with the type ghost
+     * Moves towards the player
      * @param level the level where the enemy moves
      */
     public void move(Level level){
@@ -62,11 +63,12 @@ public class Ghost extends Enemy{
 
     /**
      * The function where the enemy takes life of a player
+     * The ghost only takes one life from the player
      * @param player the player that suffers
      */
     public void attackPlayer(Player player){
         player.removeHealth(1);
 
-        System.out.println("\u001B[31mYou've been hit by " + this.name + "\u001B[0m");
+        System.out.println("\u001B[31mYou've been hit by " + this.name + " (ghost) \u001B[0m");
     }
 }

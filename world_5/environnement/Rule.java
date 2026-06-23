@@ -10,10 +10,8 @@ import world_5.types.*;
 import world_5.inventory.item.*;
 
 import java.util.Scanner;
-import java.util.List;
 import java.util.Iterator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.ArrayList;
 
 /**
@@ -24,15 +22,17 @@ public class Rule{
      * Empty constructor
      */
     public Rule(){
+        // Empty constructor
     }
 
     /**
      * Each cell has a type, and shows something based on what's on it
-     * The player is priority, then coins then the actual type
+     * The player is priority, then the other enemies then coins, then walls & doors, then items and finaly traps or empty space
      * So a coin can be on a trap and just show the coin (it's a hidden trap hehe)
-     * @param cell The cell we want to give the char of
+     * Walls with no collision can also hide items
+     * @param cell The cell we want to give the corresponding char of
      * @param level The level (to access the player and enemies)
-     * @return the character of the cell ( ,.,#,*,1,etc)
+     * @return the character of the cell ( ,.,#,*,1,,W,H,G,R,C, etc)
      */
     public static String cellChar(Cell cell, Level level){
         String RESET = "\u001B[0m";
@@ -43,11 +43,11 @@ public class Rule{
         String BLUE = "\u001B[94m";     // Items
         String GREEN = "\u001B[92m";    // Player
 
-        if (level.getPlayer().getCoord().equals(cell.getCoord())){
+        if (level.getPlayer().getCoord().equals(cell.getCoord())){      // The player
             return GREEN + "1" + RESET;
         }
 
-        if(level.getEnemyCells().contains(cell)){
+        if(level.getEnemyCells().contains(cell)){                       // The enemies
             Iterator<Enemy> iterator = level.getEnemies().iterator();
             while (iterator.hasNext()){
                 Enemy enemy = iterator.next();
@@ -74,10 +74,18 @@ public class Rule{
             }
         }
 
-        if (cell.getHasItem()){
-            if (cell.getItem() instanceof Coin){
-                return YELLOW + "." + RESET;
-            }
+        if (cell.hasItem() && cell.getItem() instanceof Coin){       // Coin (that can hid traps and walls)
+            return YELLOW + "." + RESET;
+        }
+
+        switch(cell.getType()){                         // Walls and doors
+            case CellType.WALL:
+                return "#" + RESET;
+            case CellType.DOOR:
+                return "D" + RESET;
+        }
+
+        if (cell.hasItem()){                         // Items (that can be hidden behind walls or hide traps)
             if (cell.getItem() instanceof Weapon){
                 return BLUE + "W" + RESET;
             }
@@ -86,45 +94,42 @@ public class Rule{
             }
         }
 
-        switch(cell.getType()){
-            case CellType.WALL:
-                return "#" + RESET;
+        switch(cell.getType()){                         // Traps and empty space
             case CellType.EMPTY:
                 return " " + RESET;
             case CellType.TRAP:
                 return MAGENTA + "*" + RESET;
-            case CellType.DOOR:
-                return "D" + RESET;
         }
         return " ";
     }
 
     /**
-     * Checks if the game is over (player no health)
+     * Checks if the game is over/lost (player has no more health)
      * @param level the level with the player in it
      * @return if the game is over or not
      */
-    public static boolean gameOver(Level level){
-        return level.getPlayer().getHealthPoint() <= 0;
+    public static boolean gameOver(Player player){
+        return player.getHealthPoint() <= 0;
     }
 
     /**
-     * Checks if a level is done (no coins left)
-     * @param level the level
-     * @return if the level is completed or not
+     * Checks if a level is done depending on the objective
+     * @param level the level we're checking
+     * @return if the level objective is completed or not
      */
     public static boolean levelComplete(Level level){
-        System.out.println(level.getType());
-        System.out.println(level.getType() == ObjectiveType.ENEMIES);
         if (level.getType() == ObjectiveType.ENEMIES){
             return level.getEnemies().isEmpty();
+        }
+        if (level.getType() == ObjectiveType.COINS){
+            return level.getNbCoins() <= 0;
         }
         return level.getNbCoins() <= 0;     // Default type
     }
 
     /**
      * Asks an input to the user
-     * @return the input as a letter
+     * @return the input with the keyboard as a letter
      */
     public static String getInput(){
         Scanner sc = new Scanner(System.in);
@@ -132,11 +137,11 @@ public class Rule{
     }
 
     /**
-     * Link the letters of the input to the direction
-     * @param input the input of the user
-     * @return the direction
+     * Bind the letters of the input to the direction of the game
+     * @param input the input of the user as a letter
+     * @return the direction or key the user inputed
      */
-    public static Direction keyBinding(String input){
+    private static Direction keyBinding(String input){
         char leftKey = 'q';
         char upKey = 'z';
         char rightKey = 'd';
@@ -176,16 +181,16 @@ public class Rule{
     }
 
     /**
-     * Ask input and return the direction
+     * Ask an input from the user and return the direction
      * @return the direction given by the user
      */
     public static Direction getDirection(){
-        return Rule.keyBinding(getInput());
+        return Rule.keyBinding(Rule.getInput());
     }
 
     /**
-     * The tore mecanic (loop)
-     * @param level the level it is in
+     * The tore mecanic (donut shaped map)
+     * @param level the level we want to use the tore in
      * @param coord the coords that needs changing if it is out of bound
      */
     public static void tore(Level level, Position coord){
@@ -209,25 +214,27 @@ public class Rule{
      * @param newPlayer the player's future position
      */
     public static void activateTrap(Level level,Position newPlayer){
-        System.out.println("\u001B[31mYou fell into a trap !\u001B[0m");
-        level.getPlayer().removeHealth(2);
+        if (level.getLevel()[newPlayer.getY()][newPlayer.getX()].getType() == CellType.TRAP){
+            System.out.println("\u001B[31mYou fell into a trap !\u001B[0m");
+            level.getPlayer().removeHealth(2);
 
-        level.resetEnemies();        // Resets the entities
+            level.getLevel()[newPlayer.getY()][newPlayer.getX()].setType(CellType.EMPTY);       // Delete the trap
 
-        level.getLevel()[newPlayer.getY()][newPlayer.getX()].setType(CellType.EMPTY);       // Delete the trap
-        newPlayer.setX(level.getStartPlayer().getX());
-        newPlayer.setY(level.getStartPlayer().getY());
+            level.resetEnemies();        // Resets the entities' positions
+            newPlayer.setX(level.getStartPlayer().getX());
+            newPlayer.setY(level.getStartPlayer().getY());
+        }
     }
 
     /**
-     * Return the next path to take to get from enemy.coord to the target
-     * @param level The level
-     * @param source The enemy mostly the hunter
+     * Return the next path to take to get, from source to the target
+     * @param level The level we move ins
+     * @param source The source probably the hunter's position
      * @param target The target usually the player
-     * @param enemy The enemy to check the collision
-     * @return the next step
+     * @param character The character to check the collision
+     * @return the next step as a position
      */
-    public static Position shortestPath(Level level, Position source, Position target, Enemy enemy){
+    public static Position shortestPath(Level level, Position source, Position target, world_5.characters.Character character){
         boolean[][] visited = new boolean[level.getHeight()][level.getWidth()];
         HashMap<Position, Position> path = new HashMap<>();
         ArrayList<Position> queue = new ArrayList<Position>();
@@ -236,7 +243,7 @@ public class Rule{
         queue.add(source);
         path.put(source, null);
 
-        int[][] directions = {      // directions of x an dy
+        int[][] directions = {      // directions of the directions available for the source (neighbour)
             {0, -1}, // up
             {0, 1},  // down
             {-1, 0}, // left
@@ -253,14 +260,14 @@ public class Rule{
             for (int[] dir : directions){       // Check all "children" (all four directions)
                 Position next = new Position(current.getX() + dir[0],current.getY() + dir[1]);
 
-                if (level.isAccessible(next, enemy) && !visited[next.getY()][next.getX()]){       // Adds a new step
+                if (level.isAccessible(next, character) && !visited[next.getY()][next.getX()]){       // Adds a new step
                     visited[next.getY()][next.getX()] = true;
                     path.put(next,current);
                     queue.add(next);
                 }
             }
         }
-        if (!path.containsKey(target)){       // The target and source aren't connected
+        if (!path.containsKey(target)){       // The target and source aren't connected => no movements
             return source;
         }
 

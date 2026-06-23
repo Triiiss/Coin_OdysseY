@@ -10,36 +10,21 @@ import world_5.environnement.Level;
 import world_5.environnement.Cell;
 
 /**
- * The enemy class >:c
+ * The enemy class (the mean ones >:c)
  */
 public abstract class Enemy extends Character{
+    /**The starting coordinates of the enemy */
     private Position startCoord;
 
     /**
-     * Constructor method
-     * @param name its name
+     * Constructor of the enemy parent to Zombie, Hunter and Ghost
+     * @param name the unique name of an enemy
      * @param coord its current coordinates
      * @param maxhealth The max health of the enemy
      */
     public Enemy(String name, Position coord,int maxhealth){
         super(name, coord, maxhealth);
         this.startCoord = coord.clone();
-    }
-
-    /**
-     * Get the starting coordinate of an enemy
-     * @return The start coordinate of the enemy
-     */
-    public Position getStartCoord(){
-        return this.startCoord;
-    }
-
-    /**
-     * Restes the position of an enemy (get back to startCoord)
-     */
-    public void resetPosition(){
-        this.coord.setX(this.startCoord.getX());
-        this.coord.setY(this.startCoord.getY());
     }
 
     /**
@@ -50,13 +35,21 @@ public abstract class Enemy extends Character{
     public abstract boolean canMove(Cell cell);
 
     /**
-     * move prototype 
-     * @param level The level where the enemy moves
+     * movement depends on the enemy type
+     * @param level The level where the enemy is moving
      */
     public abstract void move(Level level);
 
     /**
-     * The abstract function where the enemy takes life of a player
+     * Resets the position of an enemy (get back to startCoord)
+     */
+    public void resetPosition(){
+        this.coord.setX(this.startCoord.getX());
+        this.coord.setY(this.startCoord.getY());
+    }
+
+    /**
+     * The abstract function where the enemy takes life of a player because of contact
      * @param player the player that suffers
      */
     public abstract void attackPlayer(Player player);

@@ -6,7 +6,7 @@
 package world_5.exceptions;
 
 /**
- * The exception if the player wants to be generated out of bounds or in a wall
+ * The exception if the level is corrupted or invalid (width and height invalid)
  */
 public class InvalidLevelException extends Exception{
     /**

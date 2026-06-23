@@ -13,14 +13,15 @@ import world_5.types.CellType;
 import java.util.Random;
 
 /**
- * The zombie (random enemy)
+ * The zombie (enemy that moves randomly)
  */
 public class Zombie extends Enemy{
     /**
-     * The zombie enemy
+     * Constructor method of the zombie enemy
+     * The most basic enemy
      * @param name The name of the zombie
      * @param coord The starting position of the enemy
-     * @param maxhealth The maximum health
+     * @param maxhealth The maximum health of the zombie
      */
     public Zombie(String name, Position coord,int maxhealth){
         super(name, coord, maxhealth);
@@ -28,6 +29,7 @@ public class Zombie extends Enemy{
     
     /**
      * Checks if an enemy collides with a cell or not
+     * Zombie doesn't go on traps and cannot phase through collision paths
      * @param cell the cell it collides
      * @return if the enemy can go on that space or not
      */
@@ -36,7 +38,8 @@ public class Zombie extends Enemy{
     }
 
     /**
-     * Moves the enemy with the type RANDOM
+     * Moves the enemy with the type zombie
+     * Moves randomly
      * @param level the level where the enemy moves
      */
     public void move(Level level){
@@ -69,6 +72,6 @@ public class Zombie extends Enemy{
     public void attackPlayer(Player player){
         player.removeHealth(1);
 
-        System.out.println("\u001B[31mYou've been hit by " + this.name + "\u001B[0m");
+        System.out.println("\u001B[31mYou've been hit by " + this.name + " (zombie) \u001B[0m");
     }
 }

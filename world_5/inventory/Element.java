@@ -4,15 +4,14 @@
  */
 
 package world_5.inventory;
-import world_5.environnement.Level;
-import world_5.environnement.Cell;
+
 import world_5.characters.Player;
-import world_5.inventory.interfaces.*;
 
 /**
- * Element class
+ * Element class for all objects
  */
 public abstract class Element /*implements Comparable<Element>*/{
+    /**The name of the Element. Used to distinguish multiple Elements */
     private String name;
 
     /**
@@ -24,8 +23,7 @@ public abstract class Element /*implements Comparable<Element>*/{
     }
 
     /**
-     * Get the name of the element
-     * @return the name given to the element
+     * @return the name of the element
      */
     public String getName(){
         return this.name;

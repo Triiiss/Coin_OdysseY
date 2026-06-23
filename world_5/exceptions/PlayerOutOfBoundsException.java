@@ -6,7 +6,7 @@
 package world_5.exceptions;
 
 /**
- * The exception if the player wants to be generated out of bounds or in a wall
+ * The exception if the player tries to generate out of bounds or in a wall
  */
 public class PlayerOutOfBoundsException extends RuntimeException{
     /**
