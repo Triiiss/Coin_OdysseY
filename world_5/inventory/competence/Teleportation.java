@@ -16,7 +16,7 @@ public class Teleportation extends Element implements IStockable, IUsable{
     }
 
     public boolean use(Level level){
-
+        level.teleportationPlayer();
         return false;
     }
 }

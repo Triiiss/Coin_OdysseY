@@ -832,6 +832,10 @@ public class Level{
         }
         this.player.moveTo(newX,newY);
 
+        if (this.level[this.player.getCoord().getY()][this.player.getCoord().getX()].getHasItem() && this.player.getInventory().pickUp(this.level[this.player.getCoord().getY()][this.player.getCoord().getX()].getItem(), this)){      // Get item
+            this.level[this.player.getCoord().getY()][this.player.getCoord().getX()].removeItem();
+        }
+
         return true;
     }
 
