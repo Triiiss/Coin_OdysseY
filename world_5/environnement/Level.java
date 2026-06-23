@@ -11,6 +11,7 @@ import world_5.types.*;
 import world_5.exceptions.*;
 import world_5.inventory.*;
 import world_5.inventory.item.*;
+import world_5.inventory.competence.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -909,7 +910,7 @@ public class Level{
                 return false;
             case Direction.DOWN:
                 if (this.player.getInventory().getIndex() + 1 < this.getPlayer().getInventory().getBag().size()){
-                    this.player.getInventory().addIndex();
+                    this.player.getInventory().increaseIndex();
                 }
                 return false;
             case Direction.USE:
@@ -943,8 +944,8 @@ public class Level{
         boolean trap = false;
         boolean playerMoving = !this.player.getCoord().equals(oldPlayer);
 
-        if (this.level[this.player.getCoord().getY()][this.player.getCoord().getX()].getHasItem()){      // Get item
-            Rule.collectItem(this,this.player.getCoord());
+        if (this.level[this.player.getCoord().getY()][this.player.getCoord().getX()].getHasItem() && this.player.getInventory().pickUp(this.level[this.player.getCoord().getY()][this.player.getCoord().getX()].getItem())){      // Get item
+            this.level[this.player.getCoord().getY()][this.player.getCoord().getX()].removeItem();
         }
         if (this.level[this.player.getCoord().getY()][this.player.getCoord().getX()].getType() == CellType.TRAP && this.player.getHealthPoint() > 0){         // Get on a trap
             trap = true;
@@ -985,12 +986,12 @@ public class Level{
                 enemyCells.add(this.level[enemy.getCoord().getY()][enemy.getCoord().getX()]);
             }
         }
-        /*if (!this.player.getInventory().getLockpick() && this.player.getScore() >= 100){        // Adds lockpicking 
-            this.player.getInventory().addInventory(new Competence("Lockpicking",CompetenceType.LOCKPICK));
+        if (!this.player.getInventory().getLockpick() && this.player.getScore() >= 100){        // Adds lockpicking 
+            this.player.getInventory().store(new Lockpick("Lockpicking"));
         }
         if (!this.player.getInventory().getTeleportation() && this.player.getKills() >= 3){    // Adds teleportation
-            this.player.getInventory().addInventory(new Competence("Teleportation", CompetenceType.TELEPORTATION));
-        }*/
+            this.player.getInventory().store(new Teleportation("Teleportation"));
+        }
 
         if (freeze > 0){        // Each movement freeze decreases
             freeze--;

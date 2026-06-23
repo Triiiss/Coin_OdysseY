@@ -6,6 +6,7 @@
 package world_5.inventory;
 
 import world_5.types.*;
+import world_5.interfaces.*;
 import world_5.inventory.item.*;
 import world_5.inventory.competence.*;
 import world_5.environnement.Level;
@@ -61,7 +62,7 @@ public class Inventory{
     /**
      * Augment the inventoryIndex by one (used the key DOWN while in inventory)
      */
-    public void addIndex(){
+    public void increaseIndex(){
         if (this.index < this.bag.size()){
             this.index++;
         }
@@ -89,8 +90,8 @@ public class Inventory{
      * @param element the element to add to the inventory
      * @return if the element was added to the inventory (true) or not (false)
      */
-    public boolean addInventory(Element element){
-        if (this.bag.size() < this.maxInventory && this.bag != null){
+    private boolean addInventory(Element element){
+        if (this.bag.size() < this.maxInventory && this.bag != null && element instanceof IPickable pickable){
             this.bag.add(element);
             //Collections.sort(this.bag);        // Sorts inventory everytime we add something
             System.out.println("\u001B[94mYou have obtained " + element.getName() + "\u001B[0m");
@@ -175,12 +176,23 @@ public class Inventory{
         this.teleportation = false;
     }
 
+    public boolean pickUp(Element element){
+        if (element instanceof IPickable pickable){
+            if (pickable.pickUp()){
+                this.addInventory(element);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public void store(Element element){
+        if (element instanceof IStockable stockable && stockable.stock()){
+            this.addInventory(element);
+        }
+    }
 
     public void use(Level level){
         
-    }
-
-    public boolean pickUp(Element element){
-        return true;
     }
 }

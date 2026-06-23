@@ -220,17 +220,6 @@ public class Rule{
     }
 
     /**
-     * Collect the coin from the cell
-     * @param level The level we take the coin from
-     * @param newPlayer the player's future position
-     */
-    public static void collectItem(Level level, Position newPlayer){
-        if (level.getPlayer().getInventory().pickUp(level.getLevel()[newPlayer.getY()][newPlayer.getX()].getItem())){      // If it got picked up
-            level.getLevel()[newPlayer.getY()][newPlayer.getX()].removeItem();                  // Delete the item from the cell
-        }
-    }
-
-    /**
      * Return the next path to take to get from enemy.coord to the target
      * @param level The level
      * @param source The enemy mostly the hunter

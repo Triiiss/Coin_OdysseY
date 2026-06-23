@@ -13,5 +13,8 @@ public class Coin extends Element implements IPickable{
         super(name);
     }
 
-
+    @Override
+    public boolean pickUp(){
+        return false;
+    }
 }
