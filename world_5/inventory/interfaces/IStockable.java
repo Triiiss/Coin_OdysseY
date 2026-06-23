@@ -3,7 +3,7 @@
  * @version 1.0
  */
 
-package world_5.interfaces;
+package world_5.inventory.interfaces;
 
 public interface IStockable{
     public default boolean stock(){

@@ -6,7 +6,7 @@
 package world_5.inventory.item;
 
 import world_5.inventory.*;
-import world_5.interfaces.*;
+import world_5.inventory.interfaces.*;
 import world_5.environnement.Level;
 
 public class Hourglass extends Element implements IStockable, IPickable, IUsable{

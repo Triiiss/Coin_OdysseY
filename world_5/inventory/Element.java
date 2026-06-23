@@ -7,7 +7,7 @@ package world_5.inventory;
 import world_5.environnement.Level;
 import world_5.environnement.Cell;
 import world_5.characters.Player;
-import world_5.interfaces.*;
+import world_5.inventory.interfaces.*;
 
 /**
  * Element class
