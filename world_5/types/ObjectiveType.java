@@ -12,5 +12,7 @@ public enum ObjectiveType{
     /**To finish the level, you have to collect all the coins */
     COINS,
     /**To finish the level, you have to defeat all enemies */
-    ENEMIES;
+    ENEMIES,
+    /**To finish the level, you have to survive for x movements */
+    SURVIVAL;
 }

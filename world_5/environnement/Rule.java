@@ -127,6 +127,9 @@ public class Rule{
         if (level.getType() == ObjectiveType.COINS){
             return level.getNbCoins() <= 0;
         }
+        if (level.getType() == ObjectiveType.SURVIVAL){
+            return (level.getTime() >= level.getGoalTime() && level.getGoalTime() > 0);
+        }
         return level.getNbCoins() <= 0;     // Default type
     }
 

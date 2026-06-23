@@ -52,6 +52,10 @@ public class Level{
     private boolean openInventory;  // handling events
     /**How much time/movement enemies are frozen for */
     private int freeze;
+    /**Amount of time passed */
+    private int time;
+    /**Amount of time to complete the level in SURVIVAL */
+    private int goalTime;
 
     private static String CUR = System.getProperty("user.dir");
 
@@ -80,6 +84,8 @@ public class Level{
             this.enemyCells = new HashSet<Cell>();
 
             this.freeze = 0;
+            this.time = 0;
+            this.goalTime = -1;
             this.openInventory = false;
 
 
@@ -166,6 +172,14 @@ public class Level{
         }
     }
 
+    public Level(int width, int height, Structure[] structs, Player player, int playerX, int playerY, List<Enemy> enemies, ObjectiveType type, int goalTime) throws InvalidLevelException{
+        this(width, height, structs, player, playerX, playerY, enemies, type);
+        if (goalTime > 0){
+            this.goalTime = goalTime;
+        }
+    }
+
+
     /**
      * Consctructor from the text file
      * Format of the file :
@@ -195,6 +209,7 @@ public class Level{
         int height = -1;
         int playerX = -1;
         int playerY = -1;
+        int goalTime = -1;
         ObjectiveType type = ObjectiveType.COINS;
 
         int section = 0;
@@ -250,7 +265,7 @@ public class Level{
                                 break;
                             case 3:     // Level info
                                 String[] levelInfo = ligne.split(" ");
-                                if (levelInfo.length == 5){
+                                if (levelInfo.length >= 5){
                                     width = Integer.parseInt(levelInfo[0]);
                                     height = Integer.parseInt(levelInfo[1]);
                                     playerX = Integer.parseInt(levelInfo[2]);
@@ -262,6 +277,15 @@ public class Level{
                                         case 1:
                                             type = ObjectiveType.ENEMIES;
                                             break;
+                                        case 2:
+                                            type = ObjectiveType.SURVIVAL;
+                                            break;
+                                        default:
+                                            type = ObjectiveType.COINS;
+                                            break;
+                                    }
+                                    if (type == ObjectiveType.SURVIVAL && levelInfo.length == 6){
+                                        goalTime = Integer.parseInt(levelInfo[5]);
                                     }
                                 }
                                 break;
@@ -270,7 +294,7 @@ public class Level{
                 }
                 if (p1 != null){
                     try{
-                        return new Level(width, height, structuresOfLevel, p1, playerX, playerY, enemies, type);   
+                        return new Level(width, height, structuresOfLevel, p1, playerX, playerY, enemies, type, goalTime);   
                     } catch (InvalidLevelException e){
                         throw e;
                     }
@@ -356,6 +380,20 @@ public class Level{
      */
     public int getFreeze(){
         return this.freeze;
+    }
+
+    /**
+     * @return the current time passed since the begining of the level
+     */
+    public int getTime(){
+        return this.time;
+    }
+
+    /**
+     * @return the goal time to survive
+     */
+    public int getGoalTime(){
+        return this.goalTime;
     }
 
     /**
@@ -482,6 +520,7 @@ public class Level{
         String YELLOW = "\u001B[33m";
         String BLUE = "\u001B[94m";
         String RED = "\u001B[31m";
+        String MAGENTA = "\u001B[35m";
 
         ui.append(this.displayHealthBar());
         ui.append('\n');
@@ -494,6 +533,10 @@ public class Level{
             case ObjectiveType.ENEMIES:
                 ui.append(" | " + RED + "enemies left : "+ this.enemies.size() + RESET + "\n");
                 break;
+            case ObjectiveType.SURVIVAL:
+                ui.append(" | " + MAGENTA + "time left : "+ (this.goalTime - this.time) + RESET + "\n");
+                break;
+
         }
         ui.append("Z: Up | Q: Right | S: Down | D: Left | N: exit");     // Direction keys
         if (this.freeze > 0){       // Eventual freeze time
@@ -582,6 +625,7 @@ public class Level{
         String RESET = "\u001B[0m";
         String YELLOW = "\u001B[33m";
         String RED = "\u001B[31m";
+        String MAGENTA = "\u001B[35m";
 
         int goodWidth = this.width;     // Good width that can print LEVEL COMPLETED without "crossing the lines"
         if (goodWidth < 19){
@@ -626,6 +670,9 @@ public class Level{
                 break;
             case ObjectiveType.ENEMIES:
                 objective.append(RED + "Kill all enemies " + RESET);
+                break;
+            case ObjectiveType.SURVIVAL:
+                objective.append(MAGENTA + "     Survive     " + RESET);
                 break;
         }
         for (int j=0;j<(goodWidth/2)-9;j++){
@@ -1038,5 +1085,7 @@ public class Level{
         if (freeze > 0){        // Each movement freeze decreases
             freeze--;
         }
+
+        this.time++;
     }
 }
