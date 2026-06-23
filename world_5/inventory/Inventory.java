@@ -140,7 +140,7 @@ public class Inventory{
     private boolean addInventory(Element element){
         if (this.bag.size() < this.maxInventory && this.bag != null){
             this.bag.add(element);
-            //Collections.sort(this.bag);        // Sorts inventory everytime we add something
+            Collections.sort(this.bag);        // Sorts inventory everytime we add something
             System.out.println("\u001B[94mYou have obtained " + element.getName() + "\u001B[0m");
 
             if (element instanceof Weapon){

@@ -6,11 +6,12 @@
 package world_5.inventory;
 
 import world_5.characters.Player;
+import world_5.inventory.interfaces.IPickable;
 
 /**
  * Element class for all objects
  */
-public abstract class Element /*implements Comparable<Element>*/{
+public abstract class Element implements Comparable<Element>{
     /**The name of the Element. Used to distinguish multiple Elements */
     private String name;
 
@@ -30,10 +31,11 @@ public abstract class Element /*implements Comparable<Element>*/{
     }
 
     /**
-     * Two characters are considered equals if their name match up (case sensitivity ignored)
-     * @return true if it's equal or false if not HERE
+     * Two elements are considered equals if their name and their class match up (case sensitivity ignored)
+     * @param object the object we want to compare
+     * @return true if the elements are equal or false if not
      */
-    /*@Override
+    @Override
     public boolean equals(Object object){
         if (this == object){
             return true;
@@ -47,12 +49,12 @@ public abstract class Element /*implements Comparable<Element>*/{
     }
 
     /**
-     * Redefine the hashCode
+     * Redefine the hashCode based on name and class
      * @return The hash of an object based on equals
      */
-    /*@Override
+    @Override
     public int hashCode(){
-        int result = 11;     // My favorite prime number
+        int result = 11;
 
         result = result*19 + this.name.toLowerCase().hashCode();
         result = result*31 + this.getClass().hashCode();
@@ -65,16 +67,16 @@ public abstract class Element /*implements Comparable<Element>*/{
      * @param e The other element we want to compare it to
      * @return negative if this goes first, positive if e goes first and 0 if they are equal
      */
-    /*@Override
+    @Override
     public int compareTo(Element e){
-        if (this instanceof Item && e instanceof Competence){
+        if (this instanceof IPickable && !(e instanceof IPickable)){
             return -1;
         }
-        else if(this instanceof Competence && e instanceof Item){
+        else if(!(this instanceof IPickable) && e instanceof IPickable){
             return 1;
         }
         else{
             return this.name.compareToIgnoreCase(e.getName());
         }
-    }*/
+    }
 }
