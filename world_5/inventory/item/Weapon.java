@@ -13,9 +13,4 @@ public class Weapon extends Element implements IStockable, IPickable{
     public Weapon(String name){
         super(name);
     }
-
-    public boolean use(Level level){
-
-        return false;
-    }
 }
