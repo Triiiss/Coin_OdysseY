@@ -15,7 +15,7 @@ public class Hourglass extends Element implements IStockable, IPickable, IUsable
     }
 
     public boolean use(Level level){
-
-        return false;
+        level.freezeEnemies(10);
+        return true;
     }
 }

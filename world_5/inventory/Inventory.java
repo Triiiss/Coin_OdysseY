@@ -193,6 +193,10 @@ public class Inventory{
     }
 
     public void use(Level level){
-        
+        if (this.bag.get(this.index) instanceof IUsable usable){
+            if (usable.use(level)){
+                this.removeInventory();
+            }
+        }
     }
 }
