@@ -127,6 +127,12 @@ public class Level{
                                                 this.level[j+structs[i].getY()][k+structs[i].getX()].addItem(new Hourglass("Hourglass"));
                                             }
                                             break;
+                                        case 103:
+                                            if ((this.level[j+structs[i].getY()][k+structs[i].getX()].getType() != CellType.WALL || !this.level[j+structs[i].getY()][k+structs[i].getX()].getCollision()) && !this.level[j+structs[i].getY()][k+structs[i].getX()].hasItem()){
+                                                this.level[j+structs[i].getY()][k+structs[i].getX()].addItem(new Potion("Health Potion"));
+                                            }
+                                            break;
+
                                     }
                                 }
                             }

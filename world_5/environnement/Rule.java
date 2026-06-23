@@ -92,6 +92,9 @@ public class Rule{
             if (cell.getItem() instanceof Hourglass){
                 return BLUE + "H" + RESET;
             }
+            if (cell.getItem() instanceof Potion){
+                return BLUE + "P" + RESET;
+            }
         }
 
         switch(cell.getType()){                         // Traps and empty space
