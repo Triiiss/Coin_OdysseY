@@ -62,10 +62,21 @@ public class Inventory{
     }
 
     /**
-     * @return the bag where the elements are stored
+     * @return the amount of elements already in the bag
      */
-    public List<Element> getBag(){
-        return this.bag;
+    public int getBagSize(){
+        return this.bag.size();
+    }
+
+    /**
+     * @param index the index of the element we want
+     * @return the name of en element in the inventory
+     */
+    public String getBagElementName(int index){
+        if (index >= 0 && index < this.maxInventory){
+            return this.bag.get(index).getName();
+        }
+        return "";
     }
 
     /**

@@ -524,7 +524,7 @@ public class Level{
         inventory.append('\n');
 
         for (int i=0;i<player.getInventory().getMaxInventory()*2;i++){
-            if (i%2 == 1 || this.player.getInventory().getBag().size() <= i/2){
+            if (i%2 == 1 || this.player.getInventory().getBagSize() <= i/2){
                 inventory.append('#');
                 for (int j=0;j<goodWidth;j++){
                     inventory.append(' ');
@@ -533,16 +533,16 @@ public class Level{
                 inventory.append('\n');
             }
             else if (this.player.getInventory().getIndex() == i/2){
-                inventory.append("#" + BLUE + " * " + this.player.getInventory().getBag().get(i/2).getName() + " [USE]" + RESET );
-                for (int j=0;j<goodWidth - 9 - this.player.getInventory().getBag().get(i/2).getName().length();j++){
+                inventory.append("#" + BLUE + " * " + this.player.getInventory().getBagElementName(i/2) + " [USE]" + RESET );
+                for (int j=0;j<goodWidth - 9 - this.player.getInventory().getBagElementName(i/2).length();j++){
                     inventory.append(" ");
                 }
                 inventory.append("#");
                 inventory.append('\n');
             }
             else{
-                inventory.append("#   " + this.player.getInventory().getBag().get(i/2).getName());
-                for (int j=0;j<goodWidth - 3 - this.player.getInventory().getBag().get(i/2).getName().length();j++){
+                inventory.append("#   " + this.player.getInventory().getBagElementName(i/2));
+                for (int j=0;j<goodWidth - 3 - this.player.getInventory().getBagElementName(i/2).length();j++){
                     inventory.append(" ");
                 }
                 inventory.append("#");
@@ -937,13 +937,13 @@ public class Level{
                 }
                 return false;
             case Direction.DOWN:
-                if (this.player.getInventory().getIndex() + 1 < this.getPlayer().getInventory().getBag().size()){
+                if (this.player.getInventory().getIndex() + 1 < this.getPlayer().getInventory().getBagSize()){
                     this.player.getInventory().increaseIndex();
                 }
                 return false;
             case Direction.USE:
                 this.openInventory = false;
-                return (this.player.getInventory().getIndex() < this.player.getInventory().getBag().size()) ? true : false;
+                return (this.player.getInventory().getIndex() < this.player.getInventory().getBagSize()) ? true : false;
             case Direction.INVENTORY:
                 this.openInventory = false;
                 this.player.getInventory().resetIndex();
