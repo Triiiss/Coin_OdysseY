@@ -944,7 +944,7 @@ public class Level{
         boolean trap = false;
         boolean playerMoving = !this.player.getCoord().equals(oldPlayer);
 
-        if (this.level[this.player.getCoord().getY()][this.player.getCoord().getX()].getHasItem() && this.player.getInventory().pickUp(this.level[this.player.getCoord().getY()][this.player.getCoord().getX()].getItem())){      // Get item
+        if (this.level[this.player.getCoord().getY()][this.player.getCoord().getX()].getHasItem() && this.player.getInventory().pickUp(this.level[this.player.getCoord().getY()][this.player.getCoord().getX()].getItem(), this)){      // Get item
             this.level[this.player.getCoord().getY()][this.player.getCoord().getX()].removeItem();
         }
         if (this.level[this.player.getCoord().getY()][this.player.getCoord().getX()].getType() == CellType.TRAP && this.player.getHealthPoint() > 0){         // Get on a trap
@@ -987,10 +987,10 @@ public class Level{
             }
         }
         if (!this.player.getInventory().getLockpick() && this.player.getScore() >= 100){        // Adds lockpicking 
-            this.player.getInventory().store(new Lockpick("Lockpicking"));
+            this.player.getInventory().stock(new Lockpick("Lockpicking"));
         }
         if (!this.player.getInventory().getTeleportation() && this.player.getKills() >= 3){    // Adds teleportation
-            this.player.getInventory().store(new Teleportation("Teleportation"));
+            this.player.getInventory().stock(new Teleportation("Teleportation"));
         }
 
         if (freeze > 0){        // Each movement freeze decreases

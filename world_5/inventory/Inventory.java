@@ -91,7 +91,7 @@ public class Inventory{
      * @return if the element was added to the inventory (true) or not (false)
      */
     private boolean addInventory(Element element){
-        if (this.bag.size() < this.maxInventory && this.bag != null && element instanceof IPickable pickable){
+        if (this.bag.size() < this.maxInventory && this.bag != null){
             this.bag.add(element);
             //Collections.sort(this.bag);        // Sorts inventory everytime we add something
             System.out.println("\u001B[94mYou have obtained " + element.getName() + "\u001B[0m");
@@ -176,9 +176,9 @@ public class Inventory{
         this.teleportation = false;
     }
 
-    public boolean pickUp(Element element){
+    public boolean pickUp(Element element, Level level){
         if (element instanceof IPickable pickable){
-            if (pickable.pickUp()){
+            if (pickable.pickUp(level)){
                 this.addInventory(element);
             }
             return true;
@@ -186,7 +186,7 @@ public class Inventory{
         return false;
     }
 
-    public void store(Element element){
+    public void stock(Element element){
         if (element instanceof IStockable stockable && stockable.stock()){
             this.addInventory(element);
         }
