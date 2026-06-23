@@ -67,8 +67,8 @@ public abstract class Character{
      * @param heal The number of healthPoints to add (positive)
      */
     public void addHealth(int heal){
-        if (heal >= 0 && this.healthPoint + heal < this.maxHealth){
-            this.healthPoint += heal;
+        if (heal >= 0){
+            this.healthPoint = (this.healthPoint + heal <= this.maxHealth) ? heal + this.healthPoint : this.maxHealth;
         }
     }
 
