@@ -7,6 +7,7 @@ package world_5.environnement;
 
 import world_5.types.*;
 import world_5.inventory.*;
+import world_5.inventory.item.*;
 
 /**
  * Cell class
@@ -16,7 +17,7 @@ public class Cell{
     private CellType type;
     private boolean collision;
     private boolean hasItem;
-    private Item item;
+    private Element item;
 
     /**
      * The cell is a space that can either be a wall, empty, or a trap
@@ -38,7 +39,7 @@ public class Cell{
      * @param type the type of the cell
      * @param item the item in the space
      */
-    public Cell(Position coord, CellType type, Item item){
+    public Cell(Position coord, CellType type, Element item){
         this(coord,type);
         if (item != null && type != CellType.WALL){     // No items within walls
             this.hasItem = true;
@@ -64,7 +65,7 @@ public class Cell{
      * @param collision the collision with the player
      * @param item the item in the space
      */
-    public Cell(Position coord, CellType type, boolean collision, Item item){
+    public Cell(Position coord, CellType type, boolean collision, Element item){
         this(coord,type,collision);
 
         if (item != null && !collision){
@@ -110,7 +111,7 @@ public class Cell{
      * Get the item of the cell
      * @return the item of the cell
      */
-    public Item getItem(){
+    public Element getItem(){
         return this.item;
     }
 
@@ -119,7 +120,7 @@ public class Cell{
      * @return true if the cell has a coin or false if not
      */
     public boolean hasCoin(){
-        if (this.hasItem && this.item.getType() == ItemType.COIN){
+        if (this.hasItem && this.item instanceof Coin){
             return true;
         }
         return false;
@@ -131,7 +132,7 @@ public class Cell{
      * @param collision if the cell collides with the player
      */
     public void setType(CellType type, boolean collision){
-        if (!(this.hasItem && this.item.getType() == ItemType.COIN && type == CellType.WALL && collision)){
+        if (!(this.hasItem && this.item instanceof Coin && type == CellType.WALL && collision)){
             this.type = type;
             this.collision = collision;
         }
@@ -150,7 +151,7 @@ public class Cell{
      * @param item the item we want to add
      * @return if the item was added or not
      */
-    public boolean addItem(Item item){
+    public boolean addItem(Element item){
         if (item != null && !this.hasItem && type != CellType.WALL){     // No writting over an already existing item
             this.hasItem = true;
             this.item = item;
@@ -163,8 +164,8 @@ public class Cell{
      * Removes the item from a cell
      * @return the item that was on the cell
      */
-    public Item removeItem(){
-        Item item = this.item;
+    public Element removeItem(){
+        Element item = this.item;
         this.item = null;
         this.hasItem = false;
 

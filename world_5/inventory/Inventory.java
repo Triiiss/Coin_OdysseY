@@ -1,11 +1,14 @@
 /**
  * @author Thémis Tran Tu Thien :D
- * @version 1.0
+ * @version 1.1
  */
 
 package world_5.inventory;
 
 import world_5.types.*;
+import world_5.inventory.item.*;
+import world_5.inventory.competence.*;
+import world_5.environnement.Level;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -89,23 +92,17 @@ public class Inventory{
     public boolean addInventory(Element element){
         if (this.bag.size() < this.maxInventory && this.bag != null){
             this.bag.add(element);
-            Collections.sort(this.bag);        // Sorts inventory everytime we add something
+            //Collections.sort(this.bag);        // Sorts inventory everytime we add something
             System.out.println("\u001B[94mYou have obtained " + element.getName() + "\u001B[0m");
 
-            if (element instanceof Item){
-                Item item = (Item) element;
-                if (item.getType() == ItemType.WEAPON){
-                    this.weapon++;
-                }
+            if (element instanceof Weapon){
+                this.weapon++;
             }
-            else if (element instanceof Competence){
-                Competence competence = (Competence) element;
-                if (competence.getType() == CompetenceType.LOCKPICK){
-                    this.lockpick = true;
-                }
-                else if (competence.getType() == CompetenceType.TELEPORTATION){
-                    this.teleportation = true;
-                }
+            else if (element instanceof Lockpick){
+                this.lockpick = true;
+            }
+            else if (element instanceof Teleportation){
+                this.teleportation = true;
             }
             return true;
         }
@@ -123,11 +120,8 @@ public class Inventory{
             Element e = this.bag.remove(this.index);
             this.index = 0;
 
-            if (e instanceof Item){
-                Item item = (Item) e;
-                if (item.getType() == ItemType.WEAPON){
-                    this.weapon--;
-                }
+            if (e instanceof Weapon){
+                this.weapon--;
             }
 
             return e;
@@ -146,11 +140,8 @@ public class Inventory{
             Element e = this.bag.remove(index);
             this.index = 0;
 
-            if (e instanceof Item){
-                Item item = (Item) e;
-                if (item.getType() == ItemType.WEAPON){
-                    this.weapon--;
-                }
+            if (e instanceof Weapon){
+                this.weapon--;
             }
 
             return e;
@@ -168,11 +159,8 @@ public class Inventory{
 
         while(iterator.hasNext()){
             Element element = iterator.next();
-            if (element instanceof Item){
-                Item item = (Item) element;
-                if (item.getType() == ItemType.WEAPON) {
-                    return i;
-                }
+            if (element instanceof Weapon){
+                return i;
             }
             i++;
         }
@@ -187,4 +175,12 @@ public class Inventory{
         this.teleportation = false;
     }
 
+
+    public void use(Level level){
+        
+    }
+
+    public boolean pickUp(Element element){
+        return true;
+    }
 }

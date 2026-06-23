@@ -1,12 +1,13 @@
 /**
  * @author Thémis Tran Tu Thien :D
- * @version 1.0
+ * @version 1.1
  */
 
 package world_5.environnement;
 
 import world_5.characters.*;
 import world_5.types.*;
+import world_5.inventory.item.*;
 
 import java.util.Scanner;
 import java.util.List;
@@ -74,17 +75,17 @@ public class Rule{
         }
 
         if (cell.getHasItem()){
-            switch (cell.getItem().getType()){
-                case ItemType.COIN:
-                    return YELLOW + "." + RESET;
-                case ItemType.WEAPON:
-                    return BLUE + "W" + RESET;
-                case ItemType.HOURGLASS:
-                    return BLUE + "H" + RESET;
-                    
+            if (cell.getItem() instanceof Coin){
+                return YELLOW + "." + RESET;
             }
-            
+            if (cell.getItem() instanceof Weapon){
+                return BLUE + "W" + RESET;
+            }
+            if (cell.getItem() instanceof Hourglass){
+                return BLUE + "H" + RESET;
+            }
         }
+
         switch(cell.getType()){
             case CellType.WALL:
                 return "#" + RESET;
@@ -224,7 +225,7 @@ public class Rule{
      * @param newPlayer the player's future position
      */
     public static void collectItem(Level level, Position newPlayer){
-        if (level.getLevel()[newPlayer.getY()][newPlayer.getX()].getItem().pickUp(level)){      // If it got picked up
+        if (level.getPlayer().getInventory().pickUp(level.getLevel()[newPlayer.getY()][newPlayer.getX()].getItem())){      // If it got picked up
             level.getLevel()[newPlayer.getY()][newPlayer.getX()].removeItem();                  // Delete the item from the cell
         }
     }

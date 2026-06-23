@@ -1,17 +1,18 @@
 /**
  * @author Thémis Tran Tu Thien :D
- * @version 1.0
+ * @version 1.1
  */
 
 package world_5.inventory;
 import world_5.environnement.Level;
 import world_5.environnement.Cell;
 import world_5.characters.Player;
+import world_5.interfaces.*;
 
 /**
  * Element class
  */
-public abstract class Element implements Comparable<Element>{
+public abstract class Element /*implements Comparable<Element>*/{
     private String name;
 
     /**
@@ -31,16 +32,10 @@ public abstract class Element implements Comparable<Element>{
     }
 
     /**
-     * Use the element
-     * @param level level with the player using the element (to erase the item from inventory)
-     */
-    public abstract void use(Level level);
-
-    /**
      * Two characters are considered equals if their name match up (case sensitivity ignored)
      * @return true if it's equal or false if not HERE
      */
-    @Override
+    /*@Override
     public boolean equals(Object object){
         if (this == object){
             return true;
@@ -57,7 +52,7 @@ public abstract class Element implements Comparable<Element>{
      * Redefine the hashCode
      * @return The hash of an object based on equals
      */
-    @Override
+    /*@Override
     public int hashCode(){
         int result = 11;     // My favorite prime number
 
@@ -72,7 +67,7 @@ public abstract class Element implements Comparable<Element>{
      * @param e The other element we want to compare it to
      * @return negative if this goes first, positive if e goes first and 0 if they are equal
      */
-    @Override
+    /*@Override
     public int compareTo(Element e){
         if (this instanceof Item && e instanceof Competence){
             return -1;
@@ -83,5 +78,5 @@ public abstract class Element implements Comparable<Element>{
         else{
             return this.name.compareToIgnoreCase(e.getName());
         }
-    }
+    }*/
 }

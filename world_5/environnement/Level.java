@@ -1,6 +1,6 @@
 /**
  * @author Thémis Tran Tu Thien :D
- * @version 1.2
+ * @version 1.3
  */
 
 package world_5.environnement;
@@ -10,6 +10,7 @@ import world_5.characters.*;
 import world_5.types.*;
 import world_5.exceptions.*;
 import world_5.inventory.*;
+import world_5.inventory.item.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -100,17 +101,17 @@ public class Level{
                                     case 100:             // If it's coins
                                         if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() != CellType.WALL && !this.level[j+structs[i].getY()][k+structs[i].getX()].getHasItem()){       // Items can be anywhere except walls or write over other items
                                             this.nbCoins += 1;
-                                            this.level[j+structs[i].getY()][k+structs[i].getX()].addItem(new Item("coin", ItemType.COIN));
+                                            this.level[j+structs[i].getY()][k+structs[i].getX()].addItem(new Coin("Coin"));
                                         }
                                         break;
                                     case 101:
                                         if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() != CellType.WALL && !this.level[j+structs[i].getY()][k+structs[i].getX()].getHasItem()){
-                                            this.level[j+structs[i].getY()][k+structs[i].getX()].addItem(new Item("Weapon",ItemType.WEAPON));
+                                            this.level[j+structs[i].getY()][k+structs[i].getX()].addItem(new Weapon("Weapon"));
                                         }
                                         break;
                                     case 102:
                                         if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() != CellType.WALL && !this.level[j+structs[i].getY()][k+structs[i].getX()].getHasItem()){
-                                            this.level[j+structs[i].getY()][k+structs[i].getX()].addItem(new Item("Hourglass",ItemType.HOURGLASS));
+                                            this.level[j+structs[i].getY()][k+structs[i].getX()].addItem(new Hourglass("Hourglass"));
                                         }
                                         break;
                                 }
@@ -984,12 +985,12 @@ public class Level{
                 enemyCells.add(this.level[enemy.getCoord().getY()][enemy.getCoord().getX()]);
             }
         }
-        if (!this.player.getInventory().getLockpick() && this.player.getScore() >= 100){        // Adds lockpicking 
+        /*if (!this.player.getInventory().getLockpick() && this.player.getScore() >= 100){        // Adds lockpicking 
             this.player.getInventory().addInventory(new Competence("Lockpicking",CompetenceType.LOCKPICK));
         }
         if (!this.player.getInventory().getTeleportation() && this.player.getKills() >= 3){    // Adds teleportation
             this.player.getInventory().addInventory(new Competence("Teleportation", CompetenceType.TELEPORTATION));
-        }
+        }*/
 
         if (freeze > 0){        // Each movement freeze decreases
             freeze--;
