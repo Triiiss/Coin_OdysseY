@@ -21,6 +21,8 @@ public class Structure{
     private int width;
     /**The height of the structure (vertical) */
     private int height;
+    /**The normalCollision of the structure */
+    private boolean normalCollision;
 
     /**
      * Constructor method
@@ -38,10 +40,26 @@ public class Structure{
             this.y = y;
             this.width = width;
             this.height = height;
+            this.normalCollision = true;
         }
         else{
             throw new InvalidStructureException("Structure arguments invalid");
         }
+    }
+
+    /**
+     * The constructor method with normal collision or not
+     * @param type Whether it's a wall(0), a trap(1), a door(2), a coin(100), a weapon(101) or an hourglass(102)
+     * @param x The horizontal coordonate within the level of the bottom left corner
+     * @param y The vertical coordonate within the level of the bottom left corner
+     * @param width The size of the x coordonate
+     * @param height The size of the y coordonate
+     * @param normalCollision if the collision is the same as the default one or not
+     * @throws InvalidStructureException if the arguments of a structure are invalid
+     */
+    public Structure(int type, int width, int height, int x, int y,boolean normalCollision) throws InvalidStructureException{
+        this(type,width, height, x, y);
+        this.normalCollision = normalCollision;
     }
     
     /**
@@ -77,5 +95,12 @@ public class Structure{
     */
     public int getType(){
         return this.type;
+    }
+
+    /**
+     * @return if the structure collides or not
+    */
+    public boolean getNormalCollision(){
+        return this.normalCollision;
     }
 }

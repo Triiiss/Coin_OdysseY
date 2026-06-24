@@ -103,23 +103,39 @@ public class Level{
                                 for (int k=0;k<structs[i].getWidth();k++){
                                     switch(structs[i].getType()){
                                         case 0:             // If it's a wall
-                                            if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY && !this.level[j+structs[i].getY()][k+structs[i].getX()].hasItem()){
+                                            if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY && !this.level[j+structs[i].getY()][k+structs[i].getX()].hasItem() && structs[i].getNormalCollision()){
                                                 this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.WALL);
+                                            }
+                                            else if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY && !this.level[j+structs[i].getY()][k+structs[i].getX()].hasItem() && !structs[i].getNormalCollision()){
+                                                this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.WALL, false);
                                             }
                                             break;
                                         case 1:         // If it's a trap
                                             if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY){
-                                                this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.TRAP);
+                                                if (structs[i].getNormalCollision()){
+                                                    this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.TRAP);
+                                                }
+                                                else{
+                                                    this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.TRAP, true);
+                                                }
                                             }
                                             break;
                                         case 2:         // If it's a locked door
                                             if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY){
-                                                this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.DOOR);
+                                                if (structs[i].getNormalCollision()){
+                                                    this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.DOOR);
+                                                }
+                                                else{
+                                                    this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.DOOR, false);
+                                                }
                                             }
                                             break;
                                         case 3:     // If it's water
-                                            if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY && !this.level[j+structs[i].getY()][k+structs[i].getX()].hasItem()){
+                                            if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY && !this.level[j+structs[i].getY()][k+structs[i].getX()].hasItem() && structs[i].getNormalCollision()){
                                                 this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.WATER);
+                                            }
+                                            else if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY && !this.level[j+structs[i].getY()][k+structs[i].getX()].hasItem() && !structs[i].getNormalCollision()){
+                                                this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.WATER, false);
                                             }
                                             break;
                                         case 100:             // If it's coins
@@ -244,6 +260,15 @@ public class Level{
                                 if (structInfo.length == 5){
                                     try{
                                         structuresOfLevel[structureIndex] = new Structure(Integer.parseInt(structInfo[0]),Integer.parseInt(structInfo[1]),Integer.parseInt(structInfo[2]),Integer.parseInt(structInfo[3]),Integer.parseInt(structInfo[4]));
+                                        structureIndex += 1;
+                                    }
+                                    catch (InvalidStructureException e){
+                                        System.err.println(e.getMessage());
+                                    }
+                                }
+                                if (structInfo.length == 6){
+                                    try{
+                                        structuresOfLevel[structureIndex] = new Structure(Integer.parseInt(structInfo[0]),Integer.parseInt(structInfo[1]),Integer.parseInt(structInfo[2]),Integer.parseInt(structInfo[3]),Integer.parseInt(structInfo[4]), false);
                                         structureIndex += 1;
                                     }
                                     catch (InvalidStructureException e){
