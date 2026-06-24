@@ -198,7 +198,7 @@ public class Level{
         if (goalTime > 0){
             this.goalTime = goalTime;
         }
-        else{
+        else if (this.type == ObjectiveType.SURVIVAL){
             this.type = ObjectiveType.COINS;
         }
     }
