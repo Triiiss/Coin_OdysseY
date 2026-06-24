@@ -117,6 +117,11 @@ public class Level{
                                                 this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.DOOR);
                                             }
                                             break;
+                                        case 3:     // If it's water
+                                            if (this.level[j+structs[i].getY()][k+structs[i].getX()].getType() == CellType.EMPTY && !this.level[j+structs[i].getY()][k+structs[i].getX()].hasItem()){
+                                                this.level[j+structs[i].getY()][k+structs[i].getX()].setType(CellType.WATER);
+                                            }
+                                            break;
                                         case 100:             // If it's coins
                                             if ((this.level[j+structs[i].getY()][k+structs[i].getX()].getType() != CellType.WALL || !this.level[j+structs[i].getY()][k+structs[i].getX()].getCollision()) && !this.level[j+structs[i].getY()][k+structs[i].getX()].hasItem()){       // Items can be anywhere except walls (except if there's no collision) or write over other items
                                                 this.nbCoins += 1;
@@ -176,6 +181,9 @@ public class Level{
         this(width, height, structs, player, playerX, playerY, enemies, type);
         if (goalTime > 0){
             this.goalTime = goalTime;
+        }
+        else{
+            this.type = ObjectiveType.COINS;
         }
     }
 

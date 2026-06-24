@@ -16,13 +16,15 @@ public enum CellType{
     /**Empty space  */
     EMPTY,
     /**A door D */
-    DOOR;
+    DOOR,
+    /**Water ~ */
+    WATER;
 
     /**
      * Some cells have collision, and some are manually changed. With no manual change, we take the default one
      * @return if the cell has collision
      */
     public boolean defaultCollision(){
-        return (this == WALL || this == DOOR);
+        return (this == WALL || this == DOOR || this == WATER);
     }
 }

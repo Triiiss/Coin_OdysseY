@@ -83,6 +83,8 @@ public class Rule{
                 return "#" + RESET;
             case CellType.DOOR:
                 return "D" + RESET;
+            case CellType.WATER:
+                return BLUE + "≋" + RESET;
         }
 
         if (cell.hasItem()){                         // Items (that can be hidden behind walls or hide traps)
